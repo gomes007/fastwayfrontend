@@ -2,13 +2,15 @@ import React from "react";
 import { Button } from 'react-bootstrap';
 import AuthService from "@/services/authService";
 import { useRouter } from "next/router";
+import withAuth from "@/services/withAuth";
+
 
 const Success = () => {
     const router = useRouter();
 
     const handleLogout = () => {
         AuthService.logout();
-        router.push('/').then(r => console.log(r));
+        router.push('/login').then(r => r);
     };
 
     return (
@@ -20,4 +22,5 @@ const Success = () => {
     );
 };
 
-export default Success;
+export default withAuth(Success);
+

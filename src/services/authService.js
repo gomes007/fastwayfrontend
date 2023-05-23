@@ -27,9 +27,19 @@ const AuthService = {
             });
     },
 
+    /*
     logout: function() {
         localStorage.removeItem('user');
     },
+
+     */
+
+    logout: function() {
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('user');
+        }
+    },
+
 
     register: function(user) {
         return this.axiosInstance.post(API_URL + 'users', {
@@ -40,9 +50,20 @@ const AuthService = {
         });
     },
 
+    /*
     getCurrentUser: function() {
         return JSON.parse(localStorage.getItem('user'));
     }
+
+     */
+
+    getCurrentUser: function() {
+        if (typeof window !== 'undefined') {
+            return JSON.parse(localStorage.getItem('user'));
+        }
+        return null;
+    }
+
 }
 
 AuthService.axiosInstance.interceptors.request.use(

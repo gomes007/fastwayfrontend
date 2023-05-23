@@ -7,6 +7,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import AuthService from "@/services/authService";
+import withGuest from "@/services/withGuest";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,15 +20,15 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await AuthService.login(email, password);
-      console.log(response); // para verificar o que está sendo retornado
+      console.log(response);
 
-      if (response.token) { // se o token existir, autenticação bem sucedida
+      if (response.token) {
         await router.push('/success');
       } else {
         setErrorMessage("Erro ao efetuar login. Por favor, tente novamente.");
       }
     } catch (err) {
-      console.log(err); // para verificar o erro
+      console.log(err);
       setErrorMessage("Erro ao efetuar login. Por favor, tente novamente.");
     }
   };
@@ -69,4 +70,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default withGuest(Login);
