@@ -5,13 +5,18 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "debug": "set NODE_OPTIONS=--inspect && next dev",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@next/font": "13.4.3",
+    "axios": "^1.4.0",
+    "bootstrap": "^5.2.3",
     "next": "13.4.3",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-bootstrap": "^2.7.4",
+    "react-dom": "18.2.0",
+    "react-icons": "^4.8.0"
   }
 }
