@@ -1,13 +1,10 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
+import React, {useState} from "react";
+import {useRouter} from "next/router";
 
-import { Form, Button, Container, Row, Col, Alert, Card } from "react-bootstrap";
-import { FaUserCircle } from 'react-icons/fa';
-
+import {Alert, Button, Card, Col, Container, Form, Row} from "react-bootstrap";
+import {FaUserCircle} from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import AuthService from "@/services/authService";
-import withGuest from "@/services/withGuest";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,14 +13,21 @@ const Login = () => {
 
   const router = useRouter();
 
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
+
+
+    console.log(email, password);
+
+
     try {
       const response = await AuthService.login(email, password);
       console.log(response);
 
       if (response.token) {
-        await router.push('/success');
+        await router.push('/registerEmployee');
       } else {
         setErrorMessage("Erro ao efetuar login. Por favor, tente novamente.");
       }
@@ -33,16 +37,20 @@ const Login = () => {
     }
   };
 
+
   return (
+
+
+
       <Container fluid className="h-100 bg-white">
         <Row className="justify-content-center align-items-center h-100">
           <Col xs={12} sm={8} md={6} lg={4}>
             <Card className="shadow-lg border-0 rounded-lg mt-5">
               <Card.Header className="text-center">
-                <h3 className="font-weight-light my-4">
+                <h2 className="font-weight-light my-4">
                   <FaUserCircle size="2em" className="mb-2" />
                   Login
-                </h3>
+                </h2>
               </Card.Header>
               <Card.Body>
                 <Form onSubmit={handleLogin}>
@@ -70,4 +78,4 @@ const Login = () => {
   );
 };
 
-export default withGuest(Login);
+export default Login;

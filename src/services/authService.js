@@ -27,19 +27,11 @@ const AuthService = {
             });
     },
 
-    /*
-    logout: function() {
-        localStorage.removeItem('user');
-    },
-
-     */
-
     logout: function() {
         if (typeof window !== 'undefined') {
             localStorage.removeItem('user');
         }
     },
-
 
     register: function(user) {
         return this.axiosInstance.post(API_URL + 'users', {
@@ -50,12 +42,22 @@ const AuthService = {
         });
     },
 
-    /*
-    getCurrentUser: function() {
-        return JSON.parse(localStorage.getItem('user'));
-    }
-
-     */
+    saveEmployee: function(employeeData) {
+        return this.axiosInstance
+            .post(API_URL + 'employees', employeeData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            .then(response => {
+                console.log('Response:', response);
+                return response.data;
+            })
+            .catch(error => {
+                console.error('Error during employee saving:', error);
+                return Promise.reject(error);
+            });
+    },
 
     getCurrentUser: function() {
         if (typeof window !== 'undefined') {
