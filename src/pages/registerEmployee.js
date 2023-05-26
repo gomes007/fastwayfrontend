@@ -3,7 +3,10 @@ import withAuth from "@/services/withAuth";
 import CampoForm from "@/components/CampoForm";
 import {useRouter} from "next/router";
 import {Button} from "react-bootstrap";
+
+import EmployeeService from "@/services/employeeService";
 import AuthService from "@/services/authService";
+
 
 const EmployeeRegister = () => {
 
@@ -25,15 +28,12 @@ const EmployeeRegister = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        let employeeData = new FormData();
         const employee = {
             name: state.name,
             cpf: state.cpf
         };
-        employeeData.append('employee', JSON.stringify(employee));
-        employeeData.append('file', state.file);
 
-        AuthService.saveEmployee(employeeData)
+        EmployeeService.saveEmployee(employee, state.file)
             .then((data) => {
                 console.log('Employee registered', data);
             })
