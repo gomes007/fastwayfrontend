@@ -1,4 +1,4 @@
-const CampoForm = ({ label, name, type, value, options, onChange, error }) => {
+const FieldForm = ({ label, name, type, value, options, onChange, error }) => {
     return (
       <div className="form-group">
         {type === 'textarea' ? (
@@ -63,5 +63,5 @@ const CampoForm = ({ label, name, type, value, options, onChange, error }) => {
       </div>
     );
   };
-  
-  export default CampoForm;
+
+  export default FieldForm;

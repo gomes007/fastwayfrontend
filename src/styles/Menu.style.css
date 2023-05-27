@@ -1,0 +1,143 @@
+.menu {
+    width: 240px;
+    background-color: #101827;
+    min-height: 100vh;
+    position: fixed;
+    top: 0; left: 0;
+    transition: all 0.5s;
+
+}
+
+.site {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+    transition: all 0.5s;
+}
+
+.site .content {
+    padding: 10px 5px;
+}
+
+.site.fechado {
+    margin-left: 0px;
+    width: 100%;
+}
+
+.menu.fechado {
+    left: -240px;
+}
+
+.menu .logo {
+    color: #fff;
+    text-align: center;
+    font-size: 30px;
+    padding: 20px 0;
+}
+
+.menu .divisor {
+    border-bottom: 1px solid rgb(207, 205, 205);
+    margin: 10px auto;
+    width: 90%;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.menu .conteudo-menu {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+    font-family: "Source Sans Pro", sans-serif;
+
+}
+
+.menu .conteudo-menu .item-menu {
+    padding: 1px 0;
+}
+
+.menu .conteudo-menu .item-menu .link-menu {
+    color: rgb(207, 205, 205);
+    text-decoration: none;
+    font-size: 12px;
+    display: block;
+    padding: 7px 15px;
+    margin-bottom: 0px;
+    transition: all 0.5s;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 3px;
+    ont-family: "Source Sans Pro", sans-serif;
+
+}
+
+.menu .conteudo-menu .item-menu .link-menu.active{
+    color: #12b981;
+    background-color: #242a38;
+}
+
+
+.menu .conteudo-menu .item-menu .link-menu span {
+    margin-left: 10px;
+}
+
+.menu .conteudo-menu .item-menu .link-menu:hover {
+    background-color: #242a38;
+
+}
+
+.menu .conteudo-menu .item-menu.subitem h3.link-menu::after {
+    content: "\f0da";
+    font-size: 20px;
+    position: absolute;
+    right: 10px;
+    font-family: "Font Awesome 5 Free";
+    font-weight: bold;
+}
+
+.menu .conteudo-menu .item-menu.subitem h3.link-menu.aberto::after {
+    content: "\f0d7";
+}
+
+.menu .conteudo-menu .item-menu.sub {
+    display: none;
+}
+
+.menu .conteudo-menu .item-menu.sub.aberto {
+    display: block;
+
+}
+
+.menu .conteudo-menu li.item-menu {
+    border-bottom: 1px solid #333333;
+    transition: all 0s ease 0s;
+}
+
+.menu .conteudo-menu .item-menu.sub li {
+    padding-left: 20px;
+    margin-bottom: 6px;
+    font-size: 10px;
+}
+
+.menu .conteudo-menu .item-menu.sub li a.link-menu {
+    font-size: 12px;
+}
+
+@media (max-width: 1060px) {
+    .site.aberto,
+    .site.fechado,
+    .site {
+        margin: 0;
+        width: 100%;
+        transition: all 0.5s;
+        z-index: 2;
+        position: relative;
+    }
+
+    .menu {
+        z-index: 4;
+        width: 230px;
+    }
+
+    .navbar .btn-menu{transition: all 0.5s;}
+    .site.aberto .navbar .btn-menu {margin-left: 230px;}
+}
+

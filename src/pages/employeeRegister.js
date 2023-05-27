@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import withAuth from "@/services/withAuth";
-import CampoForm from "@/components/CampoForm";
+import FieldForm from "@/components/Form/FieldForm";
 import {useRouter} from "next/router";
 import {Button} from "react-bootstrap";
 
@@ -59,7 +59,7 @@ const EmployeeRegister = () => {
     return (
         <div className="container">
             <form onSubmit={handleSubmit}>
-                <CampoForm
+                <FieldForm
                     label="name"
                     name="name"
                     type="text"
@@ -68,7 +68,7 @@ const EmployeeRegister = () => {
                     error={errors.name}
                 />
 
-                <CampoForm
+                <FieldForm
                     label="cpf"
                     name="cpf"
                     type="text"
