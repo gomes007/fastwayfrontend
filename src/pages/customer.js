@@ -4,7 +4,9 @@ import {useRouter} from "next/router";
 import AuthService from "@/services/authService";
 import TabForm from "@/components/Form/TabForm";
 import FieldForm from "@/components/Form/FieldForm";
-import custumerService from "@/services/customerService";
+import customerService from "@/services/customerService";
+import AddressForm from "@/components/Form/AddressForm";
+import NavTitle from "@/components/NavTitle/NavTitle";
 
 
 const Customer = () => {
@@ -71,7 +73,7 @@ const Customer = () => {
         }
         console.log(data);
 
-        return custumerService.createNewCustomer(data)
+        return customerService.createNewCustomer(data)
             .then((data) => {
                 console.log('Customer registered', data);
                 setCustomer({
@@ -102,6 +104,15 @@ const Customer = () => {
 
     return (
         <>
+            <NavTitle
+                title="Add Customer"
+                path={[
+                    {name: "Home", link: "/"},
+                    {name: "Registry", link: "/registry"},
+                    {name: "Customer", link: "/registry/customer"}
+                ]}
+            />
+
             <div className="content">
                 <TabForm
                     tabs={[
@@ -154,14 +165,160 @@ const Customer = () => {
                                                 onChange={(e) => handleCustomer(e)}
                                             />
                                         </div>
+                                        <div className="col-md-3">
+                                            <FieldForm
+                                                label="Email"
+                                                type="email"
+                                                name='email'
+                                                value={customer.email}
+                                                onChange={(e) => handleCustomer(e)}
+                                            />
+                                        </div>
+
+                                        {
+                                            (customer.companyType === 'PERSON') ? (
+                                                <>
+                                                    <div className="col-md-3">
+                                                        <FieldForm
+                                                            label="CPF"
+                                                            type="text"
+                                                            name="cpf"
+                                                            value={customer.cpf}
+                                                            onChange={(e) => handleCustomer(e)}
+                                                        />
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                customer.companyType === 'COMPANY' && (
+                                                    <>
+                                                        <div className="col md 3">
+                                                            <FieldForm
+                                                                label="CNPJ"
+                                                                type="text"
+                                                                name="cnpj"
+                                                                value={customer.cnpj}
+                                                                onChange={(e) => handleCustomer(e)}
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-md-3">
+                                                            <FieldForm
+                                                                label="Razão Social"
+                                                                type="text"
+                                                                name="razaoSocial"
+                                                                value={customer.razaoSocial}
+                                                                onChange={(e) => handleCustomer(e)}
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-md-3">
+                                                            <FieldForm
+                                                                label="Fantasy Name"
+                                                                type="text"
+                                                                name="fantasyName"
+                                                                value={customer.fantasyName}
+                                                                onChange={(e) => handleCustomer(e)}
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-md-3">
+                                                            <FieldForm
+                                                                label="Inscrição Estadual"
+                                                                type="text"
+                                                                name="inscricaoEstadual"
+                                                                value={customer.inscricaoEstadual}
+                                                                onChange={(e) => handleCustomer(e)}
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-md-3">
+                                                            <FieldForm
+                                                                label="Contact Name"
+                                                                type="text"
+                                                                name="contactName"
+                                                                value={customer.contactName}
+                                                                onChange={(e) => handleCustomer(e)}
+                                                            />
+                                                        </div>
+                                                    </>
+
+                                                )
+                                            )
+                                        }
+
+                                        <div className="col-md-3">
+                                            <FieldForm
+                                                label="Phone"
+                                                type="text"
+                                                name="phone"
+                                                value={customer.phone}
+                                                onChange={(e) => handleCustomer(e)}
+                                            />
+                                        </div>
+
+                                        <div className="col-md-3">
+                                            <FieldForm
+                                                label="CreditLimit"
+                                                type="number"
+                                                name="creditLimit"
+                                                value={credit.creditLimit}
+                                                onChange={(e) => handleCredit(e)}
+                                            />
+                                        </div>
+
+                                        <div className="col-md-3 mt-4">
+                                            <FieldForm
+                                                label="CreditLimitExceeded"
+                                                type="checkbox"
+                                                name="creditLimitExceeded"
+                                                value={credit.creditLimitExceeded}
+                                                onChange={(e) => handleCredit(e)}
+                                            />
+                                        </div>
+
+                                    </div>
+
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <FieldForm
+                                                label="Other Informations"
+                                                type="textarea"
+                                                rows={4}
+                                                name="otherInformations"
+                                                value={customer.otherInformations}
+                                                onChange={(e) => handleCustomer(e)}
+                                            />
+                                        </div>
                                     </div>
 
                                 </>
                             )
-
-                        }
+                        },
+                        {
+                            label: 'Address',
+                            content: (
+                                <>
+                                <AddressForm
+                                    addressesList={address}
+                                    setAddressesList={setAddress}
+                                />
+                                </>
+                            )
+                        },
                     ]}
                 />
+
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="float-right">
+                            <button onClick={saveCustomer} type="button" className="btn btn-success">
+                                <i className="fa fa-save mr-12px"></i>
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </>
     );

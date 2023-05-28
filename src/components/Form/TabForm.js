@@ -8,7 +8,7 @@ const TabForm = ({tabs}) => {
     return (
         <>
             <div className="form-content">
-                <nav>
+                <nav className="menuTab">
                     <ul>
                         {
                             tabs.map((tab, index) => (

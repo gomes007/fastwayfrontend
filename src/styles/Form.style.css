@@ -1,0 +1,80 @@
+.form-content {
+    padding: 20px;
+    border: 1px solid #CCCCCC;
+    border-radius: 0px;
+    background-color: #ffffff;
+    margin: 50px 40px 20px;
+}
+
+.form-content h3 {
+    font-size: 1.2em;
+    margin-bottom: 14px;
+    margin-top: -10px;
+}
+
+.form-content h3 i {
+    margin-right: 5px;
+    padding-top: 20px;
+}
+
+.form-group {
+    padding-bottom: 15px;
+}
+
+.form-content .menuTab {
+    margin-top: -65px;
+    margin-left: -21px;
+}
+
+.form-content .menuTab ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.form-content .menuTab ul li {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.form-content .menuTab ul li.active {
+    border-top: 1px;
+    border-left: 1px;
+    border-right: 1px;
+    border-bottom: 0px;
+    border-color: #CCCCCC;
+    border-style: solid;
+    background-color: #fff;
+}
+
+.form-content .menuTab ul li a {
+    text-decoration: none;
+    color: #000;
+}
+
+.form-content .paginationButton {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.form-content .paginationButton button:first-child {
+    margin-right: 10px;
+}
+
+.mr-15px {
+    margin-right: 10px;
+}
+
+.mr-12px {
+    margin-right: 12px;
+}
+
+.float-right {
+    text-align: right;
+    margin-right: 40px;
+}
+
+
+
+

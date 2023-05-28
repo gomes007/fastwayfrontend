@@ -27,7 +27,7 @@ const Login = () => {
       console.log(response);
 
       if (response.token) {
-        await router.push('/registerEmployee2');
+        await router.push('/customer');
       } else {
         setErrorMessage("Erro ao efetuar login. Por favor, tente novamente.");
       }
