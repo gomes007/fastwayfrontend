@@ -30,7 +30,7 @@ const Menu = ({children}) => {
                         <li>
                             <a className="link-menu" href="/customer">
                                 <i className="fa-solid fa-user-plus"></i>
-                                <span> New</span>
+                                <span>New</span>
                             </a>
                         </li>
                     </ItemMenu>

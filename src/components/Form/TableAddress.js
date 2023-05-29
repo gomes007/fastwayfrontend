@@ -8,8 +8,9 @@ const TableAddress = ({addresses, setEditAddress, setDeleteAddress}) => {
             text: "You won't be able to revert this address!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33'
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete'
         }).then((result) => {
             if (result.isConfirmed) {
                 setDeleteAddress(addresses.filter((address, i) => i !== index));
@@ -17,7 +18,7 @@ const TableAddress = ({addresses, setEditAddress, setDeleteAddress}) => {
                     'Deleted!',
                     'Your address has been deleted.',
                     'success'
-                ).then(r => r.isConfirmed && window.location.reload());
+                )
             }
         })
     }
@@ -45,7 +46,7 @@ const TableAddress = ({addresses, setEditAddress, setDeleteAddress}) => {
                         return (
                             <tr key={index}>
                                 <td>{address.zipCode}</td>
-                                <td>{address.addressType.label}</td>
+                                <td>{address.addressType ? address.addressType.label : ''}</td>
                                 <td>{address.street}</td>
                                 <td>{address.number}</td>
                                 <td>{address.complement}</td>
@@ -54,7 +55,7 @@ const TableAddress = ({addresses, setEditAddress, setDeleteAddress}) => {
                                 <td>{address.state}</td>
                                 <td className='tableButtons'>
                                     <button className='btn btn-outline-dark'
-                                            onClick={() => setEditAddress({...address, index})}>
+                                            onClick={() => setEditAddress({...address, index, addressTypeId: address.addressType.id})}>
                                         <i className="fa-solid fa-pen"></i>
                                     </button>
                                     <button className='btn btn-outline-danger'

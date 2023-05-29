@@ -13,7 +13,8 @@ const AddressForm = ({addressesList, setAddressesList}) => {
         neighborhood: '',
         city: '',
         state: '',
-        complement: ''
+        complement: '',
+        addressTypeId: ''  // new line
     });
 
     const [addressType, setAddressType] = useState([]);
@@ -103,9 +104,11 @@ const AddressForm = ({addressesList, setAddressesList}) => {
             neighborhood: '',
             city: '',
             state: '',
-            complement: ''
+            complement: '',
+            addressTypeId: ''  // reset the addressTypeId
         });
     }
+
 
 
     return (

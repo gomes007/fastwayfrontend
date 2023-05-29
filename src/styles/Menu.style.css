@@ -5,7 +5,6 @@
     position: fixed;
     top: 0; left: 0;
     transition: all 0.5s;
-
 }
 
 .site {
@@ -122,22 +121,32 @@
 }
 
 @media (max-width: 1060px) {
-    .site.aberto,
-    .site.fechado,
     .site {
-        margin: 0;
-        width: 100%;
-        transition: all 0.5s;
-        z-index: 2;
-        position: relative;
+        margin: 0 !important;
+        width: 100% !important;
+        transition: all 0.5s !important;
+        z-index: 2 !important;
+        position: relative !important;
     }
 
     .menu {
-        z-index: 4;
-        width: 230px;
+        z-index: 4 !important;
+        width: 230px !important;
     }
 
-    .navbar .btn-menu{transition: all 0.5s;}
-    .site.aberto .navbar .btn-menu {margin-left: 230px;}
+    .navbar .btn-menu {
+        transition: all 0.5s !important;
+    }
+
+    .site.aberto .navbar .btn-menu {
+        margin-left: 230px !important;
+    }
+
+    .site.fechado .navbar .btn-menu {
+        margin-left: 0 !important;
+    }
 }
+
+
+
 

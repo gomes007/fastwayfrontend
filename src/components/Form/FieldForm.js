@@ -16,7 +16,7 @@ const FieldForm = ({ label, name, type, value, options, onChange, error }) => {
           <>
             <label htmlFor={name}>{label}</label>
             <select
-              className="form-control"
+              className="form-select"
               id={name}
               name={name}
               value={value}
