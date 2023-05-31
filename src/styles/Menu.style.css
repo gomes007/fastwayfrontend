@@ -120,6 +120,7 @@
     font-size: 12px;
 }
 
+
 @media (max-width: 1060px) {
     .site {
         margin: 0 !important;
@@ -146,6 +147,11 @@
         margin-left: 0 !important;
     }
 }
+
+
+
+
+
 
 
 
