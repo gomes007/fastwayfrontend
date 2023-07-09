@@ -3,7 +3,7 @@
     border: 1px solid #CCCCCC;
     border-radius: 0px;
     background-color: #ffffff;
-    margin: 50px 40px 20px;
+    margin: 50px 0px 20px;
 }
 
 .form-content h3 {
@@ -77,12 +77,10 @@
 
 
 
-
-
 .content {
     position: relative;
   }
-  
+
 
   .img {
     position: absolute;
@@ -92,16 +90,16 @@
     flex-direction: column;
     align-items: center;
   }
-  
-  
+
+
   .img img {
-    
-    height: 110px; 
-    object-fit: cover; 
+
+    height: 110px;
+    object-fit: cover;
     border-radius: 5%;
     max-width: 100%;
   }
-  
+
 
   .file-upload-label {
     background: #3498db;
@@ -112,11 +110,11 @@
     margin-top: 10px;
     font-size: small;
   }
-  
 
-  
-  
-  
-  
-  
+
+
+
+
+
+
 

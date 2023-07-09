@@ -1,4 +1,4 @@
-const FieldForm = ({ label, name, type, value, options, onChange, error }) => {
+const FieldForm = ({ label, name, type, value, options, onChange, rows, error }) => {
     return (
       <div className="form-group">
         {type === 'textarea' ? (
@@ -9,6 +9,7 @@ const FieldForm = ({ label, name, type, value, options, onChange, error }) => {
               id={name}
               name={name}
               value={value}
+              rows={rows}
               onChange={onChange}
             />
           </>

@@ -14,7 +14,7 @@ const AddressForm = ({addressesList, setAddressesList}) => {
         city: '',
         state: '',
         complement: '',
-        addressTypeId: ''  // new line
+        addressTypeId: ''
     });
 
     const [addressType, setAddressType] = useState([]);

@@ -18,6 +18,7 @@ const EmployeeRegister = () => {
   const [state, setState] = useState({
     name: "",
     cpf: "",
+    gender: 'select',
     file: null,
   });
 
@@ -83,6 +84,7 @@ const EmployeeRegister = () => {
               onChange={handleChange}
               error={errors.cpf}
             />
+
           </div>
         </div>
 

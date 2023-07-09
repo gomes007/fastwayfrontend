@@ -1,15 +1,28 @@
-import ItemMenu from "@/components/Menu/ItemMenu";
 import {useState} from "react";
+
+import ItemMenu from "@/components/Menu/ItemMenu";
 import Navbar from "@/components/Navbar/Navbar";
+import {useRouter} from "next/router";
 
 
 const Menu = ({children}) => {
+
+    const router = useRouter();
 
     const [open, setOpen] = useState('aberto');
 
     const handleMenu = () => {
         (open === 'aberto') ? setOpen('fechado') : setOpen('aberto');
     };
+
+
+    if (router.route === '/login') {
+        return (
+            <>
+                {children}
+            </>
+        );
+    }
 
 
     return (

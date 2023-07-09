@@ -283,7 +283,7 @@ const Customer = () => {
                                             <FieldForm
                                                 label="Other Informations"
                                                 type="textarea"
-                                                rows={4}
+                                                rows={5}
                                                 name="otherInformations"
                                                 value={customer.otherInformations}
                                                 onChange={(e) => handleCustomer(e)}
