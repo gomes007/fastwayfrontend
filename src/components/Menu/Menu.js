@@ -3,6 +3,7 @@ import {useState} from "react";
 import ItemMenu from "@/components/Menu/ItemMenu";
 import Navbar from "@/components/Navbar/Navbar";
 import {useRouter} from "next/router";
+import AuthService from "@/services/authService";
 
 
 const Menu = ({children}) => {
@@ -24,9 +25,17 @@ const Menu = ({children}) => {
         );
     }
 
+    const handleLogout = () => {
+        AuthService.logout();
+        router.push("/login").then((r) => r);
+    };
 
     return (
         <>
+            <Navbar
+                tipoMenu={open}
+                handleMenu={handleMenu}
+            />
 
             <div className={`menu ${open}`}>
                 <h1 className="logo">Logo Here</h1>
@@ -47,19 +56,23 @@ const Menu = ({children}) => {
                             </a>
                         </li>
                     </ItemMenu>
+
                 </ul>
+
+                <div>
+                    <a className='logout' onClick={handleLogout}>
+                        <i className="fa-solid fa-sign-out"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+
             </div>
 
             <div className={`site ${open}`}>
-                <Navbar
-                    tipoMenu={open}
-                    handleMenu={handleMenu}
-                />
                 <div className="content">
                     {children}
                 </div>
             </div>
-
 
         </>
     );

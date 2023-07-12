@@ -1,11 +1,11 @@
-.site .navbar {
-    box-shadow: 2px 4px 8px 2px ;
+.navbar {
+    box-shadow: 2px 4px 4px 2px;
     padding: 5px 20px;
 }
 
 .navbar .user-ciclo {
     max-width: 60px;
-    border-radius: 100%;
+    border-radius: 50%;
 }
 
 .navbar .btn-menu {

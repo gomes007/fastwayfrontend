@@ -1,6 +1,6 @@
 .form-content {
     padding: 20px;
-    border: 1px solid #CCCCCC;
+    border: 1px solid #cac0c0;
     border-radius: 0px;
     background-color: #ffffff;
     margin: 50px 0px 20px;
@@ -72,7 +72,7 @@
 
 .float-right {
     text-align: right;
-    margin-right: 40px;
+    margin-right: 0px;
 }
 
 

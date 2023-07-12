@@ -1,17 +1,19 @@
 .menu {
-    width: 240px;
-    background-color: #8b8b8b;
+    width: 270px;
+    background-color: #242a38;
     min-height: 100vh;
     position: fixed;
-    top: 0; left: 0;
+    transform: translateY(0px);
+    left: 0;
     transition: all 0.5s;
     z-index: 1;
+
 }
 
 .site {
-    margin-left: 240px;
-    width: calc(100% - 240px);
-    transition: all 0.5s;
+    margin-left: 270px;
+    width: calc(100% - 270px);
+    transition: all 0.50s;
 }
 
 .site .content {
@@ -24,7 +26,7 @@
 }
 
 .menu.fechado {
-    left: -240px;
+    left: -270px;
 }
 
 .menu .logo {
@@ -57,7 +59,7 @@
 .menu .conteudo-menu .item-menu .link-menu {
     color: rgb(207, 205, 205);
     text-decoration: none;
-    font-size: 12px;
+    font-size: 14px;
     display: block;
     padding: 7px 15px;
     margin-bottom: 0px;
@@ -80,7 +82,8 @@
 }
 
 .menu .conteudo-menu .item-menu .link-menu:hover {
-    background-color: #242a38;
+    background-color: #dadee7;
+    color: #12b981;
 
 }
 
@@ -118,7 +121,7 @@
 }
 
 .menu .conteudo-menu .item-menu.sub li a.link-menu {
-    font-size: 12px;
+    font-size: 13px;
 }
 
 
@@ -136,6 +139,7 @@
         width: 230px !important;
     }
 
+    /*
     .navbar .btn-menu {
         transition: all 0.5s !important;
     }
@@ -147,12 +151,36 @@
     .site.fechado .navbar .btn-menu {
         margin-left: 0 !important;
     }
+     */
 }
 
 
+.menu .logout{
+    position: absolute;
+    bottom: 6rem;
+    width: 100%;
+    text-decoration: none;
+    list-style: none;
+    cursor: pointer;
+    left: 20px;
+    color: rgb(207, 205, 205);
+    ont-family: "Source Sans Pro", sans-serif;
+    box-sizing: border-box;
+    left: 0;
+    right: 0;
+    padding: 10px 0;
+    padding-left: 15px;
+    display: block;
+}
 
+.menu .logout i {
+    margin-right: 10px;
+}
 
-
+.menu .logout:hover{
+    color: #12b981;
+    background-color: #dadee7;
+}
 
 
 
