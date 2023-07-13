@@ -17,7 +17,7 @@ const Menu = ({children}) => {
     };
 
 
-    if (router.route === '/login') {
+    if (router.route === '/login' || router.route.startsWith('/resetPassword/') || router.route === '/forgotPassword') {
         return (
             <>
                 {children}
