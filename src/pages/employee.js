@@ -58,13 +58,19 @@ function Employee() {
         });
     }
 
+    /*
 
     const saveEmployee = () => {
         const employeeData = {...employee};
         delete employeeData.file;
         delete employeeData.selectedFile;
 
-        EmployeeService.saveEmployee(employeeData, employee.file)
+        const data = {
+            ...employeeData,
+            addresses: address
+        }
+
+        EmployeeService.saveEmployee(data, employee.file)
             .then(response => {
                 console.log("Employee saved successfully.");
             })
@@ -72,6 +78,28 @@ function Employee() {
                 console.error("Error saving employee:", error);
             });
     };
+
+     */
+
+    const saveEmployee = () => {
+        const employeeData = {...employee};
+        delete employeeData.file;
+        delete employeeData.selectedFile;
+
+        const data = {
+            ...employeeData,
+            addresses: address
+        }
+
+        EmployeeService.saveEmployee(data, employee.file)
+            .then(response => {
+                console.log("Employee saved successfully.");
+            })
+            .catch(error => {
+                console.error("Error saving employee:", error);
+            });
+    };
+
 
 
 
