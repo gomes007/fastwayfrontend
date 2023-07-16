@@ -6,7 +6,7 @@ function EmployeeImage({ employeeId, photoName }) {
     const [image, setImage] = useState(null);
 
     useEffect(() => {
-        fetchImage();
+        fetchImage().then(r => r);
     }, [employeeId, photoName]);
 
     async function fetchImage() {

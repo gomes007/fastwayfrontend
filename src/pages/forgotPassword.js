@@ -1,12 +1,15 @@
 import React, {useState} from 'react';
-import {Button, Form, Alert} from 'react-bootstrap';
+import {Button, Form, Alert, Card} from 'react-bootstrap';
 import axiosInstance from '@/services/axiosService';
-import {router} from "next/client";
+import {useRouter} from "next/router";
+
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,11 +29,10 @@ const ForgotPassword = () => {
     }
 
     return (
-
-        <div className='container fp'>
-            <Form onSubmit={handleSubmit}>
-                <fieldset>
-                    <legend>Resetar Senha</legend>
+        <Form onSubmit={handleSubmit}>
+            <Card className='fp'>
+                <Card.Body>
+                    <Card.Title>Esqueceu sua senha?</Card.Title>
                     <Form.Group>
                         <Form.Label>Email</Form.Label>
                         <Form.Control type="email" placeholder="Insira o email" value={email}
@@ -45,11 +47,9 @@ const ForgotPassword = () => {
                     </Button>
                     <Button variant="primary" type="button" onClick={handleBackToLogin}
                             className='button1'>Voltar</Button>
-                </fieldset>
-            </Form>
-        </div>
-
-
+                </Card.Body>
+            </Card>
+        </Form>
     );
 };
 

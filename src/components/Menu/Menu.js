@@ -52,7 +52,13 @@ const Menu = ({children}) => {
                         <li>
                             <a className="link-menu" href="/customer">
                                 <i className="fa-solid fa-user-plus"></i>
-                                <span>New</span>
+                                <span>customer</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a className="link-menu" href="/employee">
+                                <i className="fa-solid fa-user-plus"></i>
+                                <span>Employee</span>
                             </a>
                         </li>
                     </ItemMenu>

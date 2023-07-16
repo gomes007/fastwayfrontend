@@ -105,7 +105,7 @@ const AddressForm = ({addressesList, setAddressesList}) => {
             city: '',
             state: '',
             complement: '',
-            addressTypeId: ''  // reset the addressTypeId
+            addressTypeId: ''
         });
     }
 
@@ -160,11 +160,6 @@ const AddressForm = ({addressesList, setAddressesList}) => {
                                 Add new address type
                             </button>
                         </div>
-
-
-
-
-
 
                         <div className="col-md-2">
                             <FieldForm

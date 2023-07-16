@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Alert } from "react-bootstrap";
+import withAuth from "@/services/withAuth";
 
 const Unauthorized = () => (
     <Container className="mt-5">
@@ -13,4 +14,4 @@ const Unauthorized = () => (
     </Container>
 );
 
-export default Unauthorized;
+export default withAuth(Unauthorized);

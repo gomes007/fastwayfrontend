@@ -1,5 +1,4 @@
-
-
+import withAuth from "@/services/withAuth";
 
 const WelcomePage = () => {
 
@@ -11,5 +10,5 @@ const WelcomePage = () => {
     );
 };
 
-export default WelcomePage;
+export default withAuth(WelcomePage);
 
