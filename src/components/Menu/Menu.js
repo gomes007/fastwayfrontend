@@ -44,21 +44,27 @@ const Menu = ({children}) => {
                 <ul className="conteudo-menu">
                     <ItemMenu title='Users' icon='fa-solid fa-user'>
                         <li>
-                            <a className="link-menu" href="/employeeRegister">
+                            <a className="link-menu" href="/positionSalary">
                                 <i className="fa-solid fa-user-plus"></i>
-                                <span> Register</span>
+                                <span> Position and Salary</span>
                             </a>
                         </li>
                         <li>
-                            <a className="link-menu" href="/customer">
+                            <a className="link-menu" href="/permission">
                                 <i className="fa-solid fa-user-plus"></i>
-                                <span>customer</span>
+                                <span>Permission Register</span>
                             </a>
                         </li>
                         <li>
                             <a className="link-menu" href="/employee">
                                 <i className="fa-solid fa-user-plus"></i>
                                 <span>Employee</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a className="link-menu" href="/role">
+                                <i className="fa-solid fa-user-plus"></i>
+                                <span>Role</span>
                             </a>
                         </li>
                     </ItemMenu>

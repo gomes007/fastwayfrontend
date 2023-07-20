@@ -92,7 +92,7 @@ const FieldForm = ({label, name, type, value, options, onChange, rows, error, on
                                     Remove
                                 </label>
                             }
-                            <label htmlFor={name} className="file-upload-label">
+                            <label type='button' htmlFor={name} className="file-upload-label">
                                 {value ? "Change" : "Select img"}
                             </label>
                         </div>

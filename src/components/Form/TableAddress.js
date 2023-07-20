@@ -58,7 +58,7 @@ const TableAddress = ({addresses, setEditAddress, setDeleteAddress}) => {
                                             onClick={() => setEditAddress({...address, index, addressTypeId: address.addressType.id})}>
                                         <i className="fa-solid fa-pen"></i>
                                     </button>
-                                    <button className='btn btn-outline-danger'
+                                    <button className='btn btn-outline-danger mt-2'
                                             onClick={() => handleDeleteAddress(index)}>
                                         <i className="fa-solid fa-trash-can"></i>
                                     </button>

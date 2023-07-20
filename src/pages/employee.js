@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import NavTitle from "@/components/NavTitle/NavTitle";
 import TabForm from "@/components/Form/TabForm";
 import AddressForm from "@/components/Form/AddressForm";
 import FieldForm from "@/components/Form/FieldForm";
 import EmployeeService from "@/services/employeeService";
+import positionSalaryService from "@/services/positionSalaryService";
+import axios from "axios";
+import axiosInstance from "@/services/axiosService";
 
 
 function Employee() {
@@ -21,8 +24,16 @@ function Employee() {
         otherInformations: ''
     });
 
+    const [selectedPosition, setSelectedPosition] = useState(null);
+
 
     const handleEmployee = (e) => {
+
+        if (e.target.name === 'position') {
+            const selected = positions.find(pos => pos.position === e.target.value);
+            setSelectedPosition(selected);
+        }
+
         if (e.target.type === 'file') {
             const file = e.target.files[0];
             if (file) {
@@ -41,53 +52,66 @@ function Employee() {
     };
 
 
-
     const [address, setAddress] = useState([]);
 
-    const [position, setPosition] = useState({
+    const [positions, setPositions] = useState({
+        id: '',
         position: '',
         salary: '',
         commission: '',
-        role: '',
+        role: ''
     });
 
-    const handlePosition = (e) => {
-        setPosition({
-            ...position,
-            [e.target.name]: e.target.value
-        });
-    }
 
     /*
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const token = user ? user.token : null;
 
-    const saveEmployee = () => {
-        const employeeData = {...employee};
-        delete employeeData.file;
-        delete employeeData.selectedFile;
-
-        const data = {
-            ...employeeData,
-            addresses: address
+        if (!token) {
+            console.log("No token found");
+            return;
         }
 
-        EmployeeService.saveEmployee(data, employee.file)
-            .then(response => {
-                console.log("Employee saved successfully.");
+        const config = {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        };
+
+        axios.get('http://localhost:8080/positions', config)
+            .then(res => {
+                console.log('Data received:', res.data);
+                setPositions(res.data);
+                console.log('Positions state after update:', positions);
             })
-            .catch(error => {
-                console.error("Error saving employee:", error);
-            });
-    };
+            .catch(error => console.error(error));
+    }, []);
 
      */
 
+
+    useEffect(() => {
+        axiosInstance.get('positions')
+            .then(res => {
+                console.log('Data received:', res.data);
+                setPositions(res.data);
+                console.log('Positions state after update:', positions);
+            })
+            .catch(error => console.error(error));
+    }, []);
+
+
+
     const saveEmployee = () => {
         const employeeData = {...employee};
         delete employeeData.file;
         delete employeeData.selectedFile;
+        delete employeeData.position;
 
         const data = {
             ...employeeData,
+            positionSalary: selectedPosition,
             addresses: address
         }
 
@@ -101,8 +125,7 @@ function Employee() {
     };
 
 
-
-
+    console.log("Rendering component", positions);
 
     return (
         <>
@@ -225,7 +248,11 @@ function Employee() {
                                                 name="file"
                                                 value={employee.selectedFile}
                                                 onChange={handleEmployee}
-                                                onRemove={() => setEmployee({ ...employee, file: null, selectedFile: null })}  // Clear both file and selectedFile
+                                                onRemove={() => setEmployee({
+                                                    ...employee,
+                                                    file: null,
+                                                    selectedFile: null
+                                                })}
                                             />
                                         </div>
                                     </div>
@@ -261,10 +288,43 @@ function Employee() {
                     {
                         label: 'Position and Salary',
                         content: (
-                            <div className="form-group">
-                                <label htmlFor="name">Name</label>
-                                <input type="text" className="form-control" id="name"/>
-                            </div>
+                            <>
+                                <div className="col-md-6">
+                                    <h3>
+                                        <i className="fas fa-dollar-sign"></i>
+                                        Position and Salary
+                                    </h3>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-4">
+                                        <label>Position</label>
+                                        <select name="position" className='form-select'
+                                                value={selectedPosition ? selectedPosition.position : ''}
+                                                onChange={handleEmployee}>
+                                            <option value="">Select position</option>
+                                            {Array.isArray(positions) && positions.map((position, index) => (
+                                                <option key={index}
+                                                        value={position.position}>{position.position}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-2 mt-2">
+                                        <label>Salary </label>
+                                        <input type="text" name="salary" className='form-control bg-secondary'
+                                               value={selectedPosition ? selectedPosition.salary : ''} readOnly/>
+                                    </div>
+                                    <div className="col-md-2 mt-2">
+                                        <label>Commission</label>
+                                        <input type="text" name="commission" className='form-control bg-secondary'
+                                               value={selectedPosition ? selectedPosition.commission : ''} readOnly/>
+                                    </div>
+                                </div>
+
+                            </>
                         )
                     }
                 ]}
