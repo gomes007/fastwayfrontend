@@ -63,34 +63,6 @@ function Employee() {
     });
 
 
-    /*
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const token = user ? user.token : null;
-
-        if (!token) {
-            console.log("No token found");
-            return;
-        }
-
-        const config = {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        };
-
-        axios.get('http://localhost:8080/positions', config)
-            .then(res => {
-                console.log('Data received:', res.data);
-                setPositions(res.data);
-                console.log('Positions state after update:', positions);
-            })
-            .catch(error => console.error(error));
-    }, []);
-
-     */
-
-
     useEffect(() => {
         axiosInstance.get('positions')
             .then(res => {
@@ -125,7 +97,7 @@ function Employee() {
     };
 
 
-    console.log("Rendering component", positions);
+    //console.log("Rendering component", positions);
 
     return (
         <>

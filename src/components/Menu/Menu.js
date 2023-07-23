@@ -67,6 +67,12 @@ const Menu = ({children}) => {
                                 <span>Role</span>
                             </a>
                         </li>
+                        <li>
+                            <a className="link-menu" href="/user">
+                                <i className="fa-solid fa-user-plus"></i>
+                                <span>User</span>
+                            </a>
+                        </li>
                     </ItemMenu>
 
                 </ul>

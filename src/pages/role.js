@@ -9,8 +9,9 @@ function Role() {
     const [role, setRole] = useState({name: '', permissions: []});
 
     useEffect(() => {
-        axiosInstance.get('permissions')
+        axiosInstance.get('permissions/names')
             .then(res => {
+                console.log('Permissions data:', res.data);
                 setPermissions(res.data);
             })
             .catch(error => console.error('Error getting permissions:', error));
@@ -21,6 +22,7 @@ function Role() {
             })
             .catch(error => console.error('Error getting roles:', error));
     }, []);
+
 
     const handleRoleNameChange = (e) => {
         setRole({...role, name: e.target.value});
@@ -34,6 +36,7 @@ function Role() {
             setRole({...role, permissions: role.permissions.filter(permission => permission.id !== id)});
         }
     };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -74,14 +77,17 @@ function Role() {
                         <div className="col-md-8">
                             <div className='form-control'>
                                 <label>PERMISSIONS: </label>
-                                {permissions.map(permission => (
-                                    <div className='form-check m-2' key={permission.id}>
-                                        <input className='m-1' type="checkbox" id={permission.id} name={permission.name}
-                                               onChange={(e) => handlePermissionSelect(e, permission.id)}/>
-                                        <label htmlFor={permission.id}>{permission.name}</label>
-                                    </div>
-                                ))}
+                                {permissions.map((permission, index) => {
+                                    return (
+                                        <div key={index}>
+                                            <input className='m-1' type="checkbox" id={permission.id} name={permission.name}
+                                                   onChange={(e) => handlePermissionSelect(e, permission.id)}/>
+                                            <label htmlFor={permission.id}>{permission.name}</label>
+                                        </div>
+                                    );
+                                })}
                             </div>
+
                         </div>
                     </div>
 
