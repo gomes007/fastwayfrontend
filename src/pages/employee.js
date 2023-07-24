@@ -62,7 +62,8 @@ function Employee() {
     });
 
     const router = useRouter();
-    const { id } = router.query;
+    const { query } = router;
+
 
 
     const formatDateArray = dateArray => {
@@ -73,8 +74,8 @@ function Employee() {
     };
 
     useEffect(() => {
-        if (id) {
-            axiosInstance.get(`employees/${id}`)
+        if (query.id) {
+            axiosInstance.get(`employees/${query.id}`)
                 .then(res => {
                     const employeeData = res.data;
 
@@ -102,7 +103,7 @@ function Employee() {
                 setPositions(res.data);
             })
             .catch(error => console.error(error));
-    }, [id]);
+    }, [query.id]);
 
 
 

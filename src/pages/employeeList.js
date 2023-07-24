@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axiosInstance from '../services/axiosService';
-import { useRouter } from 'next/router';
+import {useRouter} from 'next/router';
 
 function EmployeeList() {
     const [employees, setEmployees] = useState([]);
@@ -23,12 +23,12 @@ function EmployeeList() {
     };
 
     const handleEdit = id => {
-        router.push(`/employee/${id}`).then(r => console.log(r));
+        router.push(`/employee/?id=${id}`);
     };
 
 
     const handleDelete = (id) => {
-        // Implemente a função de deletar um funcionário
+
     };
 
     const filteredEmployees = employees.filter(employee => {
