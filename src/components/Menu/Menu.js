@@ -73,7 +73,22 @@ const Menu = ({children}) => {
                                 <span>User</span>
                             </a>
                         </li>
+
+                        <li>
+                            <a className="link-menu" href="/employeeList">
+                                <i className="fa-solid fa-user-plus"></i>
+                                <span>EmployeeList</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a className="link-menu" href="/employeeCadastro">
+                                <i className="fa-solid fa-user-plus"></i>
+                                <span>EmployeeCadastro</span>
+                            </a>
+                        </li>
                     </ItemMenu>
+
+
 
                 </ul>
 
