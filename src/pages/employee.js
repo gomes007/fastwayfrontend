@@ -9,7 +9,6 @@ import AddressData from "@/components/Form/AddressData";
 import PositionSalaryData from "@/components/Form/PositionSalaryData";
 import PositionSalaryService from "@/services/positionSalaryService";
 import DepartmentService from "@/services/departmentService";
-import DepartmentData from "@/components/Form/DepartmentData";
 
 function Employee() {
 
@@ -280,21 +279,15 @@ function Employee() {
                         label: "Position Salary",
                         content: (
                             <PositionSalaryData
+                                departments={departments}
+                                selectedDepartment={selectedDepartment}
+                                handleDepartmentChange={handleDepartmentChange}
                                 positions={positions}
                                 selectedPosition={selectedPosition}
                                 handlePositionChange={handlePositionChange}
                                 employee={employee}
                             />
-                        )
-                    },
-                    {
-                        label: "Department",
-                        content: (
-                            <DepartmentData
-                                departments={departments}
-                                selectedDepartment={selectedDepartment}
-                                handleDepartmentChange={handleDepartmentChange}
-                            />
+
                         )
                     }
                 ]}

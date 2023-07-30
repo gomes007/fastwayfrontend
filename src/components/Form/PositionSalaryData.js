@@ -1,15 +1,25 @@
 import React from 'react';
+import DepartmentData from "@/components/Form/DepartmentData";
 
-const PositionSalaryData = ({ positions, selectedPosition, handlePositionChange, employee }) => {
+const PositionSalaryData = ({ positions, selectedPosition, handlePositionChange, employee, departments, selectedDepartment, handleDepartmentChange }) => {
 
     return (
         <>
+
+            <DepartmentData
+                departments={departments}
+                selectedDepartment={selectedDepartment}
+                handleDepartmentChange={handleDepartmentChange}
+            />
+
+
             <div className="col-md-6">
                 <h3>
                     <i className="fas fa-dollar-sign"></i>
                     Position and Salary
                 </h3>
             </div>
+
 
             <div className="row">
                 <div className="col-md-4">

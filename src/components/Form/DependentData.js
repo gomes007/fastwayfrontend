@@ -14,7 +14,7 @@ const DependentData = ({dependent, handleDependentChange, handleAddOrEditDepende
                         type="text"
                         id="name"
                         name="name"
-                        value={dependent.name}
+                        value={dependent?.name}
                         onChange={handleDependentChange}
                     />
                 </div>
@@ -24,7 +24,7 @@ const DependentData = ({dependent, handleDependentChange, handleAddOrEditDepende
                         type="date"
                         id="birthDate"
                         name="birthDate"
-                        value={dependent.birthDate}
+                        value={dependent?.birthDate}
                         onChange={handleDependentChange}
                     />
                 </div>
@@ -34,7 +34,7 @@ const DependentData = ({dependent, handleDependentChange, handleAddOrEditDepende
                         type="radio"
                         id='gender'
                         name='gender'
-                        value={dependent.gender}
+                        value={dependent?.gender}
                         onChange={handleDependentChange}
                         options={[
                             {value: 'MALE', label: 'Male'},
@@ -48,7 +48,7 @@ const DependentData = ({dependent, handleDependentChange, handleAddOrEditDepende
                         type="text"
                         id="cpf"
                         name="cpf"
-                        value={dependent.cpf}
+                        value={dependent?.cpf}
                         onChange={handleDependentChange}
                     />
                 </div>
@@ -58,7 +58,7 @@ const DependentData = ({dependent, handleDependentChange, handleAddOrEditDepende
                         type="select"
                         id="relationship"
                         name="relationship"
-                        value={dependent.relationship}
+                        value={dependent?.relationship}
                         onChange={handleDependentChange}
                         options={[
                             {value: 'SPOUSE', label: 'Spouse'},
@@ -86,7 +86,7 @@ const DependentData = ({dependent, handleDependentChange, handleAddOrEditDepende
                     </tr>
                     </thead>
                     <tbody>
-                    {dependents.map((dependent, index) => (
+                    {dependents?.map((dependent, index) => (
                         <tr key={index}>
                             <td>{dependent.name}</td>
                             <td>{dependent.birthDate}</td>

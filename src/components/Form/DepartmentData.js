@@ -1,6 +1,7 @@
 import React from 'react';
 
 const DepartmentData = ({ departments, selectedDepartment, handleDepartmentChange }) => {
+
     return (
         <div className="row">
             <div className="col-md-4">
@@ -12,9 +13,9 @@ const DepartmentData = ({ departments, selectedDepartment, handleDepartmentChang
                     onChange={handleDepartmentChange}
                 >
                     <option value="">Select department</option>
-                    {Array.isArray(departments) && departments.map((department, index) => (
+                    {Array.isArray(departments) && departments.map((department) => (
                         <option
-                            key={index}
+                            key={department.id}
                             value={department.id}
                         >
                             {department.name}
