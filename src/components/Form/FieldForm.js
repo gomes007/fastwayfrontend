@@ -1,4 +1,4 @@
-const FieldForm = ({label, name, type, value, options, onChange, rows, error, onRemove}) => {
+const FieldForm = ({label, name, type, value, options, onChange, rows, error, onRemove, previews}) => {
     return (
         <div className="form-group">
             {type === 'textarea' ? (
@@ -72,9 +72,18 @@ const FieldForm = ({label, name, type, value, options, onChange, rows, error, on
             ) : type === 'file' ? (
                 <>
                     <div className="image-container form-control">
-                        <div className="img">
-                            {value && <img src={value} alt="Selected file" />}
-                        </div>
+                        {Array.isArray(previews) && previews.map((preview, index) => (
+                            <div className="img" key={index}>
+                                {preview && <img src={preview} alt="Selected file" />}
+                                <label
+                                    type="button"
+                                    onClick={() => onRemove(index)}
+                                    className="file-upload-label remove-img-button"
+                                >
+                                    Remove
+                                </label>
+                            </div>
+                        ))}
                         <div className="file-actions">
                             <input
                                 type="file"
@@ -82,18 +91,10 @@ const FieldForm = ({label, name, type, value, options, onChange, rows, error, on
                                 name={name}
                                 onChange={onChange}
                                 style={{ display: "none" }}
+                                multiple
                             />
-                            {value &&
-                                <label
-                                    type="button"
-                                    onClick={onRemove}
-                                    className="file-upload-label remove-img-button"
-                                >
-                                    Remove
-                                </label>
-                            }
                             <label type='button' htmlFor={name} className="file-upload-label">
-                                {value ? "Change" : "Select img"}
+                                {value ? "Change files" : "Select files"}
                             </label>
                         </div>
                     </div>

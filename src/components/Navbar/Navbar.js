@@ -23,7 +23,7 @@ function EmployeeImage({ employeeId, photoName }) {
         return null;
     }
 
-    return <img src={image} alt="Employee" className="user-ciclo" />;
+    return <img src={image} alt="Employee01" className="user-ciclo" />;
 }
 
 const Navbar = ({ handleMenu }) => {

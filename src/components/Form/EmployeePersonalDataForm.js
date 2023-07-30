@@ -1,7 +1,52 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import FieldForm from './FieldForm';
 
-const EmployeePersonalDataForm = ({ employee, handleEmployee, setEmployee }) => {
+const EmployeePersonalDataForm = ({ employee, handleEmployeeChange, handleProfilePicChange, handleFilesChange }) => {
+
+    const [profilePicPreview, setProfilePicPreview] = useState(null);
+    const [filesPreviews, setFilesPreviews] = useState([]);
+
+    useEffect(() => {
+        return () => {
+            if (profilePicPreview) URL.revokeObjectURL(profilePicPreview);
+            filesPreviews.forEach(URL.revokeObjectURL);
+        }
+    }, [profilePicPreview, filesPreviews]);
+
+
+    const handleProfilePicPreview = (e) => {
+        handleProfilePicChange(e);
+        if (profilePicPreview) {
+            URL.revokeObjectURL(profilePicPreview);
+        }
+        setProfilePicPreview(URL.createObjectURL(e.target.files[0]));
+    }
+
+    const handleProfilePicRemove = () => {
+        handleProfilePicChange(null);
+        if (profilePicPreview) {
+            URL.revokeObjectURL(profilePicPreview);
+        }
+        setProfilePicPreview(null);
+    }
+
+
+    const handleFilesPreview = (e) => {
+        handleFilesChange(e);
+        if (filesPreviews.length > 0) {
+            filesPreviews.forEach(URL.revokeObjectURL);
+        }
+        const newPreviews = Array.from(e.target.files).map(file => URL.createObjectURL(file));
+        setFilesPreviews(newPreviews);
+    }
+
+
+    const handleFileRemove = (index) => {
+        handleFilesChange(null, index);
+        URL.revokeObjectURL(filesPreviews[index]);
+        setFilesPreviews(prev => prev.filter((_, i) => i !== index));
+    }
+
 
     return (
         <>
@@ -24,7 +69,7 @@ const EmployeePersonalDataForm = ({ employee, handleEmployee, setEmployee }) => 
                                     id="name"
                                     name="name"
                                     value={employee.name}
-                                    onChange={handleEmployee}
+                                    onChange={handleEmployeeChange}
                                 />
                             </div>
                             <div className="col-md-3">
@@ -34,7 +79,7 @@ const EmployeePersonalDataForm = ({ employee, handleEmployee, setEmployee }) => 
                                     id="privateEmail"
                                     name="privateEmail"
                                     value={employee.privateEmail}
-                                    onChange={handleEmployee}
+                                    onChange={handleEmployeeChange}
                                 />
                             </div>
                             <div className="col-md-3">
@@ -44,7 +89,7 @@ const EmployeePersonalDataForm = ({ employee, handleEmployee, setEmployee }) => 
                                     id="cpf"
                                     name="cpf"
                                     value={employee.cpf}
-                                    onChange={handleEmployee}
+                                    onChange={handleEmployeeChange}
                                 />
                             </div>
                             <div className="col-md-2">
@@ -54,7 +99,7 @@ const EmployeePersonalDataForm = ({ employee, handleEmployee, setEmployee }) => 
                                     id="phone"
                                     name="phone"
                                     value={employee.phone}
-                                    onChange={handleEmployee}
+                                    onChange={handleEmployeeChange}
                                 />
                             </div>
                         </div>
@@ -67,7 +112,7 @@ const EmployeePersonalDataForm = ({ employee, handleEmployee, setEmployee }) => 
                                     id="birthDate"
                                     name="birthDate"
                                     value={employee.birthDate}
-                                    onChange={handleEmployee}
+                                    onChange={handleEmployeeChange}
                                 />
                             </div>
                             <div className="col-md-4">
@@ -77,7 +122,7 @@ const EmployeePersonalDataForm = ({ employee, handleEmployee, setEmployee }) => 
                                     id='gender'
                                     name='gender'
                                     value={employee.gender}
-                                    onChange={handleEmployee}
+                                    onChange={handleEmployeeChange}
                                     options={[
                                         {value: 'MALE', label: 'Male'},
                                         {value: 'FEMALE', label: 'Female'}
@@ -92,7 +137,7 @@ const EmployeePersonalDataForm = ({ employee, handleEmployee, setEmployee }) => 
                                     id="hireDate"
                                     name="hireDate"
                                     value={employee.hireDate}
-                                    onChange={handleEmployee}
+                                    onChange={handleEmployeeChange}
                                 />
                             </div>
                         </div>
@@ -100,19 +145,27 @@ const EmployeePersonalDataForm = ({ employee, handleEmployee, setEmployee }) => 
                     </div>
                 </div>
                 <div className="col_2">
-                    <div>
+                    <div className='col-md-4'>
                         <FieldForm
                             label="Profile Picture"
                             type="file"
-                            id="file"
-                            name="file"
-                            value={employee.selectedFile}
-                            onChange={handleEmployee}
-                            onRemove={() => setEmployee({
-                                ...employee,
-                                file: null,
-                                selectedFile: null
-                            })}
+                            id="profilePic"
+                            name="profilePic"
+                            onChange={handleProfilePicPreview}
+                        />
+                        {profilePicPreview && (
+                            <img src={profilePicPreview} alt="Profile Preview" style={{ width: '100px', height: '100px' }}/>
+                        )}
+                    </div>
+                    <div>
+                        <FieldForm
+                            label="Documents"
+                            type="file"
+                            id="files"
+                            name="files"
+                            onChange={handleFilesPreview}
+                            onRemove={handleFileRemove}
+                            previews={filesPreviews}
                         />
                     </div>
                 </div>
@@ -125,7 +178,7 @@ const EmployeePersonalDataForm = ({ employee, handleEmployee, setEmployee }) => 
                     id="otherInformations"
                     name="otherInformations"
                     value={employee.otherInformations}
-                    onChange={handleEmployee}
+                    onChange={handleEmployeeChange}
                 />
             </div>
         </>

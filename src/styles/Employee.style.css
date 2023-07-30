@@ -2,6 +2,9 @@
     position: relative;
 }
 
+
+
+/*
 .line_01 {
     display: grid;
     grid-template-columns: 4.5fr 1fr;
@@ -60,6 +63,8 @@
 .file-upload-label {
     display: block;
 }
+
+ */
 
 
 @media screen and (max-width: 600px) {

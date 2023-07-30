@@ -1,12 +1,15 @@
 import axiosInstance from './axiosService';
 
 const EmployeeService = {
-    saveEmployee: function(employeeData, file) {
+    saveEmployee: function(employeeData, profilePic, files) {
         let formData = new FormData();
         formData.append('employee', new Blob([JSON.stringify(employeeData)], {
             type: 'application/json'
         }));
-        formData.append('file', file);
+        formData.append('profilePic', profilePic);
+        Array.from(files).forEach(file => {
+            formData.append('files', file);
+        });
 
         return axiosInstance
             .post('employees', formData, {
@@ -20,3 +23,4 @@ const EmployeeService = {
 }
 
 export default EmployeeService;
+

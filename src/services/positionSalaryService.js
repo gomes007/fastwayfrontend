@@ -14,13 +14,14 @@ const positionSalaryService = {
     async getAllPositionSalary() {
         try {
             const response = await axiosInstance.get("/positions");
-            console.log(response.data);
-            return response.data.content ?? [];
+            console.log("back end", response.data);
+            return response.data ?? [];
         } catch (error) {
             console.log("Error in positionSalaryService.getAllPositionSalary: ", error);
             throw error;
         }
     }
+
 
 };
 

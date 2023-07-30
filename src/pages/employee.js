@@ -1,132 +1,231 @@
 import React, {useEffect, useState} from 'react';
+import EmployeeService from "@/services/employeeService";
 import NavTitle from "@/components/NavTitle/NavTitle";
 import TabForm from "@/components/Form/TabForm";
-import AddressForm from "@/components/Form/AddressForm";
-import EmployeeService from "@/services/employeeService";
-import axiosInstance from "@/services/axiosService";
 import EmployeePersonalDataForm from "@/components/Form/EmployeePersonalDataForm";
-
-import { useRouter } from 'next/router';
+import DependentData from "@/components/Form/DependentData";
+import Swal from 'sweetalert2';
+import AddressData from "@/components/Form/AddressData";
+import PositionSalaryData from "@/components/Form/PositionSalaryData";
+import PositionSalaryService from "@/services/positionSalaryService";
+import DepartmentService from "@/services/departmentService";
+import DepartmentData from "@/components/Form/DepartmentData";
 
 function Employee() {
 
     const [employee, setEmployee] = useState({
-        name: '',
-        privateEmail: '',
-        cpf: '',
-        phone: '',
-        file: null,
-        selectedFile: null,
-        birthDate: '',
         hireDate: '',
+        department: {id: null},
+        positionSalary: {id: null},
+        dependents: [],
+        name: '',
+        birthDate: '',
         gender: '',
-        otherInformations: ''
+        cpf: '',
+        privateEmail: '',
+        phone: '',
+        files: []
+    })
+
+    const [address, setAddress] = useState({
+        id: null,
+        addressType: {id: null},
+        city: '',
+        street: '',
+        number: '',
+        complement: '',
+        neighborhood: '',
+        state: '',
+        zipCode: ''
     });
 
+
+    const [newDependent, setNewDependent] = useState({
+        name: '',
+        birthDate: '',
+        gender: '',
+        cpf: '',
+        relationship: ''
+    });
+
+    const [profilePic, setProfilePic] = useState(null);
+
+    const [files, setFiles] = useState([]);
+
+    const [positions, setPositions] = useState([]);
     const [selectedPosition, setSelectedPosition] = useState(null);
 
-
-    const handleEmployee = (e) => {
-
-        if (e.target.name === 'position') {
-            const selected = positions.find(pos => pos.position === e.target.value);
-            setSelectedPosition(selected);
-        }
-
-        if (e.target.type === 'file') {
-            const file = e.target.files[0];
-            if (file) {
-                setEmployee(prevState => ({
-                    ...prevState,
-                    [e.target.name]: file,
-                    selectedFile: URL.createObjectURL(file),
-                }));
-            }
-        } else {
-            setEmployee(prevState => ({
-                ...prevState,
-                [e.target.name]: e.target.value
-            }));
-        }
-    };
-
-
-    const [address, setAddress] = useState([]);
-
-    const [positions, setPositions] = useState({
-        id: '',
-        position: '',
-        salary: '',
-        commission: '',
-        role: ''
-    });
-
-    const router = useRouter();
-    const { query } = router;
-
-
-
-    const formatDateArray = dateArray => {
-        if (!Array.isArray(dateArray)) {
-            return "";
-        }
-        return `${dateArray[0]}-${dateArray[1].toString().padStart(2, '0')}-${dateArray[2].toString().padStart(2, '0')}`;
-    };
+    const [departments, setDepartments] = useState([]);
+    const [selectedDepartment, setSelectedDepartment] = useState(null);
 
     useEffect(() => {
-        if (query.id) {
-            axiosInstance.get(`employees/${query.id}`)
-                .then(res => {
-                    const employeeData = res.data;
-
-
-                    employeeData.birthDate = formatDateArray(employeeData.birthDate);
-                    employeeData.hireDate = formatDateArray(employeeData.hireDate);
-
-                    setEmployee(employeeData);
-
-                    if (employeeData.addresses && employeeData.addresses.length > 0) {
-                        setAddress(employeeData.addresses);
-                    }
-                    if (employeeData.positionSalary) {
-                        axiosInstance.get(`positions/${employeeData.positionSalary}`)
-                            .then(res => {
-                                setSelectedPosition(res.data);
-                            })
-                            .catch(error => console.error('Error getting position details:', error));
-                    }
-                })
-                .catch(error => console.error('Error getting employee:', error));
-        }
-        axiosInstance.get('positions')
-            .then(res => {
-                setPositions(res.data);
-            })
-            .catch(error => console.error(error));
-    }, [query.id]);
-
-
-
-
-
-    const saveEmployee = () => {
-        const employeeData = {...employee};
-        delete employeeData.file;
-        delete employeeData.selectedFile;
-        delete employeeData.position;
-
-        const data = {
-            ...employeeData,
-            positionSalary: { id: selectedPosition.id },
-            addresses: address
-        }
-
-        EmployeeService.saveEmployee(data, employee.file)
-            .then(response => {
-                console.log("Employee saved successfully." + response.data);
+        Promise.all([
+            PositionSalaryService.getAllPositionSalary(),
+            DepartmentService.getAllDepartments()
+        ])
+            .then(([positionsData, departmentsData]) => {
+                setPositions(positionsData);
+                setDepartments(departmentsData);
             })
             .catch(error => {
-                console.error("Error saving employee:", error);
+                console.error("Error retrieving data: ", error);
+            });
+    }, []);
+
+
+
+
+    const handleEmployeeChange = (e) => {
+        setEmployee({
+            ...employee,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleDependentChange = (e) => {
+        setNewDependent({
+            ...newDependent,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleDepartmentChange = (e) => {
+        const selectedDepartment = departments.find(
+            (department) => department.id.toString() === e.target.value
+        );
+
+        setSelectedDepartment(selectedDepartment);
+
+        setEmployee(prev => ({
+            ...prev,
+            department: {
+                id: selectedDepartment ? selectedDepartment.id : ''
+            }
+        }));
+    };
+
+
+    const handleProfilePicChange = (e) => {
+        setProfilePic(e.target.files[0]);
+    };
+
+    const handleFilesChange = (e) => {
+        setFiles(Array.from(e.target.files));
+    };
+
+
+    const handlePositionChange = (e) => {
+        const selectedPosition = positions.find(
+            (position) => position.id.toString() === e.target.value
+        );
+
+        setSelectedPosition(selectedPosition);
+
+        setEmployee(prev => ({
+            ...prev,
+            positionSalary: {
+                id: selectedPosition ? selectedPosition.id : ''
+            }
+        }));
+    };
+
+
+
+
+    const handleAddressChange = (e) => {
+        const { name, value } = e.target;
+        // Update the address state
+        setAddress((prevAddress) => ({
+            ...prevAddress,
+            [name]: value,
+        }));
+
+        if (name === 'zipCode' && value.length === 8) {
+            fetch(`https://viacep.com.br/ws/${value}/json/`)
+                .then((response) => response.json())
+                .then((data) => {
+                    setAddress((prevAddress) => ({
+                        ...prevAddress,
+                        street: data.logradouro,
+                        neighborhood: data.bairro,
+                        city: data.localidade,
+                        state: data.uf,
+                    }));
+                })
+                .catch((error) => console.error('Error:', error));
+        }
+    };
+
+
+    //logic to add, edit and delete dependents at datatable
+    const [editDependentIndex, setEditDependentIndex] = useState(null);
+
+    const editDependent = (index) => {
+        setNewDependent(employee.dependents[index]);
+        setEditDependentIndex(index);
+    }
+
+    const addOrEditDependent = () => {
+        if (editDependentIndex !== null) {
+            setEmployee(oldEmployee => {
+                const newEmployee = {...oldEmployee};
+                newEmployee.dependents[editDependentIndex] = newDependent;
+                return newEmployee;
+            });
+            setEditDependentIndex(null);
+        } else {
+            setEmployee(oldEmployee => {
+                const newEmployee = {...oldEmployee};
+                newEmployee.dependents = [...newEmployee.dependents, newDependent];
+                return newEmployee;
+            });
+        }
+        setNewDependent({
+            name: '',
+            birthDate: '',
+            gender: '',
+            cpf: '',
+            relationship: ''
+        });
+    }
+
+    const deleteDependent = (index) => {
+        Swal.fire({
+            title: 'Você tem certeza?',
+            text: "Você não poderá reverter isso!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, delete!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setEmployee(prev => {
+                    const dependentsCopy = [...prev.dependents];
+                    dependentsCopy.splice(index, 1);
+                    return { ...prev, dependents: dependentsCopy };
+                });
+                Swal.fire(
+                    'Deletado!',
+                    'O dependente foi deletado.',
+                    'success'
+                )
+            }
+        })
+    }
+    //end of logic dependents datatable
+
+
+
+    const saveEmployee = (e) => {
+        const employeeData = {...employee, address: address};
+
+        EmployeeService.saveEmployee(employeeData, profilePic, files)
+            .then(response => {
+                console.log("Employee created: ", response.data);
+            })
+            .catch(error => {
+                console.error("Error creating employee: ", error);
             });
     };
 
@@ -145,71 +244,61 @@ function Employee() {
             <TabForm
                 tabs={[
                     {
-                        label: 'Personal Data',
+                        label: "Personal Data",
                         content: (
                             <EmployeePersonalDataForm
                                 employee={employee}
-                                handleEmployee={handleEmployee}
-                                setEmployee={setEmployee}
+                                handleEmployeeChange={handleEmployeeChange}
+                                handleProfilePicChange={handleProfilePicChange}
+                                handleFilesChange={handleFilesChange}
                             />
                         )
                     },
                     {
-                        label: 'Address',
+                        label: "Dependent",
                         content: (
-                            <>
-                                <AddressForm
-                                    addressesList={address}
-                                    setAddressesList={setAddress}
-                                />
-                            </>
+                            <DependentData
+                                dependent={newDependent}
+                                handleDependentChange={handleDependentChange}
+                                handleAddOrEditDependent={addOrEditDependent}
+                                handleEditDependent={editDependent}
+                                deleteDependent={deleteDependent}
+                                dependents={employee.dependents}
+                            />
                         )
                     },
                     {
-                        label: 'Position and Salary',
+                        label: "Address",
                         content: (
-                            <>
-                                <div className="col-md-6">
-                                    <h3>
-                                        <i className="fas fa-dollar-sign"></i>
-                                        Position and Salary
-                                    </h3>
-                                </div>
-
-                                <div className="row">
-                                    <div className="col-md-4">
-                                        <label>Position</label>
-                                        <select name="position" className='form-select'
-                                                value={selectedPosition ? selectedPosition.position : ''}
-                                                onChange={handleEmployee}>
-                                            <option value="">Select position</option>
-                                            {Array.isArray(positions) && positions.map((position, index) => (
-                                                <option key={index}
-                                                        value={position.position}>{position.position}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div className="row">
-                                    <div className="col-md-2 mt-2">
-                                        <label>Salary </label>
-                                        <input type="text" name="salary" className='form-control bg-secondary'
-                                               value={selectedPosition ? selectedPosition.salary : ''} readOnly/>
-                                    </div>
-                                    <div className="col-md-2 mt-2">
-                                        <label>Commission</label>
-                                        <input type="text" name="commission" className='form-control bg-secondary'
-                                               value={selectedPosition ? selectedPosition.commission : ''} readOnly/>
-                                    </div>
-                                </div>
-
-                            </>
+                            <AddressData
+                                address={address}
+                                handleAddressChange={handleAddressChange}
+                            />
+                        )
+                    },
+                    {
+                        label: "Position Salary",
+                        content: (
+                            <PositionSalaryData
+                                positions={positions}
+                                selectedPosition={selectedPosition}
+                                handlePositionChange={handlePositionChange}
+                                employee={employee}
+                            />
+                        )
+                    },
+                    {
+                        label: "Department",
+                        content: (
+                            <DepartmentData
+                                departments={departments}
+                                selectedDepartment={selectedDepartment}
+                                handleDepartmentChange={handleDepartmentChange}
+                            />
                         )
                     }
                 ]}
             />
-
             <div className="row">
                 <div className="col-md-12">
                     <div className="float-right">
@@ -220,7 +309,6 @@ function Employee() {
                     </div>
                 </div>
             </div>
-
         </>
     );
 }
