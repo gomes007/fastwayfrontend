@@ -9,6 +9,8 @@ import AddressData from "@/components/Form/AddressData";
 import PositionSalaryData from "@/components/Form/PositionSalaryData";
 import PositionSalaryService from "@/services/positionSalaryService";
 import DepartmentService from "@/services/departmentService";
+import { useRouter } from 'next/router';
+import axiosInstance from "@/services/axiosService";
 
 function Employee() {
 
@@ -57,6 +59,8 @@ function Employee() {
     const [departments, setDepartments] = useState([]);
     const [selectedDepartment, setSelectedDepartment] = useState(null);
 
+
+
     useEffect(() => {
         Promise.all([
             PositionSalaryService.getAllPositionSalary(),
@@ -70,6 +74,47 @@ function Employee() {
                 console.error("Error retrieving data: ", error);
             });
     }, []);
+
+    const router = useRouter();
+    const { query } = router;
+
+    useEffect(() => {
+        if (query.id) {
+            axiosInstance.get(`employees/${query.id}`)
+                .then(res => {
+                    const employeeData = res.data;
+
+                    setEmployee(employeeData);
+
+                    // Set the address
+                    if (employeeData.address) {
+                        setAddress(employeeData.address);
+                    }
+
+                    const department = departments.find(dept => dept.id === employeeData.department);
+                    setSelectedDepartment(department);
+
+                    if (employeeData.positionSalary) {
+                        axiosInstance.get(`positions/${employeeData.positionSalary}`)
+                            .then(res => {
+                                const positionData = res.data;
+                                setSelectedPosition(positionData);
+                            })
+                            .catch(error => console.error('Error getting position details:', error));
+                    }
+                })
+                .catch(error => console.error('Error getting employee:', error));
+        }
+
+        axiosInstance.get('positions')
+            .then(res => {
+                const positionsData = res.data;
+                setPositions(positionsData);
+            })
+            .catch(error => console.error(error));
+    }, [query.id, departments]);
+
+
 
 
 
@@ -106,6 +151,7 @@ function Employee() {
 
     const handleProfilePicChange = (e) => {
         setProfilePic(e.target.files[0]);
+        console.log("foto",e.target.files[0])
     };
 
     const handleFilesChange = (e) => {
@@ -219,6 +265,9 @@ function Employee() {
     const saveEmployee = (e) => {
         const employeeData = {...employee, address: address};
 
+        console.log("Estado atual de profilePic: ", profilePic); // Adicionado
+        console.log("Estado atual de files: ", files); // Adicionado
+
         EmployeeService.saveEmployee(employeeData, profilePic, files)
             .then(response => {
                 console.log("Employee created: ", response.data);
@@ -227,6 +276,7 @@ function Employee() {
                 console.error("Error creating employee: ", error);
             });
     };
+
 
 
     return (
