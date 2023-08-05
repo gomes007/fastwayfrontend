@@ -68,7 +68,7 @@ const EmployeePersonalDataForm = ({ employee, handleEmployeeChange, handleProfil
                                     type="text"
                                     id="name"
                                     name="name"
-                                    value={employee.name}
+                                    value={employee?.name}
                                     onChange={handleEmployeeChange}
                                 />
                             </div>

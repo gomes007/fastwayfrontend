@@ -50,8 +50,12 @@ function Employee() {
     });
 
     const [profilePic, setProfilePic] = useState(null);
-
     const [files, setFiles] = useState([]);
+
+    const [currentProfilePic, setCurrentProfilePic] = useState(null);
+    const [currentFiles, setCurrentFiles] = useState([]);
+
+
 
     const [positions, setPositions] = useState([]);
     const [selectedPosition, setSelectedPosition] = useState(null);
@@ -85,6 +89,10 @@ function Employee() {
                     const employeeData = res.data;
 
                     setEmployee(employeeData);
+
+                    // Set the profile pic and other files
+                    setCurrentProfilePic(employeeData.profilePic);
+                    setCurrentFiles(employeeData.files);
 
                     // Set the address
                     if (employeeData.address) {

@@ -89,6 +89,8 @@ function EmployeesList() {
                     <th>CPF</th>
                     <th>Phone</th>
                     <th>HireDate</th>
+                    <th>Photo</th>
+                    <th>File</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -101,13 +103,44 @@ function EmployeesList() {
                         <td>{employee.phone}</td>
                         <td>{employee.hireDate}</td>
                         <td>
+                            {employee.files.filter(file =>
+                                file.photoName.toLowerCase().endsWith('.jpg') ||
+                                file.photoName.toLowerCase().endsWith('.png') ||
+                                file.photoName.toLowerCase().endsWith('.gif')
+                            ).map((img, index) => (
+                                <img
+                                    key={index}
+                                    src={`http://localhost:8080/files/${img.photoName}`}
+                                    alt={img.photoName}
+                                    style={{width: '80px', height: '80px'}}
+                                />
+                            ))}
+                        </td>
+                        <td>
+                            {employee.files.filter(file =>
+                                !file.photoName.toLowerCase().endsWith('.jpg') &&
+                                !file.photoName.toLowerCase().endsWith('.png') &&
+                                !file.photoName.toLowerCase().endsWith('.gif')
+                            ).map((file, index) => (
+                                <React.Fragment key={index}>
+                                    <a href={`http://localhost:8080/files/${file.photoName}`}>
+                                        {file.photoName}
+                                    </a>
+                                    {' | '}
+                                </React.Fragment>
+                            ))}
+                        </td>
+
+                        <td>
                             <button onClick={() => handleEdit(employee.id)} className="btn btn-primary">Edit</button>
                             <button onClick={() => handleDelete(employee.id)} className="btn btn-danger">Delete</button>
                         </td>
                     </tr>
                 ))}
+
                 </tbody>
             </table>
+
         </div>
     );
 }

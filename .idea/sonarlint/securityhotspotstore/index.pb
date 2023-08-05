@@ -61,8 +61,6 @@ K
 src/services/authContext.js,b\d\bdc4a4d6e42cb78948cfa80d25ad2cb0aec28078
 K
 src/services/authService.js,3\3\3315be405170635511599ef976b4cfd4b2f3d304
-L
-src/services/axiosService.js,3\4\344ab8e9b10062f743c974dc3993343f6550419d
 H
 src/services/withAuth.js,3\e\3e0af611b4ff91ef8c1738241ae1023e1c7705d7
 N
@@ -131,8 +129,6 @@ w
 G.idea/sonarlint/issuestore/1/0/10a03f31c4dce92cb371e761ce9429428bb6c176,0\3\030ed2ccb712537825891dfda283154162e458a8
 Å
 Q.idea/sonarlint/securityhotspotstore/7/e/7e3c5db3196cf4253f80199c6969cf75cc4e095b,9\6\96c12c82a36725903e4984d30d75532fb55f665e
-P
- src/components/Form/FieldForm.js,0\c\0c9389cade364fe2e00c0c5c723c5977735d888f
 Å
 Q.idea/sonarlint/securityhotspotstore/e/8/e8caa77bf7d05b10672fd2354eb05a0eafbd86c7,1\8\18fc55bbd67c858b25213cdc6d653c50d58b8442
 Å
