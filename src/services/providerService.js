@@ -29,7 +29,28 @@ const providerService = {
             console.error("Provider Update Request failure: ", error.message);
             return provider;
         }
+    },
+
+    async deleteProvider(id) {
+        try {
+            const response = await axiosInstance.delete(`/providers/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error("Provider Delete Request failure: ", error.message);
+            return {};
+        }
+    },
+
+    async getAllProviders(page = 1, size = 10) {
+        try {
+            const response = await axiosInstance.get(`/providers?page=${page}&size=${size}`);
+            return response.data;
+        } catch (error) {
+            console.error("Provider Get Request failure: ", error.message);
+            return [];
+        }
     }
+
 
 
 }

@@ -83,7 +83,7 @@ function Provider() {
                 title="Add Provider"
                 path={[
                     {name: "Home", link: "/"},
-                    {name: "List", link: "/providerList"}
+                    {name: "List", link: "/providersList"}
                 ]}
             />
 

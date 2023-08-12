@@ -47,8 +47,6 @@ G
 src/pages/permission.js,5\5\55f63d923486d3e230a2fd10489b77491a2b3fbf
 A
 src/pages/role.js,6\c\6c22c2f212f3a93e8f497960313d26802f145973
-A
-package-lock.json,f\a\fa288d1472d29beccb489a676f68739ad365fc47
 R
 "src/pages/resetPassword/[token].js,7\e\7e3c5db3196cf4253f80199c6969cf75cc4e095b
 K
@@ -399,8 +397,6 @@ Q.idea/sonarlint/securityhotspotstore/a/9/a9e608c7b8e1baffddf799185e0b660cdb92c8
 Q.idea/sonarlint/securityhotspotstore/4/e/4eb512245713914a093ffd8fe5eb40d1c64ded38,7\4\740379a58684f625e9496a3972e85c5549771eaf
 Å
 Q.idea/sonarlint/securityhotspotstore/d/2/d21640cbc0e453b2052035d5dd7e36003043a0a5,e\5\e5562e0b7ae350cc535fc7d7fb7633c038f02328
-P
- src/components/Form/FieldForm.js,0\c\0c9389cade364fe2e00c0c5c723c5977735d888f
 L
 src/services/axiosService.js,3\4\344ab8e9b10062f743c974dc3993343f6550419d
 F
@@ -409,14 +405,8 @@ M
 src/styles/Employee.style.css,b\3\b305f5325a32e4f77ea1c6d4f95a34a3ccd8f973
 I
 src/styles/Form.style.css,5\3\53c0188f3df052ead2054df03995972ecd270a2b
-R
-"src/components/Form/AddressData.js,1\2\12387b616d770cbd9e5df8a7d1cc916a3858553f
 O
 src/services/customerService.js,c\6\c6bc3bad45f8a2df884b14e4f347bebc8cc1ff1f
-U
-%src/components/Form/DepartmentData.js,c\c\cc4c584b42d80757d4784a325203d9d5d2a86369
-T
-$src/components/Form/DependentData.js,3\0\30d664534199756c4e4f08b75e85750b10c1396f
 E
 src/pages/customer.js,1\2\12ef72009dafa101d44cb8ce751f4adc3f0dd397
 S

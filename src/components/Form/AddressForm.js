@@ -1,8 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import FieldForm from "./FieldForm";
 import TableAddress from "./TableAddress";
-import axios from "axios";
-import AddressTypeModal from "./AddressTypeModal";
 
 const AddressForm = ({addressesList, setAddressesList}) => {
 
