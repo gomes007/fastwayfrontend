@@ -82,11 +82,25 @@ function Employee() {
     const router = useRouter();
     const { query } = router;
 
+
+    const formatDateArray = dateArray => {
+        if (!Array.isArray(dateArray)) {
+            return "";
+        }
+        return `${dateArray[0]}-${dateArray[1].toString().padStart(2, '0')}-${dateArray[2].toString().padStart(2, '0')}`;
+    };
+
+
     useEffect(() => {
         if (query.id) {
             axiosInstance.get(`employees/${query.id}`)
                 .then(res => {
                     const employeeData = res.data;
+
+
+                    employeeData.birthDate = formatDateArray(employeeData.birthDate);
+                    employeeData.hireDate = formatDateArray(employeeData.hireDate);
+
 
                     setEmployee(employeeData);
 
@@ -162,9 +176,14 @@ function Employee() {
         console.log("foto",e.target.files[0])
     };
 
-    const handleFilesChange = (e) => {
-        setFiles(Array.from(e.target.files));
+    const handleFilesChange = (input) => {
+        if (input instanceof Event) {
+            setFiles(Array.from(input.target.files));
+        } else if (Array.isArray(input)) {
+            setFiles(input);
+        }
     };
+
 
 
     const handlePositionChange = (e) => {
@@ -181,8 +200,6 @@ function Employee() {
             }
         }));
     };
-
-
 
 
     const handleAddressChange = (e) => {
@@ -269,12 +286,28 @@ function Employee() {
     //end of logic dependents datatable
 
 
+    const parseDateStringToArray = dateStr => {
+        if (typeof dateStr !== 'string') {
+            return null;
+        }
+        const parts = dateStr.split('-');
+        if (parts.length !== 3) {
+            return null;
+        }
+        return parts.map(part => parseInt(part, 10));
+    };
 
-    const saveEmployee = (e) => {
+
+
+    const createEmployee = (e) => {
         const employeeData = {...employee, address: address};
 
-        console.log("Estado atual de profilePic: ", profilePic); // Adicionado
-        console.log("Estado atual de files: ", files); // Adicionado
+        employeeData.birthDate = parseDateStringToArray(employeeData.birthDate);
+        employeeData.hireDate = parseDateStringToArray(employeeData.hireDate);
+        employeeData.dependents.forEach(dependent => {
+            dependent.birthDate = parseDateStringToArray(dependent.birthDate);
+        });
+
 
         EmployeeService.saveEmployee(employeeData, profilePic, files)
             .then(response => {
@@ -285,7 +318,33 @@ function Employee() {
             });
     };
 
+    const updateEmployee = () => {
+        const employeeData = {...employee, address: address};
 
+        employeeData.birthDate = parseDateStringToArray(employeeData.birthDate);
+        employeeData.hireDate = parseDateStringToArray(employeeData.hireDate);
+        employeeData.dependents.forEach(dependent => {
+            dependent.birthDate = parseDateStringToArray(dependent.birthDate);
+        });
+
+        EmployeeService.updateEmployee(query.id, employeeData, profilePic, files)
+            .then(response => {
+                console.log("Employee updated: ", response.data);
+            })
+            .catch(error => {
+                console.error("Error updating employee: ", error);
+            });
+    };
+
+
+    const saveEmployee = (e) => {
+        if (query.id) {
+            updateEmployee(e);
+            console.log('update', e)
+        } else {
+            createEmployee(e);
+        }
+    };
 
     return (
         <>
@@ -293,8 +352,7 @@ function Employee() {
                 title="Add Employee"
                 path={[
                     {name: "Home", link: "/"},
-                    {name: "Registry", link: "/registry"},
-                    {name: "Customer", link: "/registry/customer"}
+                    {name: "List", link: "/employeesList"}
                 ]}
             />
 
@@ -305,10 +363,13 @@ function Employee() {
                         content: (
                             <EmployeePersonalDataForm
                                 employee={employee}
+                                currentProfilePic={currentProfilePic}
+                                currentFiles={currentFiles}
                                 handleEmployeeChange={handleEmployeeChange}
                                 handleProfilePicChange={handleProfilePicChange}
                                 handleFilesChange={handleFilesChange}
                             />
+
                         )
                     },
                     {

@@ -48,6 +48,10 @@ const EmployeeService = {
 
     updateEmployee: function(id, employeeData, profilePic, files) {
         let formData = new FormData();
+        console.log(`Atualizando funcionário com ID: ${id}`);
+        console.log('Dados do Funcionário:', employeeData);
+        console.log('Foto do Perfil:', profilePic);
+        console.log('Arquivos:', files);
         formData.append('employee', new Blob([JSON.stringify(employeeData)], {
             type: 'application/json'
         }));
@@ -67,7 +71,10 @@ const EmployeeService = {
                 },
             })
             .then(response => response.data)
-            .catch(error => Promise.reject(error));
+            .catch(error => {
+                console.error("Erro do Axios:", error.response.data);
+                return Promise.reject(error);
+            });
     },
 
 

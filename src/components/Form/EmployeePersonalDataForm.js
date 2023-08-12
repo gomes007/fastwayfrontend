@@ -1,10 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import FieldForm from './FieldForm';
 
-const EmployeePersonalDataForm = ({ employee, handleEmployeeChange, handleProfilePicChange, handleFilesChange }) => {
+const EmployeePersonalDataForm = (
+    { employee, handleEmployeeChange,
+        handleProfilePicChange, handleFilesChange,
+        currentProfilePic, currentFiles}) => {
 
     const [profilePicPreview, setProfilePicPreview] = useState(null);
     const [filesPreviews, setFilesPreviews] = useState([]);
+    const [files, setFiles] = useState([]);
+
 
     useEffect(() => {
         return () => {
@@ -23,6 +28,7 @@ const EmployeePersonalDataForm = ({ employee, handleEmployeeChange, handleProfil
     }
 
     const handleProfilePicRemove = () => {
+        console.log("Removing profile picture...");
         handleProfilePicChange(null);
         if (profilePicPreview) {
             URL.revokeObjectURL(profilePicPreview);
@@ -42,10 +48,18 @@ const EmployeePersonalDataForm = ({ employee, handleEmployeeChange, handleProfil
 
 
     const handleFileRemove = (index) => {
-        handleFilesChange(null, index);
+        console.log(`Removing file at index ${index}...`);
+        if (Array.isArray(files)) {
+            const updatedFiles = files.filter((_, i) => i !== index);
+            handleFilesChange(updatedFiles);
+        } else {
+            console.warn('files is not an array');
+        }
         URL.revokeObjectURL(filesPreviews[index]);
         setFilesPreviews(prev => prev.filter((_, i) => i !== index));
-    }
+    };
+
+
 
 
     return (
@@ -153,6 +167,12 @@ const EmployeePersonalDataForm = ({ employee, handleEmployeeChange, handleProfil
                             name="profilePic"
                             onChange={handleProfilePicPreview}
                         />
+                        {currentProfilePic && (
+                            <div>
+                                <img src={`http://localhost:8080/files/${currentProfilePic.photoName}`} alt="Profile pic" style={{ width: '100px', height: '100px' }}/>
+                                <button onClick={handleProfilePicRemove}>Remove</button>
+                            </div>
+                        )}
                         {profilePicPreview && (
                             <img src={profilePicPreview} alt="Profile Preview" style={{ width: '100px', height: '100px' }}/>
                         )}
@@ -167,7 +187,32 @@ const EmployeePersonalDataForm = ({ employee, handleEmployeeChange, handleProfil
                             onRemove={handleFileRemove}
                             previews={filesPreviews}
                         />
+                        {currentFiles && currentFiles.filter(file =>
+                            file.photoName.toLowerCase().endsWith('.jpg') ||
+                            file.photoName.toLowerCase().endsWith('.png') ||
+                            file.photoName.toLowerCase().endsWith('.gif')
+                        ).map((img, index) => (
+                            <div key={index}>
+                                <img
+                                    src={`http://localhost:8080/files/${img.photoName}`}
+                                    alt={img.photoName}
+                                    style={{width: '80px', height: '80px'}}
+                                />
+                                <button onClick={() => handleFileRemove(index)}>Remove</button>
+                            </div>
+                        ))}
+                        {currentFiles && currentFiles.filter(file =>
+                            !file.photoName.toLowerCase().endsWith('.jpg') &&
+                            !file.photoName.toLowerCase().endsWith('.png') &&
+                            !file.photoName.toLowerCase().endsWith('.gif')
+                        ).map((file, index) => (
+                            <div key={index}>
+                                <a href={`http://localhost:8080/files/${file.photoName}`} target="_blank" rel="noopener noreferrer">{file.photoName}</a>
+                                <button onClick={() => handleFileRemove(index)}>Remove</button>
+                            </div>
+                        ))}
                     </div>
+
                 </div>
             </div>
             <div className="line_03">

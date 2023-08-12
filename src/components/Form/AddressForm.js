@@ -14,50 +14,17 @@ const AddressForm = ({addressesList, setAddressesList}) => {
         city: '',
         state: '',
         complement: '',
-        addressTypeId: ''
     });
 
-    const [addressType, setAddressType] = useState([]);
+
     const [modalShow, setModalShow] = useState(false);
-
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const token = user ? user.token : null;
-
-        if (!token) {
-            console.log("No token found");
-            return;
-        }
-
-        const config = {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        };
-
-        axios.get('http://localhost:8080/address/types', config)
-            .then(res => {
-                setAddressType(res.data);
-            })
-            .catch(error => console.error(error));
-    }, []);
-
-
-
 
     const handleAddress = (e) => {
         setAddress({
             ...address,
             [e.target.name]: e.target.value
         })
-        console.log(address)
-        if (e.target.name === "addressTypeId") {
-            setAddress({
-                ...address,
-                addressTypeId: e.target.value
-            });
-        }
-
+        console.log(address);
 
         if (e.target.name === 'zipCode' && e.target.value.length === 8) {
             fetch(`https://viacep.com.br/ws/${e.target.value}/json/`)
@@ -75,23 +42,19 @@ const AddressForm = ({addressesList, setAddressesList}) => {
         }
     }
 
-    const handleAddressTypeCreated = (data) => {
-        setAddressType((prevAddressType) => [...prevAddressType, data]);
-        console.log(data);
-    };
 
 
     const handleAddAddress = () => {
         let newAddresses = addressesList;
-        let selectedAddressType = addressType.find(type => type.id === parseInt(address.addressTypeId));
-        delete address.addressTypeId
+
+
         if (address.index !== undefined) {
-            newAddresses[address.index] = {...address, addressType: selectedAddressType}; //to edit if exist
+            newAddresses[address.index] = {...address}; //to edit if exist
         } else {
             if (newAddresses !== undefined && newAddresses.length > 0) {
-                newAddresses.push({...address, addressType: selectedAddressType});
+                newAddresses.push({...address});
             } else {
-                newAddresses = [{...address, addressType: selectedAddressType}]
+                newAddresses = [{...address}]
             }
         }
 
@@ -105,7 +68,6 @@ const AddressForm = ({addressesList, setAddressesList}) => {
             city: '',
             state: '',
             complement: '',
-            addressTypeId: ''
         });
     }
 
@@ -114,11 +76,6 @@ const AddressForm = ({addressesList, setAddressesList}) => {
     return (
         <>
 
-            <AddressTypeModal
-                isOpen={modalShow}
-                onRequestClose={() => setModalShow(false)}
-                onAddressTypeCreated={handleAddressTypeCreated}
-            />
             <div className="row">
                 <div className="col-md-12">
                     <h3>
@@ -131,35 +88,8 @@ const AddressForm = ({addressesList, setAddressesList}) => {
             <div className="address-form">
                 <div className="row">
                     <>
-                        <div className="col-md-3">
-                            <label htmlFor="addressType">Address Type:</label>
-                            <select
-                                className="form-select"
-                                name="addressTypeId"
-                                id="addressType"
-                                onChange={handleAddress}
-                            >
-                                <option value="">Select an address type</option>
-                                {addressType &&
-                                    addressType.length > 0 &&
-                                    addressType.map((addressType, index) => (
-                                        <option
-                                            key={addressType.id}
-                                            value={addressType.id}
-                                            disabled={index === addressType.length - 1}
-                                        >
-                                            {addressType.label}
-                                        </option>
-                                    ))}
-                            </select>
-                            <button
-                                className="btn btn-link"
-                                disabled={false}
-                                onClick={() => setModalShow(true)}
-                            >
-                                Add new address type
-                            </button>
-                        </div>
+
+
 
                         <div className="col-md-2">
                             <FieldForm
@@ -250,7 +180,6 @@ const AddressForm = ({addressesList, setAddressesList}) => {
                 addresses={addressesList}
                 setEditAddress={setAddress}
                 setDeleteAddress={setAddressesList}
-                addressType={addressType}
             />
         </>
     )

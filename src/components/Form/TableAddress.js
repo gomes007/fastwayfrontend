@@ -30,7 +30,6 @@ const TableAddress = ({addresses, setEditAddress, setDeleteAddress}) => {
                 <thead>
                 <tr>
                     <th scope="col">ZipCode</th>
-                    <th scope="col">Address Type</th>
                     <th scope="col">Street</th>
                     <th scope="col">Number</th>
                     <th scope="col">Complement</th>
@@ -46,7 +45,6 @@ const TableAddress = ({addresses, setEditAddress, setDeleteAddress}) => {
                         return (
                             <tr key={index}>
                                 <td>{address.zipCode}</td>
-                                <td>{address.addressType ? address.addressType.label : ''}</td>
                                 <td>{address.street}</td>
                                 <td>{address.number}</td>
                                 <td>{address.complement}</td>
@@ -55,7 +53,7 @@ const TableAddress = ({addresses, setEditAddress, setDeleteAddress}) => {
                                 <td>{address.state}</td>
                                 <td className='tableButtons'>
                                     <button className='btn btn-outline-dark'
-                                            onClick={() => setEditAddress({...address, index, addressTypeId: address.addressType.id})}>
+                                            onClick={() => setEditAddress({...address, index})}>
                                         <i className="fa-solid fa-pen"></i>
                                     </button>
                                     <button className='btn btn-outline-danger mt-2'
