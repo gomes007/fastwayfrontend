@@ -145,8 +145,8 @@ function ProvidersList() {
             </div>
 
 
-            <div className='form-content mt-3'>
-                <table className="table">
+            <div className='form-content mt-3 table-responsive'>
+                <table className="table table-sm">
                     <thead>
                     <tr>
                         <th>Name</th>
@@ -168,12 +168,12 @@ function ProvidersList() {
                             <td>
                                 <button onClick={() => {
                                     handleEdit(provider.id)
-                                }} className="btn btn-outline-dark">
+                                }} style={{border: 'none'}} className="btn btn-outline-dark mr-15px">
                                     <i className="fa-solid fa-pen"></i>
                                 </button>
                                 <button onClick={() => {
                                     handleDeleteProvider(provider.id)
-                                }} className="btn btn-outline-danger mt-2">
+                                }} style={{border: 'none'}} className="btn btn-outline-danger">
                                     <i className="fa-solid fa-trash-can"></i>
                                 </button>
                             </td>

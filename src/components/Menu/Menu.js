@@ -103,6 +103,14 @@ const Menu = ({children}) => {
                         </a>
                     </li>
 
+                    <li>
+                        <a className="link-menu" href="/product">
+                            <i className="fa-solid fa-user-plus"></i>
+                            <span>Product</span>
+                        </a>
+                    </li>
+
+
                 </ul>
 
                 <div>

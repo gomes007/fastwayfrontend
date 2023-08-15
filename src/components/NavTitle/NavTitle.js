@@ -1,7 +1,14 @@
-const NavTitle = ({title, path}) => {
+const NavTitle = ({icon, title, path}) => {
+    const iconStyle = {
+        marginRight: "10px"
+    };
+
     return (
         <div className="nav-title">
-            <h1>{title}</h1>
+            <h1>
+                <span style={iconStyle}>{icon}</span>
+                {title}
+            </h1>
             <div className="path">
                 <nav>
                     <ol className="breadcrumb">
@@ -20,5 +27,6 @@ const NavTitle = ({title, path}) => {
         </div>
     )
 }
+
 
 export default NavTitle
