@@ -9,11 +9,11 @@ const ProductService = {
             type: 'application/json'
         }));
 
-
-
-        Array.from(files).forEach(file => {
-            formData.append('files', file);
-        });
+        if (files) {
+            Array.from(files).forEach(file => {
+                formData.append('files', file);
+            });
+        }
 
         return axiosInstance
             .post('products', formData, {

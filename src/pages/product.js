@@ -12,6 +12,8 @@ import Select from 'react-select';
 
 import ProductService from "@/services/productService";
 import serviceProvider from "@/services/providerService";
+import Swal from "sweetalert2";
+import {MdDeleteForever} from "react-icons/md";
 
 
 function Product() {
@@ -79,24 +81,32 @@ function Product() {
         setInventory({...inventory, [e.target.name]: e.target.value});
     }
 
+    const isValidFileExtension = (filename) => {
+        const validExtensions = ['jpg', 'jpeg', 'gif', 'png'];
+        const fileExtension = filename.split('.').pop().toLowerCase();
+        return validExtensions.includes(fileExtension);
+    };
+
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
         let validFiles = [];
         let errorMessages = [];
 
         files.forEach(file => {
-            const fileExtension = file.name.split('.').pop().toLowerCase();
-            const validExtensions = ['jpg', 'jpeg', 'gif', 'png'];
-
-            if (!validExtensions.includes(fileExtension)) {
-                errorMessages.push(`Formato do arquivo ${file.name} não suportado, envie imagens em formato jpg, jpeg, gif ou png.`);
+            if (!isValidFileExtension(file.name)) {
+                errorMessages.push(`Formato do arquivo ${file.name} não suportado. Por favor, envie imagens em formato jpg, jpeg, gif ou png.`);
             } else {
                 validFiles.push(file);
             }
         });
 
         if (errorMessages.length > 0) {
-            alert(errorMessages.join('\n'));
+            Swal.fire({
+                title: 'Erro ao carregar arquivo(s)',
+                text: errorMessages.join('\n'),
+                width: '300px',
+                height: '200px'
+            });
             return;
         }
 
@@ -106,37 +116,30 @@ function Product() {
         setPreviews([...previews, ...newPreviews]);
     };
 
-    const removeFile = (index) => {
-        const newFiles = [...uploadedFiles];
-        newFiles.splice(index, 1);
-        setUploadedFiles(newFiles);
 
-        const newPreviews = [...previews];
-        newPreviews.splice(index, 1);
-        setPreviews(newPreviews);
-    };
+    const removeFile = (index) => {
+        setUploadedFiles(files => files.filter((file, i) => i !== index));
+        setPreviews(files => files.filter((file, i) => i !== index));
+    }
 
     //find providers
     const [providers, setProviders] = useState([]);
     const [input, setInput] = useState('');
     const [filteredProviders, setFilteredProviders] = useState([]);
-    const [selectedProvider, setSelectedProvider] = useState(null);
+    const [selectedProviders, setSelectedProviders] = useState([]);
 
 
     useEffect(() => {
         async function fetchProviders() {
             const data = await serviceProvider.getAllProviders();
-            console.log('Providers:', data);
             if (data && data.items) {
                 setProviders(data.items);
             } else {
                 setProviders([]);
             }
         }
-
         fetchProviders();
     }, []);
-
 
     useEffect(() => {
         if (input) {
@@ -155,8 +158,43 @@ function Product() {
         label: provider.generalInformation.name
     }));
 
+    const removeProvider = (idToRemove) => {
+        setSelectedProviders(prev => prev.filter(provider => provider.id !== idToRemove));
+    };
+
     //end find providers
 
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const data = {
+            ...product,
+            commission: parseFloat(product.commission),
+            details: { ...details },
+            price: { ...price },
+            inventory: { ...inventory },
+            providers: selectedProviders.map(provider => ({ id: provider.id }))
+        };
+
+        const response = await ProductService.saveProduct(data, uploadedFiles);
+
+        if (response) {
+            await Swal.fire({
+                title: 'Produto cadastrado com sucesso!',
+                icon: 'success',
+                width: '300px',
+                height: '200px'
+            });
+        } else {
+            await Swal.fire({
+                title: 'Erro ao cadastrar produto!',
+                icon: 'error',
+                width: '300px',
+                height: '200px'
+            });
+        }
+    }
 
 
 
@@ -177,8 +215,10 @@ function Product() {
                         label: "General Data",
                         content: (
                             <div className="tab-content">
+
+                                {/* Primeira linha */}
                                 <div className="row">
-                                    <div className="col-md-6">
+                                    <div className="col-4">
                                         <FieldForm
                                             label="Product Name"
                                             type="text"
@@ -187,7 +227,7 @@ function Product() {
                                             onChange={(e) => handleProduct(e)}
                                         />
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-4">
                                         <FieldForm
                                             label="Bar Code"
                                             type="text"
@@ -196,7 +236,7 @@ function Product() {
                                             onChange={(e) => handleProduct(e)}
                                         />
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-4">
                                         <FieldForm
                                             label="Commission (%)"
                                             type="number"
@@ -207,50 +247,52 @@ function Product() {
                                     </div>
                                 </div>
 
+                                {/* Segunda linha */}
                                 <div className="row">
-                                    <div className="col-md-6">
+
+                                    {/* Primeira coluna da segunda linha */}
+                                    <div className="col-6">
                                         <div className="card">
                                             <div className="card-header">
-                                                <GiWeightScale style={{fontSize: "20px", marginRight: "5px"}}/>
+                                                <GiWeightScale style={{ fontSize: "20px", marginRight: "5px" }} />
                                                 Weight and Dimensions
                                             </div>
                                             <div className="card-body">
                                                 <FieldForm
-                                                    label="Weight"
+                                                    label="Weight (kg)"
                                                     type="text"
                                                     name="weight"
                                                     value={product.weight}
                                                     onChange={(e) => handleProduct(e)}
                                                 />
                                                 <FieldForm
-                                                    label="Height"
+                                                    label="Height (m)"
                                                     type="text"
                                                     name="height"
                                                     value={product.height}
                                                     onChange={(e) => handleProduct(e)}
                                                 />
                                                 <FieldForm
-                                                    label="Length"
+                                                    label="Length (m)"
                                                     type="text"
                                                     name="length"
                                                     value={product.length}
                                                     onChange={(e) => handleProduct(e)}
                                                 />
-
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="col-md-6">
-
-                                        <div className="card">
+                                    {/* Segunda coluna da segunda linha */}
+                                    <div className="col-6">
+                                        <div className="card mb-2">
                                             <div className="card-header">
-                                                <BsClipboard2CheckFill style={{fontSize: "20px", marginRight: "5px"}}/>
+                                                <BsClipboard2CheckFill style={{ fontSize: "20px", marginRight: "5px" }} />
                                                 Details
                                             </div>
-                                            <div className="card-body mb-2">
+                                            <div className="card-body">
                                                 <div className="row">
-                                                    <div className="col-md-4">
+                                                    <div className="col-4">
                                                         <FieldForm
                                                             label="Enabled"
                                                             type="checkbox"
@@ -259,7 +301,7 @@ function Product() {
                                                             onChange={(e) => handleDetails(e)}
                                                         />
                                                     </div>
-                                                    <div className="col-md-4">
+                                                    <div className="col-4">
                                                         <FieldForm
                                                             label="Sold Separately"
                                                             type="checkbox"
@@ -268,7 +310,7 @@ function Product() {
                                                             onChange={(e) => handleDetails(e)}
                                                         />
                                                     </div>
-                                                    <div className="col-md-4">
+                                                    <div className="col-4">
                                                         <FieldForm
                                                             label="Enabled on PDV"
                                                             type="checkbox"
@@ -280,7 +322,6 @@ function Product() {
                                                 </div>
                                             </div>
                                         </div>
-
                                         <FieldForm
                                             label="Description"
                                             type="textarea"
@@ -289,10 +330,11 @@ function Product() {
                                             value={product.description}
                                             onChange={(e) => handleProduct(e)}
                                         />
-
                                     </div>
                                 </div>
                             </div>
+
+
                         )
                     },
                     {
@@ -307,7 +349,7 @@ function Product() {
                                                 Price and Cost
                                             </div>
                                             <div className="card-body">
-                                                <div className="row"> {/* Added a row wrapper */}
+                                                <div className="row">
                                                     <div className="col-md-6">
                                                         <FieldForm
                                                             label="Unit Cost ($)"
@@ -368,9 +410,9 @@ function Product() {
                                                 <div className="row">
                                                     <div className="col-md-6">
                                                         <FieldForm
-                                                            label="Stock"
+                                                            label="Current Stock"
                                                             type="number"
-                                                            name="stock"
+                                                            name="currentQuantity"
                                                             value={inventory.currentQuantity}
                                                             onChange={(e) => handleInventory(e)}
                                                         />
@@ -379,7 +421,7 @@ function Product() {
                                                         <FieldForm
                                                             label="Minimum Stock"
                                                             type="number"
-                                                            name="minimumStock"
+                                                            name="minQuantity"
                                                             value={inventory.minQuantity}
                                                             onChange={(e) => handleInventory(e)}
                                                         />
@@ -388,7 +430,7 @@ function Product() {
                                                         <FieldForm
                                                             label="Maximum Stock"
                                                             type="number"
-                                                            name="maximumStock"
+                                                            name="maxQuantity"
                                                             value={inventory.maxQuantity}
                                                             onChange={(e) => handleInventory(e)}
                                                         />
@@ -404,7 +446,7 @@ function Product() {
                     {
                         label: "Pictures",
                         content: (
-                            <div className="tab-content">
+                            <div className="files">
                                 <FieldForm
                                     type="file"
                                     name="productFiles"
@@ -426,22 +468,40 @@ function Product() {
                                     onInputChange={value => setInput(value)}
                                     onChange={option => {
                                         const selected = providers.find(provider => provider.id === option.value);
-                                        setSelectedProvider(selected);
+                                        if (selected && !selectedProviders.some(sp => sp.id === selected.id)) {
+                                            setSelectedProviders(prev => [...prev, selected]);
+                                        }
                                     }}
                                     placeholder="Type to search for providers..."
                                 />
-                                {selectedProvider && (
-                                    <div>
-                                        <h3>Details of {selectedProvider.generalInformation.name}</h3>
-                                        <p>Name: {selectedProvider.generalInformation.name}</p>
+                                {selectedProviders.map(provider => (
+                                    <div key={provider.id} className="d-flex align-items-center mt-5">
+                                        <h3 className='form-control mb-0 mr-2'>{provider.generalInformation.name}</h3>
+                                        <MdDeleteForever style={{ fontSize: "50px", color: "#dc3545"}}
+                                                         onClick={() => removeProvider(provider.id)}
+                                        />
                                     </div>
-                                )}
+                                ))}
                             </div>
+
                         )
                     }
                 ]}
             />
+
+            <div className="row">
+                <div className="col-md-12">
+                    <div className="float-right">
+                        <button onClick={handleSubmit} type="button" className="btn btn-success">
+                            <i className="fa fa-save mr-12px"></i>
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </>
+
     );
 }
 
