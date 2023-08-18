@@ -1,0 +1,63 @@
+.tab-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.img {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+}
+
+.img img {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+}
+
+.file-upload-label.remove-img-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 2px 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.file-upload-label.remove-img-button:hover {
+    background-color: rgba(255, 0, 0, 0.7);
+}
+
+
+.provider-selector {
+    position: relative;
+    width: 150px;  /* ou o tamanho que preferir */
+}
+
+.provider-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 150px; /* altura máxima para a lista */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    z-index: 10;
+}
+
+.provider-dropdown li {
+    padding: 8px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.provider-dropdown li:hover {
+    background-color: #f5f5f5;
+}

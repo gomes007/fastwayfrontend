@@ -41,7 +41,7 @@ const providerService = {
         }
     },
 
-    async getAllProviders(page = 1, size = 10) {
+    async getAllProviders(page = 1, size = 12) {
         try {
             const response = await axiosInstance.get(`/providers?page=${page}&size=${size}`);
             return response.data;

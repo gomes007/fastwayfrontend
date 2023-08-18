@@ -3,8 +3,6 @@
 	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
 C
 .vscode/launch.json,f\1\f14cb12fa7462cdba1e6e6e4b499bce722fe22ba
-F
-src/pages/_document.js,3\a\3a1019c5cd4d42aaa4f13e18797f79b5f43365a2
 B
 src/pages/index.js,c\1\c16ef34da304c300e7b6c91b3a47fea77c278c7a
 B
@@ -43,8 +41,6 @@ Q.idea/sonarlint/securityhotspotstore/d/d/dd3e4fa9ad2637b54c610af56cb82db9b46c08
 Q.idea/sonarlint/securityhotspotstore/c/1/c16ef34da304c300e7b6c91b3a47fea77c278c7a,3\5\35e7a24da5cb6a878aefe77a394f89ec577ebeef
 w
 G.idea/sonarlint/issuestore/3/a/3a1019c5cd4d42aaa4f13e18797f79b5f43365a2,2\5\254bac227806ae980cfb0690334a59db0b4cfabf
-G
-src/pages/permission.js,5\5\55f63d923486d3e230a2fd10489b77491a2b3fbf
 A
 src/pages/role.js,6\c\6c22c2f212f3a93e8f497960313d26802f145973
 R
@@ -141,8 +137,6 @@ w
 G.idea/sonarlint/issuestore/5/c/5ca3f12e97385cc178be5761fe24bf755bc59a99,f\e\fe027c063f83df904a93ee5e649e151884cac61c
 w
 G.idea/sonarlint/issuestore/b/4/b4a0b63ce8560bbc5de0f9995c20cc861dc2adb3,b\0\b04578cffb47b1e57970601a0cacef6081245859
-Q
-!src/services/departmentService.js,f\f\ff2679349eca26eb071d815311ce7866d048c1a4
 Å
 Q.idea/sonarlint/securityhotspotstore/6/9/69bd61b3318a5556b9b2c2cb0288673681b499f0,0\f\0fc66a28c241d59354403b4e1547a2f115ccce52
 Å
@@ -159,8 +153,6 @@ w
 G.idea/sonarlint/issuestore/e/3/e392dc55497968e0d542481af8dc946091d240a4,4\e\4eb512245713914a093ffd8fe5eb40d1c64ded38
 Å
 Q.idea/sonarlint/securityhotspotstore/f/2/f218480b0f5f1e02ca0582fcf60424e2473158fa,1\e\1e8e49abb662dd428ecbb30a4e64059ac5dbb967
-U
-%src/services/positionSalaryService.js,9\c\9cca46342af690d217b9e713bd7beb6c8307a1e0
 Å
 Q.idea/sonarlint/securityhotspotstore/6/c/6c22c2f212f3a93e8f497960313d26802f145973,d\1\d1df7c2ea945a156779f4d1a16cf69cd39f60060
 w
@@ -401,10 +393,6 @@ L
 src/services/axiosService.js,3\4\344ab8e9b10062f743c974dc3993343f6550419d
 M
 src/styles/Employee.style.css,b\3\b305f5325a32e4f77ea1c6d4f95a34a3ccd8f973
-I
-src/styles/Form.style.css,5\3\53c0188f3df052ead2054df03995972ecd270a2b
-O
-src/services/customerService.js,c\6\c6bc3bad45f8a2df884b14e4f347bebc8cc1ff1f
 K
 src/pages/forgotPassword.js,d\5\d5d4de3a37dde7188154d102b06bd441519f8293
 w
@@ -587,8 +575,6 @@ Q.idea/sonarlint/securityhotspotstore/2/b/2b8dfde369b36797e77154c3c5b4b003092fd4
 Q.idea/sonarlint/securityhotspotstore/7/4/740379a58684f625e9496a3972e85c5549771eaf,d\a\daa570a7d67ffeff0c60f6002f72a2acd97c2c7e
 Å
 Q.idea/sonarlint/securityhotspotstore/e/5/e5858c145921e6e3f6bb3f543790f6b01d74d0bb,f\8\f8ee6e9b4d28bb5cb33c56d8225a77ee2128f3b5
-O
-src/services/employeeService.js,0\a\0a4a8bd8029d7429ab947090fdd0743ced6fb856
 Å
 Q.idea/sonarlint/securityhotspotstore/a/e/ae139e6ba06e04197d6df242986ecd67a6d82d0e,1\7\1758199594cd5bb9b990b3fd3b24bd17c67d2616
 Å
@@ -885,8 +871,6 @@ Q.idea/sonarlint/securityhotspotstore/f/2/f235835ed945e2bdc599be5466a48e135a8818
 Q.idea/sonarlint/securityhotspotstore/f/b/fb1f8562394e43ea315ffce54b42b0d047b21214,7\5\7593e53eb6dda87b1530ba6dfb1c22e8c1db9c2a
 Å
 Q.idea/sonarlint/securityhotspotstore/f/a/fafdfa5c8f818cc00b093af08f9445e2672b6bf3,a\a\aa0b922b2704a2f1158303c020640e9f299b0b4f
-R
-"src/components/Form/AddressData.js,1\2\12387b616d770cbd9e5df8a7d1cc916a3858553f
 W
 'src/components/Form/AddressTypeModal.js,2\8\286c4ccb7a9621c3635ac41380229feecf3bff7a
 U

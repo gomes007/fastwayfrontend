@@ -71,7 +71,7 @@ const FieldForm = ({label, name, type, value, options, onChange, rows, error, on
                 </>
             ) : type === 'file' ? (
                 <>
-                    <div className="image-container form-control">
+                    <div className="tab-content">
                         {Array.isArray(previews) && previews.map((preview, index) => (
                             <div className="img" key={index}>
                                 {preview && <img src={preview} alt="Selected file" />}
@@ -84,7 +84,7 @@ const FieldForm = ({label, name, type, value, options, onChange, rows, error, on
                                 </label>
                             </div>
                         ))}
-                        <div className="file-actions">
+                        <div>
                             <input
                                 type="file"
                                 id={name}
