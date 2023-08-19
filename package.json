@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "debug": "set NODE_OPTIONS=--inspect && next dev",
+    "debug": "cross-env NODE_OPTIONS=--inspect next dev",
     "start": "next start",
     "lint": "next lint"
   },
@@ -24,5 +24,8 @@
     "react-router-dom": "^6.14.2",
     "react-select": "^5.7.4",
     "sweetalert2": "^11.6.16"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

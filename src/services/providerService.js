@@ -49,7 +49,26 @@ const providerService = {
             console.error("Provider Get Request failure: ", error.message);
             return [];
         }
+    },
+
+    async searchProvidersByName(query, page = 1, size = 10) {
+        try {
+            const response = await axiosInstance.get(`/providers/search`, {
+                params: {
+                    query: query,
+                    page: page,
+                    size: size
+                }
+            });
+            console.log("Search response:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Provider Search Request failure: ", error.message);
+            return [];
+        }
     }
+
+
 
 
 

@@ -127,36 +127,46 @@ function Product() {
     const [input, setInput] = useState('');
     const [filteredProviders, setFilteredProviders] = useState([]);
     const [selectedProviders, setSelectedProviders] = useState([]);
+    const [selectValue, setSelectValue] = useState(null);
 
+
+    async function fetchAllProviders(query) {
+        const data = await serviceProvider.searchProvidersByName(query);
+        return data.content || [];
+    }
 
     useEffect(() => {
         async function fetchProviders() {
-            const data = await serviceProvider.getAllProviders();
-            if (data && data.items) {
-                setProviders(data.items);
-            } else {
+            if (input.length < 1) {
                 setProviders([]);
+                return;
             }
+            const allProviders = await fetchAllProviders(input);
+            setProviders(allProviders);
         }
         fetchProviders();
-    }, []);
+        console.log("Current input:", input);
+    }, [input]);
+
 
     useEffect(() => {
         if (input) {
             const filtered = providers.filter(provider =>
                 provider.generalInformation && provider.generalInformation.name.toLowerCase().includes(input.toLowerCase())
             );
-            console.log('Filtered Providers:', filtered);
             setFilteredProviders(filtered);
         } else {
             setFilteredProviders([]);
         }
     }, [input, providers]);
 
+
     const options = providers.map(provider => ({
         value: provider.id,
         label: provider.generalInformation.name
     }));
+
+
 
     const removeProvider = (idToRemove) => {
         setSelectedProviders(prev => prev.filter(provider => provider.id !== idToRemove));
@@ -464,25 +474,34 @@ function Product() {
 
                             <div className="provider-selector">
                                 <Select
+                                    className="selector01"
+                                    value={selectValue}
+                                    isClearable
                                     options={options}
                                     onInputChange={value => setInput(value)}
                                     onChange={option => {
-                                        const selected = providers.find(provider => provider.id === option.value);
-                                        if (selected && !selectedProviders.some(sp => sp.id === selected.id)) {
-                                            setSelectedProviders(prev => [...prev, selected]);
+                                        if (option) {
+                                            const selected = providers.find(provider => provider.id === option.value);
+                                            if (selected && !selectedProviders.some(sp => sp.id === selected.id)) {
+                                                setSelectedProviders(prev => [...prev, selected]);
+                                            }
                                         }
+                                        setSelectValue(null);
+                                        setInput('');
                                     }}
                                     placeholder="Type to search for providers..."
                                 />
+
                                 {selectedProviders.map(provider => (
-                                    <div key={provider.id} className="d-flex align-items-center mt-5">
+                                    <div key={provider.id} className="d-flex">
                                         <h3 className='form-control mb-0 mr-2'>{provider.generalInformation.name}</h3>
-                                        <MdDeleteForever style={{ fontSize: "50px", color: "#dc3545"}}
+                                        <MdDeleteForever style={{ fontSize: "30px", color: "#dc3545"}}
                                                          onClick={() => removeProvider(provider.id)}
                                         />
                                     </div>
                                 ))}
                             </div>
+
 
                         )
                     }

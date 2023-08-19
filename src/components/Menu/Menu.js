@@ -4,7 +4,6 @@ import ItemMenu from "@/components/Menu/ItemMenu";
 import Navbar from "@/components/Navbar/Navbar";
 import {useRouter} from "next/router";
 import AuthService from "@/services/authService";
-import EmployeesList from "@/pages/employeesList";
 
 
 const Menu = ({children}) => {
@@ -107,6 +106,13 @@ const Menu = ({children}) => {
                         <a className="link-menu" href="/product">
                             <i className="fa-solid fa-user-plus"></i>
                             <span>Product</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a className="link-menu" href="/productList">
+                            <i className="fa-solid fa-user-plus"></i>
+                            <span>ProductList</span>
                         </a>
                     </li>
 

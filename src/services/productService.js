@@ -65,7 +65,7 @@ const ProductService = {
         }
     },
 
-    async getAllProducts(page = 1, size = 10) {
+    async getAllProductsPages(page = 1, size = 10) {
         try {
             const response = await axiosInstance.get(`/products?page=${page}&size=${size}`);
             return response.data;
@@ -73,7 +73,36 @@ const ProductService = {
             console.error("Product Get Request failure: ", error.message);
             return [];
         }
+    },
+
+    async searchProductsByName(query, page = 1, size = 10) {
+        try {
+            const response = await axiosInstance.get(`/products/searchProductsByName`, {
+                params: {
+                    query: query,
+                    page: page,
+                    size: size
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Product Search Request failure: ", error.message);
+            return [];
+        }
+    },
+
+    async getAllProducts() {
+        try {
+            const response = await axiosInstance.get('/products/findProducts');
+            return response.data;
+        } catch (error) {
+            console.error("Product Get All Request failure: ", error.message);
+            return { items: [] };
+        }
     }
+
+
+
 
 }
 

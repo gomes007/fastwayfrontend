@@ -45,6 +45,7 @@ function ProvidersList() {
     useEffect(() => {
         providerService.getAllProviders(currentPage + 1, itemsPerPage)
             .then(data => {
+                //debugger;
                 if (Array.isArray(data.items)) {
                     const filteredProviders = applyFilters(data.items);
                     setProviders(filteredProviders);

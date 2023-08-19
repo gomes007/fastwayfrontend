@@ -38,29 +38,92 @@
 
 
 .provider-selector {
-    position: relative;
-    width: 150px;  /* ou o tamanho que preferir */
-}
-
-.provider-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    max-height: 150px; /* altura máxima para a lista */
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    width: 100%;
+    max-width: 500px; /* Ajuste conforme necessário */
+    margin: 20px auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     background-color: #fff;
-    z-index: 10;
 }
 
-.provider-dropdown li {
-    padding: 8px;
+.provider-selector .selector01 {
+    width: 100%;
+}
+
+.provider-selector .d-flex {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.provider-selector .d-flex .form-control {
+    display: flex;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.provider-selector .d-flex:hover {
+    background-color: #f0f0f0;
+}
+
+.provider-selector .d-flex:hover .form-control {
+    color: #007bff;
+}
+
+.provider-selector .d-flex .form-control:focus {
+    box-shadow: none;
+}
+
+.provider-selector .d-flex .form-control:disabled,
+.provider-selector .d-flex .form-control[readonly] {
+    background-color: transparent;
+}
+
+.provider-selector .d-flex .form-control.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.provider-selector .d-flex svg {
     cursor: pointer;
-    list-style: none;
 }
 
-.provider-dropdown li:hover {
-    background-color: #f5f5f5;
+.provider-selector .d-flex svg:hover {
+    color: #c82333;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
