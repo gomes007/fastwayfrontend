@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useRouter} from "next/router";
 import productService from "@/services/productService";
 import NavTitle from "@/components/NavTitle/NavTitle";
+import FieldForm from "@/components/Form/FieldForm";
 
 function ProductsList() {
 
@@ -9,22 +10,8 @@ function ProductsList() {
 
     const [products, setProducts] = useState([]);
 
+
     const [nameFilter, setNameFilter] = useState('');
-
-    const applyFilters = (items) => {
-        let filteredProducts = items;
-
-        if (nameFilter) {
-            filteredProducts = filteredProducts.filter(product => product.productName.toLowerCase().includes(nameFilter.toLowerCase()));
-        }
-
-        return filteredProducts;
-    }
-
-    async function fetchProducts(query) {
-        const data = await productService.searchProductsByName(query);
-        return data.content || [];
-    }
 
 
     useEffect(() => {
@@ -40,6 +27,25 @@ function ProductsList() {
     }, []);
 
 
+    async function fetchProducts(query) {
+        const data = await productService.searchProductsByName(query);
+        return data.content || [];
+    }
+
+    useEffect(() => {
+        async function fetchFilteredProducts() {
+            if (nameFilter.length < 1) {
+                const data = await productService.getAllProducts();
+                setProducts(data.items);
+                return;
+            }
+            const filteredProducts = await fetchProducts(nameFilter);
+            setProducts(filteredProducts);
+        }
+        fetchFilteredProducts();
+    }, [nameFilter]);
+
+
     return (
         <>
             <NavTitle
@@ -53,7 +59,7 @@ function ProductsList() {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-12">
-                        <div className="card shadow mb-4 mt-3">
+                        <div className="card shadow mb-4 mt-">
                             <div className="card-header py-3">
                                 <div className="row">
                                     <div className="col-12 col-md-6">
@@ -64,16 +70,13 @@ function ProductsList() {
                             <div className="card-body">
                                 <div className="row">
                                     <div className="col-12 col-md-6">
-                                        <div className="form-group">
-                                            <label htmlFor="nameFilter">Name</label>
-                                            <input
-                                                className="form-control"
-                                                type="text"
-                                                id="nameFilter"
-                                                value={nameFilter}
-                                                onChange={event => setNameFilter(event.target.value)}
-                                            />
-                                        </div>
+                                        <FieldForm
+                                            label="Search by Name"
+                                            type="text"
+                                            name="nameFilter"
+                                            value={nameFilter}
+                                            onChange={e => setNameFilter(e.target.value)}
+                                        />
                                     </div>
                                 </div>
                                 <div className="row">
@@ -83,7 +86,8 @@ function ProductsList() {
                                             <tr>
                                                 <th>Name</th>
                                                 <th>Unit Cost</th>
-                                                <th>Picture</th>
+                                                <th>Sales Price</th>
+                                                <th>Provider</th>
                                                 <th>Actions</th>
                                             </tr>
                                             </thead>
@@ -93,6 +97,13 @@ function ProductsList() {
                                                     <td>{product.productName}</td>
                                                     <td>{product.price.unitCost}</td>
                                                     <td>{product.price.salePrice}</td>
+                                                    <td>
+                                                        {product.providers.map((provider, index) => (
+                                                            <span key={provider.id}>
+                                                                {provider.generalInformation.name}{index < product.providers.length - 1 ? ', ' : ''}
+                                                            </span>
+                                                        ))};
+                                                    </td>
                                                     <td>
                                                         <button
                                                             className="btn btn-sm btn-primary"
@@ -123,5 +134,6 @@ function ProductsList() {
         </>
     );
 }
+
 
 export default ProductsList;

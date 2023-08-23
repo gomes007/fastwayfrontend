@@ -43,10 +43,6 @@ A
 src/pages/role.js,6\c\6c22c2f212f3a93e8f497960313d26802f145973
 R
 "src/pages/resetPassword/[token].js,7\e\7e3c5db3196cf4253f80199c6969cf75cc4e095b
-K
-src/services/authContext.js,b\d\bdc4a4d6e42cb78948cfa80d25ad2cb0aec28078
-H
-src/services/withAuth.js,3\e\3e0af611b4ff91ef8c1738241ae1023e1c7705d7
 N
 src/components/Form/TabForm.js,1\3\13f552301473798284d1e28a6f9d4e712f5c6632
 w
@@ -383,8 +379,6 @@ Q.idea/sonarlint/securityhotspotstore/a/9/a9e608c7b8e1baffddf799185e0b660cdb92c8
 Q.idea/sonarlint/securityhotspotstore/4/e/4eb512245713914a093ffd8fe5eb40d1c64ded38,7\4\740379a58684f625e9496a3972e85c5549771eaf
 
 Q.idea/sonarlint/securityhotspotstore/d/2/d21640cbc0e453b2052035d5dd7e36003043a0a5,e\5\e5562e0b7ae350cc535fc7d7fb7633c038f02328
-L
-src/services/axiosService.js,3\4\344ab8e9b10062f743c974dc3993343f6550419d
 M
 src/styles/Employee.style.css,b\3\b305f5325a32e4f77ea1c6d4f95a34a3ccd8f973
 K
@@ -883,8 +877,6 @@ S
 #src/components/Form/TableAddress.js,5\c\5ca3f12e97385cc178be5761fe24bf755bc59a99
 S
 #src/components/NavTitle/NavTitle.js,4\0\4018f6113abb62fc3575b8f81cf90a82741c7208
-E
-src/pages/customer.js,1\2\12ef72009dafa101d44cb8ce751f4adc3f0dd397
 Q
 !src/services/departmentService.js,f\f\ff2679349eca26eb071d815311ce7866d048c1a4
 U
@@ -913,9 +905,27 @@ K
 src/pages/positionSalary.js,2\0\20c8c73bd23875986ad3cac75190ab5889cba375
 >
 next.config.js,8\1\811a6d5a2e04fadb44d8eec365f2fa8af5c4facf
-E
-src/pages/provider.js,b\0\b04edd05865430acdf89b3ba29dd064d8ee96b1f
-K
-src/services/authService.js,3\3\3315be405170635511599ef976b4cfd4b2f3d304
 =
 jsconfig.json,5\6\56f2d335ffa27c20b4ea310cf0214fa96f325894
+O
+src/services/employeeService.js,0\a\0a4a8bd8029d7429ab947090fdd0743ced6fb856
+J
+src/pages/employeesList.js,9\6\9684a899005f5976fb64f3db9d6202ce8b1501a7
+A
+package-lock.json,f\a\fa288d1472d29beccb489a676f68739ad365fc47
+K
+src/components/Menu/Menu.js,8\0\800084a3cfe832c797fd1f56310913f74a83aa84
+<
+package.json,7\0\7030d0b2f71b999ff89a343de08c414af32fc93a
+L
+src/styles/product.style.css,d\d\ddcad17630924222ac1ceccaae28b7a1c3f8b6a5
+J
+src/pages/providersList.js,c\f\cff27264b12eef4e11a8166a050def9014780b17
+K
+src/services/authContext.js,b\d\bdc4a4d6e42cb78948cfa80d25ad2cb0aec28078
+K
+src/services/authService.js,3\3\3315be405170635511599ef976b4cfd4b2f3d304
+L
+src/services/axiosService.js,3\4\344ab8e9b10062f743c974dc3993343f6550419d
+E
+src/pages/customer.js,1\2\12ef72009dafa101d44cb8ce751f4adc3f0dd397

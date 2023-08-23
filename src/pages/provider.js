@@ -76,7 +76,6 @@ function Provider() {
     };
 
 
-
     return (
         <>
             <NavTitle
