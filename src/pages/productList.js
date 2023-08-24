@@ -3,47 +3,64 @@ import {useRouter} from "next/router";
 import productService from "@/services/productService";
 import NavTitle from "@/components/NavTitle/NavTitle";
 import FieldForm from "@/components/Form/FieldForm";
+import providerService from "@/services/providerService";
+
 
 function ProductsList() {
 
     const router = useRouter();
 
     const [products, setProducts] = useState([]);
-
-
+    const [providers, setProviders] = useState([]);
     const [nameFilter, setNameFilter] = useState('');
+    const [providerFilter, setProviderFilter] = useState('');
 
+    const fetchAllProducts = async () => {
+        try {
+            const { items } = await productService.getAllProducts();
+            return items || [];
+        } catch (error) {
+            console.error('Error retrieving all products:', error);
+            return [];
+        }
+    };
+
+    const fetchProducts = async () => {
+        let fetchedProducts = await fetchAllProducts();
+
+        if (nameFilter) {
+            const { content } = await productService.searchProductsByName(nameFilter);
+            fetchedProducts = content || [];
+        }
+
+        if (providerFilter) {
+            fetchedProducts = fetchedProducts.filter(product =>
+                product.providers.some(provider =>
+                    provider.generalInformation.name.includes(providerFilter)
+                )
+            );
+        }
+
+        setProducts(fetchedProducts);
+    };
 
     useEffect(() => {
-        productService.getAllProducts()
-            .then(res => {
-                if (res && res.items) {
-                    setProducts(res.items);
-                }
-            })
-            .catch(error => {
-                console.error("Error retrieving products: ", error);
-            });
+        fetchAllProducts().then((allProducts) => {
+            setProducts(allProducts);
+
+            const allProviders = allProducts.flatMap((product) => product.providers);
+            const uniqueProviders = Array.from(new Set(allProviders.map((provider) => provider.id)))
+                .map((id) => allProviders.find((provider) => provider.id === id));
+
+            setProviders(uniqueProviders);
+        });
     }, []);
 
-
-    async function fetchProducts(query) {
-        const data = await productService.searchProductsByName(query);
-        return data.content || [];
-    }
-
     useEffect(() => {
-        async function fetchFilteredProducts() {
-            if (nameFilter.length < 1) {
-                const data = await productService.getAllProducts();
-                setProducts(data.items);
-                return;
-            }
-            const filteredProducts = await fetchProducts(nameFilter);
-            setProducts(filteredProducts);
-        }
-        fetchFilteredProducts();
-    }, [nameFilter]);
+        fetchProducts();
+    }, [nameFilter, providerFilter]);
+
+
 
 
     return (
@@ -77,6 +94,22 @@ function ProductsList() {
                                             value={nameFilter}
                                             onChange={e => setNameFilter(e.target.value)}
                                         />
+                                    </div>
+                                    <div className="col-12 col-md-6">
+                                        <label htmlFor="providerFilter">Search by Provider</label>
+                                        <select
+                                            id="providerFilter"
+                                            name="providerFilter"
+                                            value={providerFilter}
+                                            onChange={e => setProviderFilter(e.target.value)}
+                                        >
+                                            <option value="">-- Select Provider --</option>
+                                            {providers.map(provider => (
+                                                <option key={provider.id} value={provider.generalInformation.name}>
+                                                    {provider.generalInformation.name}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
                                 <div className="row">
