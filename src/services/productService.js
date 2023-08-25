@@ -91,6 +91,27 @@ const ProductService = {
         }
     },
 
+    async searchProductsByProviderName(query, page = 1, size = 10) {
+        try {
+            const response = await axiosInstance.get(`/products/searchProductsByProviderName`, {
+                params: {
+                    query: query,
+                    page: page,
+                    size: size
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Product Search Request failure: ", error.message);
+            return [];
+        }
+    },
+
+
+
+
+
+
     async getAllProducts() {
         try {
             const response = await axiosInstance.get('/products/findProducts');

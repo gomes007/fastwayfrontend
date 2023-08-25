@@ -3,7 +3,6 @@ import {useRouter} from "next/router";
 import productService from "@/services/productService";
 import NavTitle from "@/components/NavTitle/NavTitle";
 import FieldForm from "@/components/Form/FieldForm";
-import providerService from "@/services/providerService";
 
 
 function ProductsList() {
@@ -12,8 +11,11 @@ function ProductsList() {
 
     const [products, setProducts] = useState([]);
     const [providers, setProviders] = useState([]);
+
     const [nameFilter, setNameFilter] = useState('');
     const [providerFilter, setProviderFilter] = useState('');
+
+
 
     const fetchAllProducts = async () => {
         try {
@@ -34,11 +36,8 @@ function ProductsList() {
         }
 
         if (providerFilter) {
-            fetchedProducts = fetchedProducts.filter(product =>
-                product.providers.some(provider =>
-                    provider.generalInformation.name.includes(providerFilter)
-                )
-            );
+            const { content } = await productService.searchProductsByProviderName(providerFilter);
+            fetchedProducts = content || [];
         }
 
         setProducts(fetchedProducts);
@@ -76,7 +75,7 @@ function ProductsList() {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-12">
-                        <div className="card shadow mb-4 mt-">
+                        <div className="card shadow mb-4 mt-3">
                             <div className="card-header py-3">
                                 <div className="row">
                                     <div className="col-12 col-md-6">
