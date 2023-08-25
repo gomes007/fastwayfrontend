@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useRouter} from "next/router";
 import productService from "@/services/productService";
 import NavTitle from "@/components/NavTitle/NavTitle";
@@ -16,48 +16,32 @@ function ProductsList() {
     const [providerFilter, setProviderFilter] = useState('');
 
 
-
-    const fetchAllProducts = async () => {
-        try {
-            const { items } = await productService.getAllProducts();
-            return items || [];
-        } catch (error) {
-            console.error('Error retrieving all products:', error);
-            return [];
-        }
-    };
-
-    const fetchProducts = async () => {
-        let fetchedProducts = await fetchAllProducts();
+    const fetchProducts = useCallback(async () => {
+        let fetchedProducts;
 
         if (nameFilter) {
             const { content } = await productService.searchProductsByName(nameFilter);
             fetchedProducts = content || [];
-        }
-
-        if (providerFilter) {
+        } else if (providerFilter) {
             const { content } = await productService.searchProductsByProviderName(providerFilter);
             fetchedProducts = content || [];
+        } else {
+            const { items } = await productService.getAllProducts();
+            fetchedProducts = items || [];
         }
 
         setProducts(fetchedProducts);
-    };
 
-    useEffect(() => {
-        fetchAllProducts().then((allProducts) => {
-            setProducts(allProducts);
+        const allProviders = fetchedProducts.flatMap(product => product.providers);
+        const uniqueProviders = Array.from(new Set(allProviders.map(provider => provider.id)))
+            .map(id => allProviders.find(provider => provider.id === id));
+        setProviders(uniqueProviders);
 
-            const allProviders = allProducts.flatMap((product) => product.providers);
-            const uniqueProviders = Array.from(new Set(allProviders.map((provider) => provider.id)))
-                .map((id) => allProviders.find((provider) => provider.id === id));
-
-            setProviders(uniqueProviders);
-        });
-    }, []);
+    }, [nameFilter, providerFilter]);
 
     useEffect(() => {
         fetchProducts();
-    }, [nameFilter, providerFilter]);
+    }, [nameFilter, providerFilter, fetchProducts]);
 
 
 
