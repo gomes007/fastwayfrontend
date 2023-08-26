@@ -52,8 +52,6 @@ function Product() {
     const [previews, setPreviews] = useState([]);
 
 
-
-
     const handleProduct = (e) => {
         setProduct({...product, [e.target.name]: e.target.value});
     }

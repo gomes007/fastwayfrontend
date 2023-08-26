@@ -3,6 +3,7 @@ import {useRouter} from "next/router";
 import productService from "@/services/productService";
 import NavTitle from "@/components/NavTitle/NavTitle";
 import FieldForm from "@/components/Form/FieldForm";
+import {GrCaretNext, GrCaretPrevious} from "react-icons/gr";
 
 
 function ProductsList() {
@@ -150,19 +151,26 @@ function ProductsList() {
                                         </table>
 
                                         <div className="pagination">
-                                            <button
-                                                onClick={() => setPage(Math.max(page - 1, 1))}
-                                                disabled={page === 1}
+                                            <div
+                                                onClick={() => {
+                                                    if (page !== 1) {
+                                                        setPage(Math.max(page - 1, 1))
+                                                    }
+                                                }}
+                                                style={{
+                                                    cursor: (page === 1 ? 'not-allowed' : 'pointer'),
+                                                    opacity: (page === 1 ? 0.5 : 1)
+                                                }}
                                             >
-                                                Previous
-                                            </button>
+                                                <GrCaretPrevious size={15} />
+                                            </div>
                                             <span>Page {page} of {paginationInfo.totalPages}</span>
-                                            <button
+                                            <div
                                                 onClick={() => setPage(Math.min(page + 1, paginationInfo.totalPages))}
-                                                disabled={page === paginationInfo.totalPages}
+                                                style={{ cursor: 'pointer', opacity: (page === paginationInfo.totalPages ? 0.5 : 1) }}
                                             >
-                                                Next
-                                            </button>
+                                                <GrCaretNext size={15} />
+                                            </div>
                                         </div>
 
                                     </div>
@@ -171,7 +179,7 @@ function ProductsList() {
                             <div className="card-footer">
                                 <div className="row">
                                     <div className="col-12">
-                                        footer
+                                        <span>Total records: {paginationInfo.totalRecordsQuantity}</span>
                                     </div>
                                 </div>
                             </div>
