@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useRouter} from "next/router";
-import ProductService from "@/services/productService";
+import productService from "@/services/productService";
 import NavTitle from "@/components/NavTitle/NavTitle";
 import FieldForm from "@/components/Form/FieldForm";
 
@@ -19,31 +19,47 @@ function ProductsList() {
     const [size, setSize] = useState(10);
 
 
+    const [paginationInfo, setPaginationInfo] = useState({
+        itemsPerPage: 10,
+        currentPage: 1,
+        totalRecordsQuantity: 0,
+        totalPages: 1,
+        previousPage: null
+    });
+
+
     const fetchProducts = useCallback(async () => {
         let fetchedProducts;
 
         if (nameFilter) {
-            const { content } = await ProductService.searchProductsByName(nameFilter);
+            const {content} = await productService.searchProductsByName(nameFilter);
             fetchedProducts = content || [];
         } else if (providerFilter) {
-            const { content } = await ProductService.searchProductsByProviderName(providerFilter);
+            const {content} = await productService.searchProductsByProviderName(providerFilter, page, size);
             fetchedProducts = content || [];
         } else {
-            const response = await ProductService.getAllProductsPages(page, size);
+            const response = await productService.getAllProductsPages(page, size);
             fetchedProducts = response.items || [];
+            setPaginationInfo({
+                itemsPerPage: response.itemsPerPage,
+                currentPage: response.currentPage,
+                totalRecordsQuantity: response.totalRecordsQuantity,
+                totalPages: response.totalPages,
+                previousPage: response.previousPage
+            });
         }
-
         setProducts(fetchedProducts);
+        const allProviders = fetchedProducts.flatMap(product => product.providers);
+        const uniqueProviders = Array.from(new Set(allProviders.map(provider => provider.id)))
+            .map(id => allProviders.find(provider => provider.id === id));
+
+        setProviders(uniqueProviders);
+
     }, [nameFilter, providerFilter, page, size]);
 
     useEffect(() => {
         fetchProducts();
     }, [nameFilter, providerFilter, page, size, fetchProducts]);
-
-
-    const handlePageChange = (newPage) => {
-        setPage(newPage);
-    };
 
 
     return (
@@ -78,9 +94,9 @@ function ProductsList() {
                                             onChange={e => setNameFilter(e.target.value)}
                                         />
                                     </div>
-                                    <div className="col-12 col-md-6">
+                                    <div className="col-12 col-md-3">
                                         <label htmlFor="providerFilter">Search by Provider</label>
-                                        <select
+                                        <select className="form-select"
                                             id="providerFilter"
                                             name="providerFilter"
                                             value={providerFilter}
@@ -134,9 +150,19 @@ function ProductsList() {
                                         </table>
 
                                         <div className="pagination">
-                                            <button onClick={() => handlePageChange(page - 1)} disabled={page === 1}>Previous</button>
-                                            <span>Page {page}</span>
-                                            <button onClick={() => handlePageChange(page + 1)}>Next</button>
+                                            <button
+                                                onClick={() => setPage(Math.max(page - 1, 1))}
+                                                disabled={page === 1}
+                                            >
+                                                Previous
+                                            </button>
+                                            <span>Page {page} of {paginationInfo.totalPages}</span>
+                                            <button
+                                                onClick={() => setPage(Math.min(page + 1, paginationInfo.totalPages))}
+                                                disabled={page === paginationInfo.totalPages}
+                                            >
+                                                Next
+                                            </button>
                                         </div>
 
                                     </div>

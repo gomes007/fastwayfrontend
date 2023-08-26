@@ -93,7 +93,7 @@ const ProductService = {
 
     async searchProductsByProviderName(query, page = 1, size = 10) {
         try {
-            const response = await axiosInstance.get(`/products/searchProductsByProviderName`, {
+            const response = await axiosInstance.get(`/products/searchProductsByProviderName?page=${page}&size=${size}`, {
                 params: {
                     query: query,
                     page: page,
