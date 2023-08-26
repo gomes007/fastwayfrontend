@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useRouter} from "next/router";
-import productService from "@/services/productService";
+import ProductService from "@/services/productService";
 import NavTitle from "@/components/NavTitle/NavTitle";
 import FieldForm from "@/components/Form/FieldForm";
 
@@ -15,35 +15,35 @@ function ProductsList() {
     const [nameFilter, setNameFilter] = useState('');
     const [providerFilter, setProviderFilter] = useState('');
 
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(10);
+
 
     const fetchProducts = useCallback(async () => {
         let fetchedProducts;
 
         if (nameFilter) {
-            const { content } = await productService.searchProductsByName(nameFilter);
+            const { content } = await ProductService.searchProductsByName(nameFilter);
             fetchedProducts = content || [];
         } else if (providerFilter) {
-            const { content } = await productService.searchProductsByProviderName(providerFilter);
+            const { content } = await ProductService.searchProductsByProviderName(providerFilter);
             fetchedProducts = content || [];
         } else {
-            const { items } = await productService.getAllProducts();
-            fetchedProducts = items || [];
+            const response = await ProductService.getAllProductsPages(page, size);
+            fetchedProducts = response.items || [];
         }
 
         setProducts(fetchedProducts);
-
-        const allProviders = fetchedProducts.flatMap(product => product.providers);
-        const uniqueProviders = Array.from(new Set(allProviders.map(provider => provider.id)))
-            .map(id => allProviders.find(provider => provider.id === id));
-        setProviders(uniqueProviders);
-
-    }, [nameFilter, providerFilter]);
+    }, [nameFilter, providerFilter, page, size]);
 
     useEffect(() => {
         fetchProducts();
-    }, [nameFilter, providerFilter, fetchProducts]);
+    }, [nameFilter, providerFilter, page, size, fetchProducts]);
 
 
+    const handlePageChange = (newPage) => {
+        setPage(newPage);
+    };
 
 
     return (
@@ -132,6 +132,13 @@ function ProductsList() {
                                             ))}
                                             </tbody>
                                         </table>
+
+                                        <div className="pagination">
+                                            <button onClick={() => handlePageChange(page - 1)} disabled={page === 1}>Previous</button>
+                                            <span>Page {page}</span>
+                                            <button onClick={() => handlePageChange(page + 1)}>Next</button>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
