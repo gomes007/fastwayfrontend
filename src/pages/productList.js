@@ -50,11 +50,24 @@ function ProductsList() {
             });
         }
         setProducts(fetchedProducts);
+
         const allProviders = fetchedProducts.flatMap(product => product.providers);
         const uniqueProviders = Array.from(new Set(allProviders.map(provider => provider.id)))
             .map(id => allProviders.find(provider => provider.id === id));
 
         setProviders(uniqueProviders);
+
+        const fetchAllAttachments = await Promise.all(
+            fetchedProducts.map(async product => {
+                const attachments = await productService.getProductAttachmentsById(product.id);
+                return {
+                    ...product,
+                    images: attachments.map(a => `data:image/jpeg;base64,${a.imageData}`)
+                };
+            })
+        );
+
+        setProducts(fetchAllAttachments);
 
     }, [nameFilter, providerFilter, page, size]);
 
@@ -100,7 +113,7 @@ function ProductsList() {
                                         <select className="form-select"
                                             id="providerFilter"
                                             name="providerFilter"
-                                            value={providerFilter}
+                                            value={providerFilter}cwedsas
                                             onChange={e => setProviderFilter(e.target.value)}
                                         >
                                             <option value="">-- Select Provider --</option>
@@ -113,7 +126,7 @@ function ProductsList() {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-12">
+                                    <div className="col-12 table-responsive">
                                         <table className="table table-bordered table-hover">
                                             <thead>
                                             <tr>
@@ -121,6 +134,8 @@ function ProductsList() {
                                                 <th>Unit Cost</th>
                                                 <th>Sales Price</th>
                                                 <th>Provider</th>
+                                                <th>Images</th>
+                                                <th>Stock</th>
                                                 <th>Actions</th>
                                             </tr>
                                             </thead>
@@ -137,6 +152,27 @@ function ProductsList() {
                                                             </span>
                                                         ))};
                                                     </td>
+                                                    <td>
+                                                        {product.images && product.images.length > 0 && (
+                                                            <div id={`carousel${product.id}`} className="carousel slide" data-bs-ride="carousel" style={{width: '50px'}}>
+                                                                <div className="carousel-inner">
+                                                                    {product.images.map((image, idx) => (
+                                                                        <div className={`carousel-item ${idx === 0 ? 'active' : ''}`} key={idx}>
+                                                                            <img src={image} className="d-block w-100" alt={`product-${index}-image-${idx}`} />
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                                <button className="carousel-control-prev" type="button" data-bs-target={`#carousel${product.id}`} data-bs-slide="prev">
+                                                                    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                </button>
+                                                                <button className="carousel-control-next" type="button" data-bs-target={`#carousel${product.id}`} data-bs-slide="next">
+                                                                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                    </td>
+                                                    <td>{product.inventory.currentQuantity}</td>
+
                                                     <td>
                                                         <button
                                                             className="btn btn-sm btn-primary"

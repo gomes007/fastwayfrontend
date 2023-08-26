@@ -118,6 +118,16 @@ const ProductService = {
         }
     },
 
+    async getProductAttachmentsById(productId) {
+        try {
+            const response = await axiosInstance.get(`/products/${productId}/attachments`);
+            return response.data;
+        } catch (error) {
+            console.error("Product Attachments Get Request failure:", error.message);
+            return [];
+        }
+    },
+
 
 
 
