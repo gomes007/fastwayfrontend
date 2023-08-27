@@ -897,10 +897,6 @@ E
 src/pages/employee.js,f\7\f7e81bb953df421682a596e6a01858a91b89168b
 G
 src/pages/permission.js,5\5\55f63d923486d3e230a2fd10489b77491a2b3fbf
-A
-src/pages/_app.js,e\9\e936121dda8f9c2ffc041c94b844a46992031b88
-P
- src/components/Form/FieldForm.js,0\c\0c9389cade364fe2e00c0c5c723c5977735d888f
 K
 src/pages/positionSalary.js,2\0\20c8c73bd23875986ad3cac75190ab5889cba375
 >
@@ -911,16 +907,8 @@ O
 src/services/employeeService.js,0\a\0a4a8bd8029d7429ab947090fdd0743ced6fb856
 J
 src/pages/employeesList.js,9\6\9684a899005f5976fb64f3db9d6202ce8b1501a7
-A
-package-lock.json,f\a\fa288d1472d29beccb489a676f68739ad365fc47
-K
-src/components/Menu/Menu.js,8\0\800084a3cfe832c797fd1f56310913f74a83aa84
-<
-package.json,7\0\7030d0b2f71b999ff89a343de08c414af32fc93a
 L
 src/styles/product.style.css,d\d\ddcad17630924222ac1ceccaae28b7a1c3f8b6a5
-J
-src/pages/providersList.js,c\f\cff27264b12eef4e11a8166a050def9014780b17
 K
 src/services/authContext.js,b\d\bdc4a4d6e42cb78948cfa80d25ad2cb0aec28078
 K

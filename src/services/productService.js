@@ -45,15 +45,33 @@ const ProductService = {
         }
     },
 
-    async updateProduct(id, product) {
+    async updateProduct(id, productData, files) {
+        let formData = new FormData();
+
+        formData.append('product', new Blob([JSON.stringify(productData)], {
+            type: 'application/json'
+        }));
+
+        if (files) {
+            Array.from(files).forEach(file => {
+                formData.append('files', file);
+            });
+        }
+
         try {
-            const response = await axiosInstance.put(`/products/${id}`, product);
-            return response.data ?? product;
+            const response = await axiosInstance.put(`/products/${id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            return response.data ?? productData;
         } catch (error) {
             console.error("Product Update Request failure: ", error.message);
-            return product;
+            return productData;
         }
     },
+
 
     async deleteProduct(id) {
         try {

@@ -2,8 +2,6 @@ import React, {useEffect, useState} from 'react';
 import NavTitle from "@/components/NavTitle/NavTitle";
 import TabForm from "@/components/Form/TabForm";
 import FieldForm from "@/components/Form/FieldForm";
-
-import {GiWeightScale} from "react-icons/gi";
 import {BsBox, BsClipboard2CheckFill} from "react-icons/bs";
 import {IoPricetagsOutline} from "react-icons/io5";
 import {AiOutlineStock} from "react-icons/ai";
@@ -11,12 +9,11 @@ import {AiOutlineStock} from "react-icons/ai";
 import Select from 'react-select';
 
 import ProductService from "@/services/productService";
+import productService from "@/services/productService";
 import serviceProvider from "@/services/providerService";
 import Swal from "sweetalert2";
 import {MdDeleteForever} from "react-icons/md";
 import {useRouter} from "next/router";
-import productService from "@/services/productService";
-import providerService from "@/services/providerService";
 
 
 function Product() {
@@ -180,30 +177,30 @@ function Product() {
 
     useEffect(() => {
         async function fetchProductAndAttachments() {
-            if (query.id) {
-                try {
-                    const productData = await productService.getProductById(query.id);
-                    console.log("Received data:", productData);
+            if (!query.id) return;
 
-                    setProduct(productData);
-                    setDetails(productData.details);
-                    setPrice(productData.price);
-                    setInventory(productData.inventory);
-                    setSelectedProviders(productData.providers || []);
+            try {
+                const [productData, attachments] = await Promise.all([
+                    productService.getProductById(query.id),
+                    productService.getProductAttachmentsById(query.id)
+                ]);
 
-                    const attachments = await productService.getProductAttachmentsById(query.id);
-                    const imagePreviews = attachments.map(a => `data:image/jpeg;base64,${a.imageData}`);
-                    setUploadedFiles(imagePreviews);
-                    setPreviews(imagePreviews);
+                setProduct(productData);
+                setDetails(productData.details);
+                setPrice(productData.price);
+                setInventory(productData.inventory);
+                setSelectedProviders(productData.providers || []);
 
-                } catch (error) {
-                    console.error('Error getting product:', error);
-                }
+                const imagePreviews = attachments.map(a => `data:image/jpeg;base64,${a.imageData}`);
+                setUploadedFiles(imagePreviews);
+                setPreviews(imagePreviews);
+            } catch (error) {
+                console.error('Erro ao obter o produto:', error);
             }
         }
+
         fetchProductAndAttachments();
     }, [query.id]);
-
     //end edit product
 
 
@@ -220,24 +217,33 @@ function Product() {
             providers: selectedProviders.map(provider => ({ id: provider.id }))
         };
 
-        const response = await ProductService.saveProduct(data, uploadedFiles);
+        let response;
+
+        if (query.id) {
+            response = await ProductService.updateProduct(query.id, data, uploadedFiles);
+        } else {
+            response = await ProductService.saveProduct(data, uploadedFiles);
+        }
 
         if (response) {
             await Swal.fire({
-                title: 'Produto cadastrado com sucesso!',
+                title: query.id ? 'Produto atualizado com sucesso!' : 'Produto cadastrado com sucesso!',
                 icon: 'success',
                 width: '300px',
                 height: '200px'
             });
         } else {
             await Swal.fire({
-                title: 'Erro ao cadastrar produto!',
+                title: 'Erro ao salvar produto!',
                 icon: 'error',
                 width: '300px',
                 height: '200px'
             });
         }
     }
+
+
+
 
 
     return (
@@ -296,7 +302,7 @@ function Product() {
                                     <div className="col-6">
                                         <div className="card">
                                             <div className="card-header">
-                                                <GiWeightScale style={{ fontSize: "20px", marginRight: "5px" }} />
+
                                                 Weight and Dimensions
                                             </div>
                                             <div className="card-body">
