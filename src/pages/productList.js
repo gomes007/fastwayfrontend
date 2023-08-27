@@ -4,6 +4,7 @@ import productService from "@/services/productService";
 import NavTitle from "@/components/NavTitle/NavTitle";
 import FieldForm from "@/components/Form/FieldForm";
 import {GrCaretNext, GrCaretPrevious} from "react-icons/gr";
+import Swal from "sweetalert2";
 
 
 function ProductsList() {
@@ -71,10 +72,46 @@ function ProductsList() {
 
     }, [nameFilter, providerFilter, page, size]);
 
+
     useEffect(() => {
         fetchProducts();
     }, [nameFilter, providerFilter, page, size, fetchProducts]);
 
+
+
+    const handleDeleteProduct = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this product!",
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete',
+            width: '300px',
+            height: '200px'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                productService.deleteProduct(id)
+                    .then(() => {
+                        setProducts(products.filter(product => product.id !== id));
+
+                    })
+                    .catch(error => {
+                        console.error("Error deleting provider: ", error);
+                        Swal.fire(
+                            'Error!',
+                            'An error occurred while deleting the product. Please try again.',
+                            'error'
+                        )
+                    });
+            }
+        });
+    };
+
+
+    const handleEdit = id => {
+        router.push(`/product?id=${id}`);
+    };
 
     return (
         <>
@@ -174,11 +211,15 @@ function ProductsList() {
                                                     <td>{product.inventory.currentQuantity}</td>
 
                                                     <td>
-                                                        <button
-                                                            className="btn btn-sm btn-primary"
-                                                            onClick={() => router.push(`/products/${product.id}`)}
-                                                        >
-                                                            Edit
+                                                        <button onClick={() => {
+                                                            handleEdit(product.id)
+                                                        }} style={{border: 'none'}} className="btn btn-outline-dark mr-15px">
+                                                            <i className="fa-solid fa-pen"></i>
+                                                        </button>
+                                                        <button onClick={() => {
+                                                            handleDeleteProduct(product.id)
+                                                        }} style={{border: 'none'}} className="btn btn-outline-danger">
+                                                            <i className="fa-solid fa-trash-can"></i>
                                                         </button>
                                                     </td>
                                                 </tr>

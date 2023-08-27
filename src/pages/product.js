@@ -14,9 +14,13 @@ import ProductService from "@/services/productService";
 import serviceProvider from "@/services/providerService";
 import Swal from "sweetalert2";
 import {MdDeleteForever} from "react-icons/md";
+import {useRouter} from "next/router";
+import productService from "@/services/productService";
+import providerService from "@/services/providerService";
 
 
 function Product() {
+
 
     const [product, setProduct] = useState({
         productName: '',
@@ -127,7 +131,6 @@ function Product() {
     const [selectedProviders, setSelectedProviders] = useState([]);
     const [selectValue, setSelectValue] = useState(null);
 
-
     async function fetchAllProviders(query) {
         const data = await serviceProvider.searchProvidersByName(query);
         return data.content || [];
@@ -164,13 +167,45 @@ function Product() {
         label: provider.generalInformation.name
     }));
 
-
-
     const removeProvider = (idToRemove) => {
         setSelectedProviders(prev => prev.filter(provider => provider.id !== idToRemove));
     };
-
     //end find providers
+
+
+
+    //begin edit product
+    const router = useRouter();
+    const {query} = router;
+
+    useEffect(() => {
+        async function fetchProductAndAttachments() {
+            if (query.id) {
+                try {
+                    const productData = await productService.getProductById(query.id);
+                    console.log("Received data:", productData);
+
+                    setProduct(productData);
+                    setDetails(productData.details);
+                    setPrice(productData.price);
+                    setInventory(productData.inventory);
+                    setSelectedProviders(productData.providers || []);
+
+                    const attachments = await productService.getProductAttachmentsById(query.id);
+                    const imagePreviews = attachments.map(a => `data:image/jpeg;base64,${a.imageData}`);
+                    setUploadedFiles(imagePreviews);
+                    setPreviews(imagePreviews);
+
+                } catch (error) {
+                    console.error('Error getting product:', error);
+                }
+            }
+        }
+        fetchProductAndAttachments();
+    }, [query.id]);
+
+    //end edit product
+
 
 
     const handleSubmit = async (e) => {
@@ -203,7 +238,6 @@ function Product() {
             });
         }
     }
-
 
 
     return (
