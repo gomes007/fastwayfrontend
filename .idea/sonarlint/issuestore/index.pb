@@ -917,3 +917,31 @@ L
 src/services/axiosService.js,3\4\344ab8e9b10062f743c974dc3993343f6550419d
 E
 src/pages/customer.js,1\2\12ef72009dafa101d44cb8ce751f4adc3f0dd397
+H
+src/services/withAuth.js,3\e\3e0af611b4ff91ef8c1738241ae1023e1c7705d7
+O
+src/services/providerService.js,9\e\9e780a8e64682ceb6798eab76dfb6f0bfdb57281
+P
+ src/components/Form/FieldForm.js,0\c\0c9389cade364fe2e00c0c5c723c5977735d888f
+A
+src/pages/_app.js,e\9\e936121dda8f9c2ffc041c94b844a46992031b88
+J
+src/pages/providersList.js,c\f\cff27264b12eef4e11a8166a050def9014780b17
+E
+src/pages/provider.js,b\0\b04edd05865430acdf89b3ba29dd064d8ee96b1f
+K
+src/components/Menu/Menu.js,8\0\800084a3cfe832c797fd1f56310913f74a83aa84
+S
+#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+]
+-.idea/sonarlint/securityhotspotstore/index.pb,8\8\88a9255124c95bdc913197c120a8d560edc59c8e
+A
+package-lock.json,f\a\fa288d1472d29beccb489a676f68739ad365fc47
+<
+package.json,7\0\7030d0b2f71b999ff89a343de08c414af32fc93a
+N
+src/services/productService.js,e\9\e903e9a7b455f9e44111c89abc669c791b348074
+H
+src/pages/productList.js,1\0\10892f7493464c24f49d4e6bc14c9cc40b4daea2
+D
+src/pages/product.js,5\a\5a4922546c28de6a2d6f189951cc6a56680f34ef

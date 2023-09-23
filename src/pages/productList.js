@@ -67,9 +67,7 @@ function ProductsList() {
                 };
             })
         );
-
         setProducts(fetchAllAttachments);
-
     }, [nameFilter, providerFilter, page, size]);
 
 

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import NavTitle from "@/components/NavTitle/NavTitle";
 import TabForm from "@/components/Form/TabForm";
 import FieldForm from "@/components/Form/FieldForm";
-import {BsBox, BsClipboard2CheckFill} from "react-icons/bs";
+import {BsArrowsMove, BsBox, BsClipboard2CheckFill} from "react-icons/bs";
 import {IoPricetagsOutline} from "react-icons/io5";
 import {AiOutlineStock} from "react-icons/ai";
 
@@ -286,7 +286,7 @@ function Product() {
                                     </div>
                                     <div className="col-4">
                                         <FieldForm
-                                            label="Commission (%)"
+                                            label="15"
                                             type="number"
                                             name="commission"
                                             value={product.commission}
@@ -302,7 +302,7 @@ function Product() {
                                     <div className="col-6">
                                         <div className="card">
                                             <div className="card-header">
-
+                                                <BsArrowsMove style={{ fontSize: "20px", marginRight: "10px" }} />
                                                 Weight and Dimensions
                                             </div>
                                             <div className="card-body">
