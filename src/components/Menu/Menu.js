@@ -130,6 +130,13 @@ const Menu = ({children}) => {
                         </a>
                     </li>
 
+                    <li>
+                        <a className="link-menu" href="/costCenter">
+                            <i className="fa-solid fa-user-plus"></i>
+                            <span>Cost Center</span>
+                        </a>
+                    </li>
+
 
                 </ul>
 

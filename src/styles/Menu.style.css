@@ -1,6 +1,6 @@
 .menu {
     width: 270px;
-    background-color: #242a38;
+    background-color: #fdfdfd;
     min-height: 100vh;
     position: fixed;
     transform: translateY(0px);
@@ -13,6 +13,8 @@
     text-decoration: none solid rgb(34, 34, 34);
     word-spacing: 0;
     box-sizing: border-box;
+    border-right: solid 1px #e9ebf0;
+
 
 }
 

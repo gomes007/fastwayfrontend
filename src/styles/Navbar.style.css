@@ -1,16 +1,17 @@
 .navbar {
-    box-shadow: 2px 4px 4px 2px;
+    box-shadow: 2px 1px 4px 1px;
     padding: 5px 20px;
+    background-color: #318cd5;
 }
 
 .navbar .user-ciclo {
-    max-width: 60px;
+    max-width: 40px;
     border-radius: 50%;
 }
 
 .navbar .btn-menu {
     background-color: transparent;
     border: none;
-    color: rgb(163, 152, 152);
+    color: rgb(240, 241, 242);
     font-size: 23px;
 }

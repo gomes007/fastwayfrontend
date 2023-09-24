@@ -8,6 +8,8 @@ import NavTitle from "@/components/NavTitle/NavTitle";
 import {GiAutoRepair} from "react-icons/gi";
 import Modal from "@/components/Modal/modal";
 import Customer from "@/pages/customer";
+import costCenterService from "@/services/costCenterService";
+import CostCenter from "@/pages/costCenter";
 
 function ServiceOrder() {
 
@@ -39,12 +41,11 @@ function ServiceOrder() {
 
 
 
-    const [selectValue, setSelectValue] = useState(null);
+
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const [selectedCostCenter, setSelectedCostCenter] = useState(null);
 
 
-
-
-    // function to load customers from the API
     const loadCustomers = async (inputValue) => {
         try {
             const data = await customerService.searchCustomerByName(inputValue);
@@ -57,6 +58,7 @@ function ServiceOrder() {
                 value: 'add_button',
                 label: 'Add new customer',
                 isAddButton: true,
+                type: 'customer'
             });
             return options;
         } catch (error) {
@@ -65,63 +67,101 @@ function ServiceOrder() {
         }
     };
 
-    const [isModalOpen, setModalOpen] = useState(false);
 
-    const handleAddButtonClick = () => {
-        setModalOpen(true);
-        console.log('Botão Adicionar Cliente clicado!');
+    const loadCostCenters = async (inputValue) => {
+        try {
+            const data = await costCenterService.searchCostCenterByName(inputValue);
+            const items = data.items || [];
+            const options = items.map(costCenter => ({
+                value: costCenter.id,
+                label: costCenter.name,
+                type: 'costcenter'
+            }));
+            options.push({
+                value: 'add_costcenter',
+                label: 'Add new cost center',
+                isAddButton: true,
+                type: 'costcenter'
+            });
+            return options;
+        } catch (error) {
+            console.error("Error loading cost centers:", error);
+            return [];
+        }
     };
 
-    const handleCloseModal = () => {
-        setModalOpen(false);
+
+    const [isCustomerModalOpen, setCustomerModalOpen] = useState(false);
+    const [isCostCenterModalOpen, setCostCenterModalOpen] = useState(false);
+
+    const handleAddButtonClick = (type) => {
+        if (type === 'customer') {
+            setCustomerModalOpen(true);
+            console.log('Botão Adicionar Cliente clicado!');
+        } else if (type === 'costcenter') {
+            setCostCenterModalOpen(true);
+            console.log('Botão Adicionar Centro de Custo clicado!');
+        }
     };
+
+    const handleCloseModal = (type) => {
+        if (type === 'customer') setCustomerModalOpen(false);
+        if (type === 'costcenter') setCostCenterModalOpen(false);
+    };
+
 
 
     const customerRef = useRef();
+    const costCenterRef = useRef();
 
-
-    const handleSaveChanges = () => {
-        if (customerRef.current && typeof customerRef.current.saveCustomer === "function") {
+    const handleSaveChanges = (type) => {
+        if (type === 'customer' && customerRef.current && typeof customerRef.current.saveCustomer === "function") {
             const customerData = customerRef.current.saveCustomer();
             console.log('Dados do cliente para salvar:', customerData);
-            setModalOpen(false);
+            handleCloseModal('customer');
+        } else if (type === 'costcenter' && costCenterRef.current && typeof costCenterRef.current.saveCost === "function") {
+            const costCenterData = costCenterRef.current.saveCost();
+            console.log('Dados do centro de custo para salvar:', costCenterData);
+            handleCloseModal('costcenter');
         }
     };
+
 
 
     const formatOptionLabel = (option, { context }) => {
         if (context === 'menu' && option.isAddButton) {
             return (
-                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleAddButtonClick}>
+                <div
+                    style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                    onClick={() => handleAddButtonClick(option.type)}
+                >
                     <MdAdd size={20} style={{ marginRight: '5px' }} />
-                    Add new customers
+                    {option.label}
                 </div>
             );
         }
         return option.label;
     };
-    // end function to load customers from the API
+
 
 
     const handleServiceOrderChange = (field) => (data) => {
-        // Verificar primeiro se é o botão especial para abrir modal
         if (data && data.isAddButton) {
-            handleAddButtonClick();
+            handleAddButtonClick(data.type);
             return;
         }
 
-        // Depois, verificar se o evento vem de um campo normal
         if (data && data.target) {
             setServiceOrder({
                 ...serviceOrder,
                 [data.target.name]: data.target.value
             });
         } else {
-            // Se vier de um AsyncSelect...
             if (field === "customer") {
-                setSelectValue(data);
+                setSelectedCustomer(data);
+            } else if (field === "costcenter") {
+                setSelectedCostCenter(data);
             }
-            // você pode adicionar mais condicionais para outros AsyncSelects aqui.
 
             if (data) {
                 setServiceOrder(prevState => ({
@@ -140,6 +180,7 @@ function ServiceOrder() {
 
 
 
+
     function handleSubmit() {
 
     }
@@ -147,7 +188,6 @@ function ServiceOrder() {
 
     return (
     <>
-
         <NavTitle
             icon={<GiAutoRepair style={{fontSize: "20px"}}/>}
             title="Service Order"
@@ -156,7 +196,6 @@ function ServiceOrder() {
                 {name: "Add Service Order", path: "/serviceOrder"}
             ]}
         />
-
 
         <div className="container-fluid">
             <div className="row">
@@ -172,13 +211,13 @@ function ServiceOrder() {
                             <form onSubmit={handleSubmit}>
                                 <div className="row">
                                     <div className="col-md-3">
-                                        <div className="mycss">
+                                        <div className="form-group">
                                             <label>Customer</label>
                                             <AsyncSelect
                                                 cacheOptions
                                                 defaultOptions
                                                 loadOptions={loadCustomers}
-                                                value={selectValue}
+                                                value={selectedCustomer}
                                                 isClearable
                                                 onChange={handleServiceOrderChange("customer")}
                                                 placeholder="Type to search..."
@@ -195,6 +234,7 @@ function ServiceOrder() {
                                                 value={serviceOrder.status}
                                                 onChange={handleServiceOrderChange("status")}
                                                 options={[
+                                                    {value: 'select', label: 'Select Status'},
                                                     {value: "OPEN", label: "Open"},
                                                     {value: "IN_PROGRESS", label: "In progress"},
                                                     {value: "FINISHED", label: "Finished"},
@@ -225,7 +265,7 @@ function ServiceOrder() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-3">
                                         <div className="form-group">
                                             <FieldForm
                                                 label="Channel Sales"
@@ -236,10 +276,19 @@ function ServiceOrder() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-3">
                                         <div className="form-group">
-
-
+                                            <label>CostCenter</label>
+                                            <AsyncSelect
+                                                cacheOptions
+                                                defaultOptions
+                                                loadOptions={loadCostCenters}
+                                                value={selectedCostCenter}
+                                                isClearable
+                                                onChange={handleServiceOrderChange("costcenter")}
+                                                placeholder="Type to search..."
+                                                formatOptionLabel={formatOptionLabel}
+                                            />
                                         </div>
                                     </div>
                                     <div className="col-md-6">
@@ -264,15 +313,24 @@ function ServiceOrder() {
         <div>
             <Modal
                 title="Add new customer"
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-                onSave={handleSaveChanges}
+                isOpen={isCustomerModalOpen}
+                onClose={() => handleCloseModal('customer') }
+                onSave={() => handleSaveChanges('customer')}
             >
-                <Customer ref={customerRef} onSubmit={handleSaveChanges} isModalOpen={isModalOpen}/>
+                <Customer ref={customerRef} onSubmit={handleSaveChanges} isModalOpen={isCustomerModalOpen}/>
             </Modal>
         </div>
+        <div>
+            <Modal
+                title="Add new cost center"
+                isOpen={isCostCenterModalOpen}
+                onClose={() => handleCloseModal('costcenter')}
+                onSave={() => handleSaveChanges('costcenter')}
+            >
+                <CostCenter ref={costCenterRef} onSubmit={handleSaveChanges} isModalOpen={isCostCenterModalOpen}/>
+            </Modal>
 
-
+        </div>
     </>
   );
 }
