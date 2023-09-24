@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {forwardRef, useImperativeHandle, useState} from 'react';
 import withAuth from "@/services/withAuth";
 import {useRouter} from "next/router";
 import AuthService from "@/services/authService";
@@ -9,7 +9,9 @@ import AddressForm from "@/components/Form/AddressForm";
 import NavTitle from "@/components/NavTitle/NavTitle";
 
 
-const Customer = () => {
+const Customer = (props, ref) => {
+    const { initialData = {}, onSubmit, isModalOpen } = props;
+
 
     const router = useRouter();
 
@@ -73,6 +75,7 @@ const Customer = () => {
         }
         console.log(data);
 
+
         return customerService.createNewCustomer(data)
             .then((data) => {
                 console.log('Customer registered', data);
@@ -101,9 +104,15 @@ const Customer = () => {
 
     }
 
+    // used by serviceOrder.js at modal
+    useImperativeHandle(ref, () => ({
+        saveCustomer
+    }));
+
 
     return (
         <>
+            {!isModalOpen && (
             <NavTitle
                 title="Add Customer"
                 path={[
@@ -112,6 +121,7 @@ const Customer = () => {
                     {name: "Customer", link: "/registry/customer"}
                 ]}
             />
+            )}
 
             <div className="content">
                 <TabForm
@@ -324,4 +334,7 @@ const Customer = () => {
     );
 };
 
-export default withAuth(Customer);
+
+//export default withAuth(Customer);
+
+export default forwardRef(Customer);

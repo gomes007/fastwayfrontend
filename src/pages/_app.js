@@ -10,7 +10,6 @@ import '../styles/Password.style.css'
 import '../styles/NavTitle.style.css'
 import '../styles/product.style.css'
 import '../styles/ServiceOrder.style.css'
-import '../styles/modal.style.css'
 
 import Menu from "@/components/Menu/Menu";
 import {useEffect} from "react";

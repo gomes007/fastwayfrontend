@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import customerService from "@/services/customerService";
 import AsyncSelect from "react-select/async";
 import FieldForm from "@/components/Form/FieldForm";
@@ -7,7 +7,7 @@ import {MdAdd} from "react-icons/md";
 import NavTitle from "@/components/NavTitle/NavTitle";
 import {GiAutoRepair} from "react-icons/gi";
 import Modal from "@/components/Modal/modal";
-import customer from "@/pages/customer";
+import Customer from "@/pages/customer";
 
 function ServiceOrder() {
 
@@ -43,6 +43,7 @@ function ServiceOrder() {
 
 
 
+
     // function to load customers from the API
     const loadCustomers = async (inputValue) => {
         try {
@@ -71,13 +72,29 @@ function ServiceOrder() {
         console.log('Botão Adicionar Cliente clicado!');
     };
 
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    };
+
+
+    const customerRef = useRef();
+
+
+    const handleSaveChanges = () => {
+        if (customerRef.current && typeof customerRef.current.saveCustomer === "function") {
+            const customerData = customerRef.current.saveCustomer();
+            console.log('Dados do cliente para salvar:', customerData);
+            setModalOpen(false);
+        }
+    };
+
 
     const formatOptionLabel = (option, { context }) => {
         if (context === 'menu' && option.isAddButton) {
             return (
                 <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleAddButtonClick}>
                     <MdAdd size={20} style={{ marginRight: '5px' }} />
-                    Add new customer
+                    Add new customers
                 </div>
             );
         }
@@ -87,7 +104,7 @@ function ServiceOrder() {
 
 
     const handleServiceOrderChange = (field) => (data) => {
-        // Verificar primeiro se é o botão especial
+        // Verificar primeiro se é o botão especial para abrir modal
         if (data && data.isAddButton) {
             handleAddButtonClick();
             return;
@@ -127,9 +144,6 @@ function ServiceOrder() {
 
     }
 
-    function handleChange() {
-
-    }
 
     return (
     <>
@@ -248,15 +262,13 @@ function ServiceOrder() {
         </div>
 
         <div>
-            <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-                <h2>Adicionar Cliente</h2>
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="form-group">
-
-                        </div>
-                    </div>
-                </div>
+            <Modal
+                title="Add new customer"
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onSave={handleSaveChanges}
+            >
+                <Customer ref={customerRef} onSubmit={handleSaveChanges} isModalOpen={isModalOpen}/>
             </Modal>
         </div>
 
