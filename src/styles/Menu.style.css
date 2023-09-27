@@ -8,14 +8,13 @@
     transition: all 0.5s;
     z-index: 1;
     font-family: "Source Sans Pro", sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 21px;
     text-decoration: none solid rgb(34, 34, 34);
     word-spacing: 0;
     box-sizing: border-box;
     border-right: solid 1px #e9ebf0;
-
-
+    font-weight: 500; /* Medium font weight */
 }
 
 .site {
@@ -40,48 +39,66 @@
 .menu .logo {
     color: #fff;
     text-align: center;
-    font-size: 20px;
-    padding: 20px 0;
+    padding: 0px;
 }
 
-.menu .divisor {
-    border-bottom: 1px solid rgb(207, 205, 205);
-    margin: 5px auto;
-    width: 90%;
+.logo-img {
+    width: 100%;
     display: block;
-    margin-bottom: 20px;
+    margin-top: 0px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+
 }
+
+.logo-img img {
+    width: 100%;
+    display: block;
+    border-radius: 10px;
+
+}
+
+
+
 
 .menu .conteudo-menu {
     list-style-type: none;
     padding: 0px;
     margin: 0px;
     font-family: "Source Sans Pro", sans-serif;
-
 }
+
+
+
+
+
+
+
+
+
 
 .menu .conteudo-menu .item-menu {
     padding: 1px 0;
 }
 
 .menu .conteudo-menu .item-menu .link-menu {
-    color: rgb(207, 205, 205);
+    color: #545252;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 16px;
     display: block;
     padding: 10px 15px;
     margin-bottom: 0px;
-    transition: all 0.5s;
+    transition: all 0.2s;
     cursor: pointer;
     position: relative;
-    margin-bottom: 3px;
-    ont-family: "Source Sans Pro", sans-serif;
+    font-family: "Source Sans Pro", sans-serif;
 
 }
 
-.menu .conteudo-menu .item-menu .link-menu.active{
-    color: #12b981;
-    background-color: #242a38;
+
+.menu .conteudo-menu .item-menu .link-menu.active {
+    color: #12b981; /* Keeping the same green for active state */
+    background-color: #1a1e23; /* Darker background for active state */
 }
 
 
@@ -90,9 +107,8 @@
 }
 
 .menu .conteudo-menu .item-menu .link-menu:hover {
+    color: #233bd9;
     background-color: #dadee7;
-    color: #12b981;
-
 }
 
 .menu .conteudo-menu .item-menu.subitem h3.link-menu::after {
@@ -118,18 +134,19 @@
 }
 
 .menu .conteudo-menu li.item-menu {
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid #e9ebf0;
+    border-top: 1px solid #e9ebf0;
     transition: all 0s ease 0s;
 }
 
 .menu .conteudo-menu .item-menu.sub li {
-    padding-left: 20px;
+    padding-left: 0px;
     margin-bottom: 6px;
-    font-size: 10px;
+    font-size: 16px;
 }
 
 .menu .conteudo-menu .item-menu.sub li a.link-menu {
-    font-size: 13px;
+    font-size: 14px;
 }
 
 
@@ -170,26 +187,89 @@
     text-decoration: none;
     list-style: none;
     cursor: pointer;
-    left: 20px;
-    color: rgb(207, 205, 205);
-    ont-family: "Source Sans Pro", sans-serif;
+    left: 0px;
+    color: rgb(21, 20, 20);
+    font-family: "Source Sans Pro", sans-serif;
     box-sizing: border-box;
-    left: 0;
     right: 0;
     padding: 10px 0;
     padding-left: 15px;
     display: block;
+    margin-top: 10px; /* Spacing */
 }
 
 .menu .logout i {
     margin-right: 10px;
+    opacity: 0.8; /* Making logout icon a bit transparent */
 }
 
 .menu .logout:hover{
-    color: #12b981;
+    color: #d40c4f;
+    background-color: #dadee7;
+}
+
+.menu .logout:hover i {
+    opacity: 1; /* Full opacity on hover */
+}
+
+/* Adjusting Font Awesome Icons */
+.menu .fa-solid {
+    margin-right: 5px; /* Spacing icons from text */
+    font-size: 16px; /* Adjusting icon size */
+    opacity: 0.8; /* Making icons a bit transparent */
+}
+
+.menu .conteudo-menu .item-menu .link-menu:hover .fa-solid {
+    opacity: 1; /* Full opacity on hover */
+}
+
+/* Submenu Arrow Changes */
+.menu .conteudo-menu .item-menu.subitem h3.link-menu::after,
+.menu .conteudo-menu .item-menu.subitem h3.link-menu.aberto::after {
+    font-size: 18px; /* Increasing arrow size */
+    top: 50%; /* Centering vertically */
+    transform: translateY(-50%); /* Centering adjustment */
+    transition: transform 0.3s ease; /* Transition for rotation */
+}
+
+
+.menu .conteudo-menu .register .link-menu{
+    color: #545252;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+    padding: 10px 15px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 3px;
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+.menu .conteudo-menu .register .link-menu:hover {
+    color: #233bd9;
     background-color: #dadee7;
 }
 
 
+.menu .conteudo-menu .list .link-menu{
+    color: #545252;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+    padding: 10px 15px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 3px;
+    font-family: "Source Sans Pro", sans-serif;
+}
 
+.menu .conteudo-menu .list .link-menu:hover {
+    color: #233bd9;
+    background-color: #dadee7;
+}
 
+.link-menu.emp {
+    border-top: 1px solid #e9ebf0;
+}
