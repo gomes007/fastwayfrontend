@@ -32,10 +32,7 @@ const Menu = ({children}) => {
 
     return (
         <>
-            <Navbar
-                tipoMenu={open}
-                handleMenu={handleMenu}
-            />
+            <Navbar handleMenu={handleMenu}/>
 
             <div className={`menu ${open}`}>
                 <h1 className="logo logo-img">

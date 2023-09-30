@@ -61,7 +61,6 @@
     width: 100%;
     display: block;
     border-radius: 10px;
-
 }
 
 
@@ -148,7 +147,7 @@
 }
 
 
-@media (max-width: 1060px) {
+@media (max-width: 1000px) {
     .site {
         margin: 0 !important;
         width: 100% !important;

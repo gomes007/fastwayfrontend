@@ -10,40 +10,46 @@ import Modal from "@/components/Modal/modal";
 import Customer from "@/pages/customer";
 import costCenterService from "@/services/costCenterService";
 import CostCenter from "@/pages/costCenter";
+import employeeService from "@/services/employeeService";
+import ServiceOrderEquipmentForm from "@/components/Form/ServiceOrderEquipmentForm";
 
 function ServiceOrder() {
 
 
-  const [serviceOrder, setServiceOrder] = useState({
-    customer: null, // ou {}
-    channelSales: '',
-    startDate: '',
-    endDate: '',
-    discountAmount: '',
-    discountPercent: '',
-    total: '',
-    otherInformation: '',
-    status: 'select',
-    costCenter: null, // ou {}
-  });
+    const [serviceOrder, setServiceOrder] = useState({
+        customer: null, // ou {}
+        channelSales: '',
+        startDate: '',
+        endDate: '',
+        discountAmount: '',
+        discountPercent: '',
+        total: '',
+        otherInformation: '',
+        status: 'select',
+        costCenter: null, // ou {}
+    });
 
 
-  const [serviceOrderServices, setServiceOrderServices] = useState(
-    {
-      service: null, // ou {}
-      details: '',
-      quantity: 0,
-      discountPercent: '',
-      discountAmount: '',
-      totalValue: '',
-    },
-  );
+    const [serviceOrderServices, setServiceOrderServices] = useState(
+        {
+            service: null, // ou {}
+            details: '',
+            quantity: 0,
+            discountPercent: '',
+            discountAmount: '',
+            totalValue: '',
+        },
+    );
+
+    const [serviceOrderEquipments, setServiceOrderEquipments] = useState([]);
 
 
 
 
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [selectedCostCenter, setSelectedCostCenter] = useState(null);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [selectedExpert, setSelectedExpert] = useState(null);
 
 
     const loadCustomers = async (inputValue) => {
@@ -90,6 +96,21 @@ function ServiceOrder() {
         }
     };
 
+    const loadEmployees = async (inputValue) => {
+        try {
+            const data = await employeeService.searchEmployeeByName(inputValue);
+            const items = data.items || [];
+            const options = items.map(employee => ({
+                value: employee.id,
+                label: employee.name,
+            }));
+            return options;
+        } catch (error) {
+            console.error("Error loading employees:", error);
+            return [];
+        }
+    };
+
 
     const [isCustomerModalOpen, setCustomerModalOpen] = useState(false);
     const [isCostCenterModalOpen, setCostCenterModalOpen] = useState(false);
@@ -110,7 +131,6 @@ function ServiceOrder() {
     };
 
 
-
     const customerRef = useRef();
     const costCenterRef = useRef();
 
@@ -127,22 +147,20 @@ function ServiceOrder() {
     };
 
 
-
-    const formatOptionLabel = (option, { context }) => {
+    const formatOptionLabel = (option, {context}) => {
         if (context === 'menu' && option.isAddButton) {
             return (
                 <div
-                    style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                    style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}
                     onClick={() => handleAddButtonClick(option.type)}
                 >
-                    <MdAdd size={20} style={{ marginRight: '5px' }} />
+                    <MdAdd size={20} style={{marginRight: '5px'}}/>
                     {option.label}
                 </div>
             );
         }
         return option.label;
     };
-
 
 
     const handleServiceOrderChange = (field) => (data) => {
@@ -161,6 +179,10 @@ function ServiceOrder() {
                 setSelectedCustomer(data);
             } else if (field === "costcenter") {
                 setSelectedCostCenter(data);
+            } else if (field === "employee") {
+                setSelectedEmployee(data);
+            } else if (field === "expert") {
+                setSelectedExpert(data);
             }
 
             if (data) {
@@ -178,137 +200,134 @@ function ServiceOrder() {
     };
 
 
-
-
-
     function handleSubmit() {
 
     }
 
 
     return (
-    <>
-        <NavTitle
-            icon={<GiAutoRepair style={{fontSize: "20px"}}/>}
-            title="Service Order"
-            path={[
-                {name: "Services", path: "/"},
-                {name: "Add Service Order", path: "/serviceOrder"}
-            ]}
-        />
+        <>
+            <NavTitle
+                icon={<GiAutoRepair style={{fontSize: "20px"}}/>}
+                title="Service Order"
+                path={[
+                    {name: "Services", path: "/"},
+                    {name: "Add Service Order", path: "/serviceOrder"}
+                ]}
+            />
 
-        <div className="container-fluid">
-            <div className="row">
-                <div className="col-md-12">
-                    <div className="card shadow mb-4 mt-3">
-                        <div className="card-header" style={{backgroundColor: '#F5F5F5FF'}}>
-                            <h4 className="card-title" style={{display: 'flex' ,alignItems: "center"}}>
-                                <BsClipboard2Data style={{marginRight: 10}}/>
-                                General Informations
-                            </h4>
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="card shadow mb-4 mt-3">
+                            <div className="card-header" style={{backgroundColor: '#F5F5F5FF'}}>
+                                <h4 className="card-title" style={{display: 'flex', alignItems: "center"}}>
+                                    <BsClipboard2Data style={{marginRight: 10}}/>
+                                    General Informations
+                                </h4>
+                            </div>
+                            <div className="card-body">
+                                <form onSubmit={handleSubmit}>
+                                    <div className="row">
+                                        <div className="col-md-3">
+                                            <div className="form-group">
+                                                <label>Customer</label>
+                                                <AsyncSelect
+                                                    cacheOptions
+                                                    defaultOptions
+                                                    loadOptions={loadCustomers}
+                                                    value={selectedCustomer}
+                                                    isClearable
+                                                    onChange={handleServiceOrderChange("customer")}
+                                                    placeholder="Type to search..."
+                                                    formatOptionLabel={formatOptionLabel}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="form-group">
+                                                <FieldForm
+                                                    label="Status"
+                                                    type="select"
+                                                    name="status"
+                                                    value={serviceOrder.status}
+                                                    onChange={handleServiceOrderChange("status")}
+                                                    options={[
+                                                        {value: 'select', label: 'Select Status'},
+                                                        {value: "OPEN", label: "Open"},
+                                                        {value: "IN_PROGRESS", label: "In progress"},
+                                                        {value: "FINISHED", label: "Finished"},
+                                                        {value: "CANCELED", label: "Canceled"},
+                                                    ]}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="form-group">
+                                                <FieldForm
+                                                    label="Start Date"
+                                                    type="date"
+                                                    name="startDate"
+                                                    value={serviceOrder.startDate}
+                                                    onChange={handleServiceOrderChange("startDate")}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="form-group">
+                                                <FieldForm
+                                                    label="End Date"
+                                                    type="date"
+                                                    name="endDate"
+                                                    value={serviceOrder.endDate}
+                                                    onChange={handleServiceOrderChange("endDate")}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="form-group">
+                                                <FieldForm
+                                                    label="Channel Sales"
+                                                    type="text"
+                                                    name="channelSales"
+                                                    value={serviceOrder.channelSales}
+                                                    onChange={handleServiceOrderChange("channelSales")}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="form-group">
+                                                <label>CostCenter</label>
+                                                <AsyncSelect
+                                                    cacheOptions
+                                                    defaultOptions
+                                                    loadOptions={loadCostCenters}
+                                                    value={selectedCostCenter}
+                                                    isClearable
+                                                    onChange={handleServiceOrderChange("costcenter")}
+                                                    placeholder="Type to search..."
+                                                    formatOptionLabel={formatOptionLabel}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <div className="card-body">
-                            <form onSubmit={handleSubmit}>
-                                <div className="row">
-                                    <div className="col-md-3">
-                                        <div className="form-group">
-                                            <label>Customer</label>
-                                            <AsyncSelect
-                                                cacheOptions
-                                                defaultOptions
-                                                loadOptions={loadCustomers}
-                                                value={selectedCustomer}
-                                                isClearable
-                                                onChange={handleServiceOrderChange("customer")}
-                                                placeholder="Type to search..."
-                                                formatOptionLabel={formatOptionLabel}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-3">
-                                        <div className="form-group">
-                                            <FieldForm
-                                                label="Status"
-                                                type="select"
-                                                name="status"
-                                                value={serviceOrder.status}
-                                                onChange={handleServiceOrderChange("status")}
-                                                options={[
-                                                    {value: 'select', label: 'Select Status'},
-                                                    {value: "OPEN", label: "Open"},
-                                                    {value: "IN_PROGRESS", label: "In progress"},
-                                                    {value: "FINISHED", label: "Finished"},
-                                                    {value: "CANCELED", label: "Canceled"},
-                                                ]}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-3">
-                                        <div className="form-group">
-                                            <FieldForm
-                                                label="Start Date"
-                                                type="date"
-                                                name="startDate"
-                                                value={serviceOrder.startDate}
-                                                onChange={handleServiceOrderChange("startDate")}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-3">
-                                        <div className="form-group">
-                                            <FieldForm
-                                                label="End Date"
-                                                type="date"
-                                                name="endDate"
-                                                value={serviceOrder.endDate}
-                                                onChange={handleServiceOrderChange("endDate")}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-3">
-                                        <div className="form-group">
-                                            <FieldForm
-                                                label="Channel Sales"
-                                                type="text"
-                                                name="channelSales"
-                                                value={serviceOrder.channelSales}
-                                                onChange={handleServiceOrderChange("channelSales")}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-3">
-                                        <div className="form-group">
-                                            <label>CostCenter</label>
-                                            <AsyncSelect
-                                                cacheOptions
-                                                defaultOptions
-                                                loadOptions={loadCostCenters}
-                                                value={selectedCostCenter}
-                                                isClearable
-                                                onChange={handleServiceOrderChange("costcenter")}
-                                                placeholder="Type to search..."
-                                                formatOptionLabel={formatOptionLabel}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+
                     </div>
-
                 </div>
-            </div>
 
-            <div className="row">
-                <div className="col-md-12">
-                    <div className="card shadow mb-4 mt-3">
-                        <div className="card-header" style={{backgroundColor: '#F5F5F5FF'}}>
-                            <h4 className="card-title" style={{display: 'flex' ,alignItems: "center"}}>
-                                <BsPerson style={{marginRight: 10}}/>
-                                Employee
-                            </h4>
-                        </div>
-                        <div className="card-body">
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="card shadow mb-4 mt-3">
+                            <div className="card-header" style={{backgroundColor: '#F5F5F5FF'}}>
+                                <h4 className="card-title" style={{display: 'flex', alignItems: "center"}}>
+                                    <BsPerson style={{marginRight: 10}}/>
+                                    Employee
+                                </h4>
+                            </div>
+                            <div className="card-body">
 
                                 <div className="row">
                                     <div className="col-md-4">
@@ -317,12 +336,11 @@ function ServiceOrder() {
                                             <AsyncSelect
                                                 cacheOptions
                                                 defaultOptions
-                                                loadOptions={loadCustomers}
-                                                value={selectedCustomer}
+                                                loadOptions={loadEmployees}
+                                                value={selectedEmployee}
                                                 isClearable
-                                                onChange={handleServiceOrderChange("customer")}
+                                                onChange={handleServiceOrderChange("employee")}
                                                 placeholder="Type to search..."
-                                                formatOptionLabel={formatOptionLabel}
                                             />
                                         </div>
                                     </div>
@@ -332,48 +350,55 @@ function ServiceOrder() {
                                             <AsyncSelect
                                                 cacheOptions
                                                 defaultOptions
-                                                loadOptions={loadCustomers}
-                                                value={selectedCustomer}
+                                                loadOptions={loadEmployees}
+                                                value={selectedExpert}
                                                 isClearable
-                                                onChange={handleServiceOrderChange("customer")}
+                                                onChange={handleServiceOrderChange("expert")}
                                                 placeholder="Type to search..."
-                                                formatOptionLabel={formatOptionLabel}
                                             />
                                         </div>
                                     </div>
                                 </div>
 
+                            </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
+
+                <div className="row">
+                    <ServiceOrderEquipmentForm
+                        equipmentsList={serviceOrderEquipments}
+                        setEquipmentsList={setServiceOrderEquipments}
+                    />
+                </div>
+
+
             </div>
 
-        </div>
+            <div>
+                <Modal
+                    title="Add new customer"
+                    isOpen={isCustomerModalOpen}
+                    onClose={() => handleCloseModal('customer')}
+                    onSave={() => handleSaveChanges('customer')}
+                >
+                    <Customer ref={customerRef} onSubmit={handleSaveChanges} isModalOpen={isCustomerModalOpen}/>
+                </Modal>
+            </div>
+            <div>
+                <Modal
+                    title="Add new cost center"
+                    isOpen={isCostCenterModalOpen}
+                    onClose={() => handleCloseModal('costcenter')}
+                    onSave={() => handleSaveChanges('costcenter')}
+                >
+                    <CostCenter ref={costCenterRef} onSubmit={handleSaveChanges} isModalOpen={isCostCenterModalOpen}/>
+                </Modal>
 
-        <div>
-            <Modal
-                title="Add new customer"
-                isOpen={isCustomerModalOpen}
-                onClose={() => handleCloseModal('customer') }
-                onSave={() => handleSaveChanges('customer')}
-            >
-                <Customer ref={customerRef} onSubmit={handleSaveChanges} isModalOpen={isCustomerModalOpen}/>
-            </Modal>
-        </div>
-        <div>
-            <Modal
-                title="Add new cost center"
-                isOpen={isCostCenterModalOpen}
-                onClose={() => handleCloseModal('costcenter')}
-                onSave={() => handleSaveChanges('costcenter')}
-            >
-                <CostCenter ref={costCenterRef} onSubmit={handleSaveChanges} isModalOpen={isCostCenterModalOpen}/>
-            </Modal>
-
-        </div>
-    </>
-  );
+            </div>
+        </>
+    );
 }
 
 export default ServiceOrder;

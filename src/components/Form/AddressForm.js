@@ -47,7 +47,7 @@ const AddressForm = ({addressesList, setAddressesList}) => {
 
 
         if (address.index !== undefined) {
-            newAddresses[address.index] = {...address}; //to edit if exist
+            newAddresses[address.index] = {...address};
         } else {
             if (newAddresses !== undefined && newAddresses.length > 0) {
                 newAddresses.push({...address});
@@ -76,19 +76,16 @@ const AddressForm = ({addressesList, setAddressesList}) => {
 
             <div className="row">
                 <div className="col-md-12">
-                    <h3>
+                    <h6>
                         <i className="fa fa-list-alt margin-right-5px"></i>
-                        <span>Address</span>
-                    </h3>
+                        <span> Address</span>
+                    </h6>
                 </div>
             </div>
 
             <div className="address-form">
                 <div className="row">
                     <>
-
-
-
                         <div className="col-md-2">
                             <FieldForm
                                 label="ZipCode"

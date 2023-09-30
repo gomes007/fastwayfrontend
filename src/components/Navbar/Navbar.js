@@ -1,106 +1,91 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import AuthService from '../../services/authService';
 import axiosInstance from "@/services/axiosService";
 
-function EmployeeImage({ employeeId, employeeName }) {
+function EmployeeImage({ employeeId }) {
     const [image, setImage] = useState(null);
 
     useEffect(() => {
-        fetchImage();
-    }, [employeeId]);
-
-    async function fetchImage() {
-        console.log("fetchImage called with:", employeeId);
-        try {
-            const response = await axiosInstance.get(`/employees/${employeeId}/image`, { responseType: 'arraybuffer' });
-            console.log("Response from /employees/{id}/image: ", response);
-            const base64 = Buffer.from(response.data).toString('base64');
-            //console.log("Base64 Image Data:", base64);
-            setImage(`data:image/png;base64,${base64}`);
-            //setImage(`data:image/jpeg;base64,${base64}`);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    if (!image) {
-        return null;
-    }
-
-    return <img src={image} alt="Employee01" className="user-ciclo" />;
-}
-
-
-
-const Navbar = ({ handleMenu }) => {
-    const [user, setUser] = useState(null);
-
-    const employeeId = user?.employee;
-    const userEmail = user?.email;
-    console.log("Employee ID:", employeeId);
-
-    const [employeeName, setEmployeeName] = useState(null); // Mova isso para Navbar
-
-
-    async function fetchEmployeeDetails(id) { // Mova isso para Navbar
-        try {
-            const response = await axiosInstance.get(`/employees/${id}`);
-            console.log("Employee details:", response.data);
-            setEmployeeName(response.data.name);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    useEffect(() => {
-        if (employeeId) {
-            fetchEmployeeDetails(employeeId);
-        }
-    }, [employeeId]);
-
-
-    useEffect(() => {
-        fetchUser().then(r => console.log(r));
-    }, []);
-
-    async function fetchUser() {
-        const authUser = AuthService.getCurrentUser();
-        if (authUser && authUser.token) {
+        async function fetchImage() {
             try {
-                const res = await axiosInstance.get('users/loggedUser');
-                console.log("User data:", res.data);
-                setUser(res.data);
+                const response = await axiosInstance.get(`/employees/${employeeId}/image`, { responseType: 'arraybuffer' });
+                const base64 = Buffer.from(response.data).toString('base64');
+                setImage(`data:image/png;base64,${base64}`);
             } catch (err) {
                 console.error(err);
             }
-        } else {
-            console.log('User not logged in');
         }
-    }
 
+        if (employeeId) {
+            fetchImage();
+        }
+    }, [employeeId]);
 
+    if (!image) return null;
+    return <img src={image} alt="Employee01" className="user-ciclo" />;
+}
 
+const Navbar = ({ handleMenu }) => {
+    const [user, setUser] = useState(null);
+    const [employeeName, setEmployeeName] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);  // New state
 
+    const { employee: employeeId, email: userEmail } = user || {};
+
+    useEffect(() => {
+        async function fetchUserDetails() {
+            if (employeeId) {
+                try {
+                    const response = await axiosInstance.get(`/employees/${employeeId}`);
+                    setEmployeeName(response.data.name);
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        }
+
+        fetchUserDetails();
+    }, [employeeId]);
+
+    useEffect(() => {
+        async function fetchUser() {
+            setIsLoading(true);  // Set to loading state
+            const authUser = AuthService.getCurrentUser();
+            if (authUser && authUser.token) {
+                try {
+                    const res = await axiosInstance.get('users/loggedUser');
+                    setUser(res.data);
+                    setIsLoading(false);  // Set to non-loading state after fetching user data
+                } catch (err) {
+                    console.error(err);
+                    setIsLoading(false);  // Set to non-loading state in case of error
+                }
+            } else {
+                setIsLoading(false);  // Set to non-loading state if no auth user
+            }
+        }
+
+        fetchUser();
+    }, []);
 
     return (
         <div className="navbar">
-            <button className="btn-menu" onClick={() => handleMenu()}>
+            <button className="btn-menu" onClick={handleMenu}>
                 <i className="fas fa-bars"></i>
             </button>
 
-            {employeeId ? (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <span style={{ marginRight: '10px', color: '#e6d5d5' }}>{employeeName}</span>
-                    <EmployeeImage className="user-ciclo" employeeId={employeeId} />
-                </div>
-            ) : (
-                <img src="/images/user.png" className="user-ciclo" alt="user" />
+            {isLoading ? null : (
+                employeeId ? (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <span style={{ marginRight: '10px', color: '#e6d5d5' }}>{employeeName}</span>
+                        <EmployeeImage employeeId={employeeId} />
+                    </div>
+                ) : (
+                    <img src="/images/user.png" className="user-ciclo" alt="user" />
+                )
             )}
-
         </div>
     );
 }
 
 export default Navbar;
-
-
