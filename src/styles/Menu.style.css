@@ -1,6 +1,8 @@
 .menu {
     width: 270px;
-    background-color: #fdfdfd;
+    /*background-color: #fdfdfd;*/
+    /*background-color: #2e3137;  Darker Background */
+    background-color: #F5F5F5;
     min-height: 100vh;
     position: fixed;
     transform: translateY(0px);
@@ -15,7 +17,6 @@
     box-sizing: border-box;
     border-right: solid 1px #e9ebf0;
     font-weight: 500; /* Medium font weight */
-
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 100vh;
@@ -81,7 +82,7 @@
 .menu .conteudo-menu .item-menu .link-menu {
     color: #545252;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 14px;
     display: block;
     padding: 10px 15px;
     margin-bottom: 0px;
@@ -171,7 +172,7 @@
     list-style: none;
     cursor: pointer;
     left: 0px;
-    color: rgb(21, 20, 20);
+    color: #545252;
     font-family: "Source Sans Pro", sans-serif;
     box-sizing: border-box;
     right: 0;
@@ -209,7 +210,7 @@
 /* Submenu Arrow Changes */
 .menu .conteudo-menu .item-menu.subitem h3.link-menu::after,
 .menu .conteudo-menu .item-menu.subitem h3.link-menu.aberto::after {
-    font-size: 18px; /* Increasing arrow size */
+    font-size: 16px; /* Increasing arrow size */
     top: 50%; /* Centering vertically */
     transform: translateY(-50%); /* Centering adjustment */
     transition: transform 0.3s ease; /* Transition for rotation */
@@ -218,8 +219,9 @@
 
 .menu .conteudo-menu .register .link-menu{
     color: #545252;
+    /*color: #b0b5bd;  Muted color for items */
     text-decoration: none;
-    font-size: 16px;
+    font-size: 14px;
     display: block;
     padding: 10px 15px;
     transition: all 0.2s;
@@ -238,7 +240,7 @@
 .menu .conteudo-menu .list .link-menu{
     color: #545252;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 14px;
     display: block;
     padding: 10px 15px;
     transition: all 0.2s;
@@ -256,3 +258,12 @@
 .link-menu.emp {
     border-top: 1px solid #e9ebf0;
 }
+
+.menu .conteudo-menu .item-menu .link-menu i {
+    margin-right: 5px;
+    margin-left: 0;
+}
+.menu .conteudo-menu .item-menu .link-menu span {
+    margin-left: 0;
+}
+

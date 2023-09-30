@@ -2,12 +2,19 @@
     box-shadow: 2px 1px 4px 1px;
     padding: 5px 20px;
     background-color: #318cd5;
+    height: 50px;
+    align-items: center;
 }
 
 .navbar .user-ciclo {
-    max-width: 40px;
-    border-radius: 50%;
+    box-sizing: border-box;
+    max-width: 50px;
+    max-height: 40px;
+    object-fit: cover;
+    border-radius: 40%;
+    vertical-align: middle;
 }
+
 
 .navbar .btn-menu {
     background-color: transparent;
