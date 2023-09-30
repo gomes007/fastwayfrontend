@@ -44,8 +44,6 @@ const Menu = ({children}) => {
 
 
                 <ul className="conteudo-menu">
-
-
                     <div className='register'>
                         <li>
                             <a className="link-menu emp" href="/employee">
