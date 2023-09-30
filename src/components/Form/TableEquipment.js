@@ -14,11 +14,6 @@ const TableEquipment = ({ equipments, setEditEquipment, setDeleteEquipment }) =>
         }).then((result) => {
             if (result.isConfirmed) {
                 setDeleteEquipment(equipments.filter((equipment, i) => i !== index));
-                Swal.fire(
-                    'Deleted!',
-                    'Your equipment has been deleted.',
-                    'success'
-                )
             }
         })
     }
@@ -31,13 +26,13 @@ const TableEquipment = ({ equipments, setEditEquipment, setDeleteEquipment }) =>
                         <th scope="col">Name</th>
                         <th scope="col">Brand</th>
                         <th scope="col">Model</th>
-                        <th scope="col">Series Number</th>
+                        <th scope="col">Series_Number</th>
                         <th scope="col">Conditions</th>
                         <th scope="col">Flaws</th>
                         <th scope="col">Fittings</th>
                         <th scope="col">Solution</th>
-                        <th scope="col">Technical Report</th>
-                        <th scope="col">Warranty Terms</th>
+                        <th scope="col">Technical_Report</th>
+                        <th scope="col">Warranty_Terms</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>

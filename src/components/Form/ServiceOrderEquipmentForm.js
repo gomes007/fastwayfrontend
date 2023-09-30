@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {BsClipboard2Data} from "react-icons/bs";
 import FieldForm from "@/components/Form/FieldForm";
 import TableEquipment from "@/components/Form/TableEquipment";
+import {SiBroadcom} from "react-icons/si";
 
-const ServiceOrderEquipmentForm = ({ equipmentsList, setEquipmentsList }) => {
+const ServiceOrderEquipmentForm = ({equipmentsList, setEquipmentsList}) => {
 
     const [equipment, setEquipment] = useState({
         name: '',
@@ -63,15 +63,15 @@ const ServiceOrderEquipmentForm = ({ equipmentsList, setEquipmentsList }) => {
                     <div className="col-md-12">
                         <div className="card shadow mb-4 mt-3">
                             <div className="card-header" style={{backgroundColor: '#F5F5F5FF'}}>
-                                <h4 className="card-title" style={{display: 'flex', alignItems: "center"}}>
-                                    <BsClipboard2Data style={{marginRight: 10}}/>
-                                    Equipment Information
-                                </h4>
+                                <h5 className="card-title" style={{display: 'flex', alignItems: "center"}}>
+                                    <SiBroadcom style={{marginRight: 10}}/>
+                                    Equipment Details
+                                </h5>
                             </div>
                             <div className="card-body">
 
                                 <div className="row">
-                                    <div className="col-md-3">
+                                    <div className="col-md-4">
                                         <div className="form-group">
                                             <FieldForm
                                                 label="Equipment Name"
@@ -82,7 +82,7 @@ const ServiceOrderEquipmentForm = ({ equipmentsList, setEquipmentsList }) => {
                                             />
                                         </div>
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-md-2">
                                         <div className="form-group">
                                             <FieldForm
                                                 label="Brand"
@@ -93,7 +93,7 @@ const ServiceOrderEquipmentForm = ({ equipmentsList, setEquipmentsList }) => {
                                             />
                                         </div>
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-md-2">
                                         <div className="form-group">
                                             <FieldForm
                                                 label="Model"
@@ -104,7 +104,7 @@ const ServiceOrderEquipmentForm = ({ equipmentsList, setEquipmentsList }) => {
                                             />
                                         </div>
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-md-4">
                                         <div className="form-group">
                                             <FieldForm
                                                 label="Series Number"
@@ -116,27 +116,116 @@ const ServiceOrderEquipmentForm = ({ equipmentsList, setEquipmentsList }) => {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Conditions"
+                                                type="textarea"
+                                                rows={4}
+                                                name="conditions"
+                                                value={equipment.conditions}
+                                                onChange={(e) => handleChange(e)}
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Flaws"
+                                                type="textarea"
+                                                rows={4}
+                                                name="flaws"
+                                                value={equipment.flaws}
+                                                onChange={(e) => handleChange(e)}
+                                            />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Fittings"
+                                                type="textarea"
+                                                rows={4}
+                                                name="fittings"
+                                                value={equipment.fittings}
+                                                onChange={(e) => handleChange(e)}
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Solution"
+                                                type="textarea"
+                                                rows={4}
+                                                name="solution"
+                                                value={equipment.solution}
+                                                onChange={(e) => handleChange(e)}
+                                            />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Technical Report"
+                                                type="textarea"
+                                                rows={4}
+                                                name="technicalReport"
+                                                value={equipment.technicalReport}
+                                                onChange={(e) => handleChange(e)}
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Warranty Terms"
+                                                type="textarea"
+                                                rows={4}
+                                                name="warrantyTerms"
+                                                value={equipment.warrantyTerms}
+                                                onChange={(e) => handleChange(e)}
+                                            />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                {equipment.index !== undefined && (
+                                    <input type='hidden' name='index' value={equipment.index}/>
+                                )}
+
+                                <div className="buttonAddEdit">
+                                    <button className="btn btn-outline-secondary"
+                                            onClick={() => handleAddEquipments()}>
+                                        {equipment.index === undefined ? 'Add' : 'Edit'}
+                                    </button>
+                                </div>
+
+                                <TableEquipment
+                                    equipments={equipmentsList}
+                                    setEditEquipment={setEquipment}
+                                    setDeleteEquipment={setEquipmentsList}
+                                />
+
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {equipment.index !== undefined && (
-                    <input type='hidden' name='index' value={equipment.index}/>
-                )}
-
-                <div className="buttonAddEdit">
-                    <button className="btn btn-outline-secondary"
-                            onClick={() => handleAddEquipments()}>
-                        {equipment.index === undefined ? 'Add' : 'Edit'}
-                    </button>
-                </div>
-
-                <TableEquipment
-                    equipments={equipmentsList}
-                    setEditEquipment={setEquipment}
-                    setDeleteEquipment={setEquipmentsList}
-                />
 
             </div>
         </>

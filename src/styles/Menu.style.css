@@ -1,4 +1,5 @@
 .menu {
+
     width: 270px;
     /*background-color: #fdfdfd;*/
     /*background-color: #2e3137;  Darker Background */
@@ -21,16 +22,20 @@
     overflow-x: hidden;
     max-height: 100vh;
     padding-bottom: 70px;
+    top: 50px; /* Desloca o menu lateral para baixo em 50px */
 }
 
 .site {
     margin-left: 270px;
     width: calc(100% - 270px);
     transition: all 0.50s;
+    padding-top: 50px; /* Ajuste de acordo com a altura da sua navbar */
 }
 
 .site .content {
     padding: 10px 5px;
+    max-height: calc(100vh - 50px); /* Ajuste de acordo com a altura da sua navbar */
+    overflow-y: auto;
 }
 
 .site.fechado {
