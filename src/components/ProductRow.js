@@ -12,7 +12,7 @@ function ProductRow({onProductChange, onRemove, onAdd, onRowUpdate}) {
                 salePrice: 0
             }
         },
-        quantity: "",
+        quantity: 0,
         discountType: "amount",
         discountAmount: 0,
         discountPercent: 0,

@@ -2,8 +2,13 @@ import React, {useEffect, useState} from 'react';
 import ProductRow from '../components/ProductRow';
 
 function ProductTable() {
+
     const [rows, setRows] = useState([{}]);
     const [totalValue, setTotalValue] = useState(0);
+    const [totalQuantity, setTotalQuantity] = useState(0);
+    const [averageSalePrice, setAverageSalePrice] = useState(0);
+    const [discount, setDiscount] = useState(0);
+
 
     const addRow = () => {
         setRows([...rows, {}]);
@@ -21,11 +26,28 @@ function ProductTable() {
     };
 
 
+
+
     useEffect(() => {
         const newTotal = rows.reduce((sum, row) => sum + (row.totalValue || 0), 0);
+        const newTotalQuantity = rows.reduce((sum, row) => sum + Number(row.quantity || 0), 0);
+
+        const totalSalePrice = rows.reduce((sum, row) => {
+            const salePrice = row.product && row.product.price ? row.product.price.salePrice : 0;
+            return sum + (salePrice * row.quantity);
+        }, 0);
+
+        const newAverageSalePrice = newTotalQuantity ? totalSalePrice / newTotalQuantity : 0;
+        const newDiscount = newTotal - totalSalePrice;
+
         setTotalValue(newTotal);
-        console.log("Total value:", newTotal);
+        setTotalQuantity(newTotalQuantity);
+        setAverageSalePrice(newAverageSalePrice);
+        setDiscount(newDiscount);
     }, [rows]);
+
+
+
 
     return (
         <div className="m-4" style={{height: "500px"}}>
@@ -52,11 +74,26 @@ function ProductTable() {
                     />
 
                 ))}
+                <tr>
+                    <td className="text-center">
+                        <strong>Total</strong>
+                    </td>
+                    <td className="text-center">
+                        <strong>{totalQuantity}</strong>
+                    </td>
+                    <td className="text-center">
+                        <strong>${averageSalePrice.toFixed(2)}</strong>
+                    </td>
+                    <td className="text-center">
+                        <strong>${discount.toFixed(2)}</strong>
+                    </td>
+                    <td className="text-center">
+                        <strong>${totalValue.toFixed(2)}</strong>
+                    </td>
+                    <td></td>
+                </tr>
                 </tbody>
             </table>
-            <div className="text-right mt-4">
-                <strong>Total: ${totalValue.toFixed(2)}</strong>
-            </div>
         </div>
     );
 }
