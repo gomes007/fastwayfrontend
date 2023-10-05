@@ -284,7 +284,7 @@ function ServiceOrder() {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-md-3">
+                                        <div className="col-md-6">
                                             <div className="form-group">
                                                 <FieldForm
                                                     label="Channel Sales"
@@ -295,7 +295,7 @@ function ServiceOrder() {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-md-3">
+                                        <div className="col-md-6">
                                             <div className="form-group">
                                                 <label>CostCenter</label>
                                                 <AsyncSelect

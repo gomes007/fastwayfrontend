@@ -39,7 +39,7 @@
 
 .provider-selector {
     width: 100%;
-    max-width: 500px; /* Ajuste conforme necessário */
+    max-width: 500px;
     margin: 20px auto;
     border: 1px solid #e0e0e0;
     border-radius: 10px;
@@ -100,11 +100,6 @@
 .provider-selector .d-flex svg:hover {
     color: #c82333;
 }
-
-
-
-
-
 
 
 

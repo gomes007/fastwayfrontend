@@ -286,7 +286,7 @@ function Product() {
                                     </div>
                                     <div className="col-4">
                                         <FieldForm
-                                            label="15"
+                                            label="Commission (%)"
                                             type="number"
                                             name="commission"
                                             value={product.commission}

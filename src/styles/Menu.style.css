@@ -33,7 +33,7 @@
 }
 
 .site .content {
-    padding: 10px 5px;
+    padding: 10px 12px;
     max-height: calc(100vh - 50px); /* Ajuste de acordo com a altura da sua navbar */
     overflow-y: auto;
 }
