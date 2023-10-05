@@ -12,6 +12,7 @@ import costCenterService from "@/services/costCenterService";
 import CostCenter from "@/pages/costCenter";
 import employeeService from "@/services/employeeService";
 import ServiceOrderEquipmentForm from "@/components/Form/ServiceOrderEquipmentForm";
+import ProductTable from "@/pages/productTable";
 
 function ServiceOrder() {
 
@@ -386,48 +387,28 @@ function ServiceOrder() {
                                 </h5>
                             </div>
                             <div className="card-body">
-
-                                <div className="row">
-                                    <div className="col-md-4">
-                                        <div className="form-group">
-                                            <label>Seller</label>
-                                            <AsyncSelect
-                                                cacheOptions
-                                                defaultOptions
-                                                loadOptions={loadEmployees}
-                                                value={selectedEmployee}
-                                                isClearable
-                                                onChange={handleServiceOrderChange("employee")}
-                                                placeholder="Type to search..."
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-4">
-                                        <div className="form-group">
-                                            <label>Expert</label>
-                                            <AsyncSelect
-                                                cacheOptions
-                                                defaultOptions
-                                                loadOptions={loadEmployees}
-                                                value={selectedExpert}
-                                                isClearable
-                                                onChange={handleServiceOrderChange("expert")}
-                                                placeholder="Type to search..."
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
+                                    <ProductTable/>
                             </div>
                         </div>
 
                     </div>
                 </div>
 
-
-
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="card shadow mb-4 mt-3">
+                            <div className="card-header" style={{backgroundColor: '#F5F5F5FF'}}>
+                                <h5 className="card-title" style={{display: 'flex', alignItems: "center"}}>
+                                    <BsBox style={{marginRight: 10}}/>
+                                    Services
+                                </h5>
+                            </div>
+                            <div className="card-body">
+                                <ProductTable/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
 

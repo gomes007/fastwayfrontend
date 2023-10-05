@@ -165,14 +165,14 @@ function ProductRow({onProductChange, onRemove, onAdd, onRowUpdate}) {
                         } else {
                             setServiceOrderProduct(prev => ({
                                 ...prev,
-                                discountPercent: value, // Sem divisão por 100
+                                discountPercent: value,
                                 discountAmount: 0
                             }));
                         }
                     }}
                     style={{width: "90px", maxWidth: "90px"}}
                 />
-                <select
+                <select className="form-select text-center" style={{width: "auto", maxWidth: "auto"}}
                     value={serviceOrderProduct.discountType}
                     onChange={handleDiscountTypeChange}>
                     <option value="amount">$</option>
