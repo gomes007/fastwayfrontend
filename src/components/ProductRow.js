@@ -4,16 +4,16 @@ import ProductService from '@/services/productService';
 import serviceOrderService from "@/services/serviceOrderService";
 
 
-function ProductRow({onProductChange, onRemove, onAdd}) {
+function ProductRow({onProductChange, onRemove, onAdd, onRowUpdate}) {
 
-    const [serviceOrderProduct, setServiceOrderProduct] = useState({
+    const [serviceOrderProduct, setServiceOrderProduct, ] = useState({
         product: {
             price: {
                 salePrice: 0
             }
         },
         quantity: "",
-        discountType: "amount",  // default to "amount"
+        discountType: "amount",
         discountAmount: 0,
         discountPercent: 0,
         totalValue: 0
@@ -33,6 +33,8 @@ function ProductRow({onProductChange, onRemove, onAdd}) {
         const selectedProduct = products.content[0];
 
         if (selectedProduct) {
+            console.log("Setting product details:", selectedProduct);
+
             setServiceOrderProduct(prev => ({
                 ...prev,
                 product: selectedProduct
@@ -44,6 +46,23 @@ function ProductRow({onProductChange, onRemove, onAdd}) {
         }
     };
 
+    useEffect(() => {
+        console.log("Service order product updated:", serviceOrderProduct);
+
+        // Notificar o componente pai sobre a atualização
+        if (onRowUpdate) {
+            onRowUpdate(serviceOrderProduct);
+        }
+    }, [serviceOrderProduct]);
+
+
+
+    useEffect(() => {
+        console.log("Service order product updated:", serviceOrderProduct);
+    }, [serviceOrderProduct]);
+
+
+
 
     const handleDiscountTypeChange = (e) => {
         const discountType = e.target.value;
@@ -51,13 +70,13 @@ function ProductRow({onProductChange, onRemove, onAdd}) {
             setServiceOrderProduct(prev => ({
                 ...prev,
                 discountType: "amount",
-                discountPercent: 0  // Zerando discountPercent quando selecionado "$"
+                discountPercent: 0
             }));
         } else {
             setServiceOrderProduct(prev => ({
                 ...prev,
                 discountType: "percent",
-                discountAmount: 0  // Zerando discountAmount quando selecionado "%"
+                discountAmount: 0
             }));
         }
     };
@@ -67,10 +86,15 @@ function ProductRow({onProductChange, onRemove, onAdd}) {
 
     useEffect(() => {
         const fetchSubtotal = async () => {
-            const productDataToSend = {...serviceOrderProduct};
-            delete productDataToSend.discountType;
 
-            const subtotal = await serviceOrderService.calculateSubtotal(productDataToSend)
+            const productDataToSend = {
+                product: serviceOrderProduct.product,
+                quantity: serviceOrderProduct.quantity,
+                discountAmount: serviceOrderProduct.discountAmount,
+                discountPercent: serviceOrderProduct.discountPercent,
+            };
+
+            const subtotal = await serviceOrderService.calculateSubtotal(productDataToSend);
             if (subtotal) {
                 setServiceOrderProduct(prevState => ({
                     ...prevState,
@@ -83,6 +107,7 @@ function ProductRow({onProductChange, onRemove, onAdd}) {
             fetchSubtotal();
         }
     }, [serviceOrderProduct.product.price.salePrice, serviceOrderProduct.quantity, serviceOrderProduct.discountAmount, serviceOrderProduct.discountPercent]);
+
 
 
 
