@@ -110,17 +110,6 @@ function ProductRow({onProductChange, onRemove, onAdd, onRowUpdate}) {
 
 
 
-
-    const borderStyle = {
-        border: '1px solid #e0e0e0',
-        borderRadius: '.25rem',
-        padding: '.375rem .75rem',
-        display: 'inline-block',
-        height: '100%',
-        boxSizing: 'border-box'
-    };
-
-
     return (
         <tr>
             <td className="text-center">

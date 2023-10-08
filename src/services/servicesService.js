@@ -11,32 +11,41 @@ const servicesService = {
         }
     },
 
-    async searchServicesByName(filter, page, size) {
+    async searchServicesByName(query, page, size) {
         try {
-            const params = {
-                filter: filter
-            };
-
-            if (page) {
-                params.page = page;
-            }
-
-            if (size) {
-                params.size = size;
-            }
-
-            const response = await axiosInstance.get(`/services/search`, {
-                params: params
+            const response = await axiosInstance.get(`/services/searchServicesByName`, {
+                params: {
+                    query: query,
+                    page: page,
+                    size: size
+                }
             });
-            console.log("Search response:", response.data);
             return response.data;
         } catch (error) {
-            console.error("Service Get Request failure: ", error.message);
+            console.error("Service Search Request failure: ", error.message);
             return [];
         }
+    },
+
+
+    async calculateSubtotal(serviceOrderService) {
+        try {
+            const response = await axiosInstance.post("/service-order/calculateSubTotalService", serviceOrderService);
+            return response.data;
+        } catch (error) {
+            console.error("Service Order Subtotal Calculation Request failure: ", error.message);
+            return null;
+        }
+    },
+    async calculateProductPrice(price) {
+        try {
+            const response = await axiosInstance.post('services/calculate-price', price);
+            return response.data;
+        } catch (error) {
+            console.log("Product Price Calculation failure: ", error.message);
+            return price;
+        }
     }
-
-
 }
 
 export default servicesService;

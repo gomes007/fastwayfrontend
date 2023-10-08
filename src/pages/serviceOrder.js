@@ -5,7 +5,7 @@ import FieldForm from "@/components/Form/FieldForm";
 import {BsBox, BsClipboard2Data, BsPerson} from "react-icons/bs";
 import {MdAdd} from "react-icons/md";
 import NavTitle from "@/components/NavTitle/NavTitle";
-import {GiAutoRepair} from "react-icons/gi";
+import {GiAutoRepair, GiCardExchange} from "react-icons/gi";
 import Modal from "@/components/Modal/modal";
 import Customer from "@/pages/customer";
 import costCenterService from "@/services/costCenterService";
@@ -13,6 +13,7 @@ import CostCenter from "@/pages/costCenter";
 import employeeService from "@/services/employeeService";
 import ServiceOrderEquipmentForm from "@/components/Form/ServiceOrderEquipmentForm";
 import ProductTable from "@/pages/productTable";
+import ServiceTable from "@/components/ServiceTable";
 
 function ServiceOrder() {
 
@@ -399,12 +400,12 @@ function ServiceOrder() {
                         <div className="card shadow mb-4 mt-3">
                             <div className="card-header" style={{backgroundColor: '#F5F5F5FF'}}>
                                 <h5 className="card-title" style={{display: 'flex', alignItems: "center"}}>
-                                    <BsBox style={{marginRight: 10}}/>
+                                    <GiCardExchange style={{marginRight: 10}}/>
                                     Services
                                 </h5>
                             </div>
                             <div className="card-body">
-                                <ProductTable/>
+                                <ServiceTable/>
                             </div>
                         </div>
                     </div>

@@ -50,7 +50,7 @@ function ProductTable() {
 
 
     return (
-        <div className="m-4 table-responsive" style={{height: "auto"}}>
+        <div className="m-4 table-responsive" style={{height: "auto", minHeight: "300px"}}>
             <table className="table table-striped table-hover">
                 <thead>
                 <tr>
