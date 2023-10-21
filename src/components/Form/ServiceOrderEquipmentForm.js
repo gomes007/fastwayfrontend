@@ -61,9 +61,9 @@ const ServiceOrderEquipmentForm = ({equipmentsList, setEquipmentsList}) => {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-12">
-                        <div className="card shadow mb-4 mt-3">
-                            <div className="card-header" style={{backgroundColor: '#F5F5F5FF'}}>
-                                <h5 className="card-title" style={{display: 'flex', alignItems: "center"}}>
+                        <div className="card mb-4 mt-3">
+                            <div className="card-header" style={{backgroundColor: '#F6F8FC'}}>
+                                <h5 className="card-title" style={{ display: 'flex', alignItems: "center", padding: '5px', margin:0 }}>
                                     <SiBroadcom style={{marginRight: 10}}/>
                                     Equipment Details
                                 </h5>

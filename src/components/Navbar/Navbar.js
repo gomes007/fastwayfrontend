@@ -12,7 +12,11 @@ function EmployeeImage({ employeeId }) {
                 const base64 = Buffer.from(response.data).toString('base64');
                 setImage(`data:image/png;base64,${base64}`);
             } catch (err) {
-                console.error(err);
+                if (err.response && err.response.status === 404) {
+                    console.log(`Image not found for employeeId: ${employeeId}`);
+                } else {
+                    console.error(err);
+                }
             }
         }
 

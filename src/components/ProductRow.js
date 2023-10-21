@@ -119,6 +119,7 @@ function ProductRow({onProductChange, onRemove, onAdd, onRowUpdate}) {
                     loadOptions={loadProducts}
                     onChange={handleProductSelection}
                     placeholder="Type to search..."
+                    menuPosition={"absolute"}
                 />
             </td>
             <td className='d-flex align-items-center justify-content-center'>

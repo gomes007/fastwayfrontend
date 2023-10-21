@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ProductRow from '../components/ProductRow';
 
-function ProductTable() {
+function ProductTable({ onTotalChange }) {
 
     const [rows, setRows] = useState([{}]);
     const [totalValue, setTotalValue] = useState(0);
@@ -44,13 +44,16 @@ function ProductTable() {
         setTotalQuantity(newTotalQuantity);
         setAverageSalePrice(newAverageSalePrice);
         setDiscount(newDiscount);
-    }, [rows]);
+
+
+        onTotalChange(newTotal);
+    }, [rows, onTotalChange]);
 
 
 
 
     return (
-        <div className="m-4 table-responsive" style={{height: "auto", minHeight: "300px"}}>
+        <div className="m-4 table-responsive" style={{height: "auto"}}>
             <table className="table table-striped table-hover">
                 <thead>
                 <tr>
@@ -66,7 +69,7 @@ function ProductTable() {
                 {rows.map((row, index) => (
                     <ProductRow
                         key={index}
-                        onProductChange={index === rows.length - 1 ? addRow : null}
+                        onProductChange={null}
                         onRemove={() => removeRow(index)}
                         onAdd={addRow}
                         onRowUpdate={(updatedRow) => handleRowChange(updatedRow, index)}

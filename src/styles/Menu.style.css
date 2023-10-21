@@ -3,7 +3,7 @@
     width: 270px;
     /*background-color: #fdfdfd;*/
     /*background-color: #2e3137;  Darker Background */
-    background-color: #F5F5F5;
+    background-color: #F6F8FC;
     min-height: 100vh;
     position: fixed;
     transform: translateY(0px);
@@ -99,8 +99,10 @@
 
 
 .menu .conteudo-menu .item-menu .link-menu.active {
-    color: #12b981; /* Keeping the same green for active state */
-    background-color: #1a1e23; /* Darker background for active state */
+    color: #233bd9;
+    background-color: #D3E3FD;
+    font-weight: bold;
+    border-radius: 0 20px 20px 0;
 }
 
 
@@ -110,7 +112,9 @@
 
 .menu .conteudo-menu .item-menu .link-menu:hover {
     color: #233bd9;
-    background-color: #dadee7;
+    background-color: #D3E3FD;
+    font-weight: bold;
+    border-radius: 0 20px 20px 0;
 }
 
 .menu .conteudo-menu .item-menu.subitem h3.link-menu::after {
@@ -193,7 +197,9 @@
 
 .menu .logout:hover{
     color: #d40c4f;
-    background-color: #dadee7;
+    background-color: #D3E3FD;
+    font-weight: bold;
+    border-radius: 0 20px 20px 0;
 }
 
 .menu .logout:hover i {
@@ -237,7 +243,9 @@
 
 .menu .conteudo-menu .register .link-menu:hover {
     color: #233bd9;
-    background-color: #dadee7;
+    background-color: #D3E3FD;
+    font-weight: bold;
+    border-radius: 0 50px 50px 0;
 }
 
 
@@ -256,7 +264,9 @@
 
 .menu .conteudo-menu .list .link-menu:hover {
     color: #233bd9;
-    background-color: #dadee7;
+    background-color: #D3E3FD;
+    font-weight: bold;
+    border-radius: 0 20px 20px 0;
 }
 
 .link-menu.emp {

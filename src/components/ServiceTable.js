@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import ServiceRow from "@/components/ServiceRow";
 
 
-function ServiceTable() {
+function ServiceTable({ onTotalChange }) {
     const [rows, setRows] = useState([{}]);
     const [totalValue, setTotalValue] = useState(0);
     const [totalQuantity, setTotalQuantity] = useState(0);
@@ -42,11 +42,14 @@ function ServiceTable() {
         setTotalQuantity(newTotalQuantity);
         setAverageSalePrice(newAverageSalePrice);
         setDiscount(newDiscount);
-    }, [rows]);
+
+        // Propagar o valor total para o componente pai
+        onTotalChange(newTotal);
+    }, [rows, onTotalChange]);
 
 
     return (
-        <div className="m-4 table-responsive" style={{height: "auto", minHeight: "300px"}}>
+        <div className="m-4 table-responsive" style={{height: "auto"}}>
           <table className="table table-striped table-hover">
             <thead>
             <tr>
@@ -62,7 +65,7 @@ function ServiceTable() {
             {rows.map((row, index) => (
                 <ServiceRow
                     key={index}
-                    onServiceChange={index === rows.length - 1 ? addRow : null}
+                    onServiceChange={null}
                     onRemove={() => removeRow(index)}
                     onAdd={addRow}
                     onRowUpdate={(updatedRow) => handleRowChange(updatedRow, index)}

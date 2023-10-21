@@ -90,12 +90,7 @@ const Menu = ({children}) => {
                                 <span>Service Order</span>
                             </a>
                         </li>
-                        <li>
-                            <a className="link-menu" href="/productTable">
-                                <i className="fa-solid fa-clipboard-list"></i>
-                                <span>productTable</span>
-                            </a>
-                        </li>
+
                     </div>
 
                     <div className='list'>

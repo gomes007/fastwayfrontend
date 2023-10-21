@@ -74,7 +74,9 @@ function ServiceRow({onServiceChange, onRemove, onAdd, onRowUpdate}) {
         }
     };
 
-    const inputStyle = {width: "90px", maxWidth: "90px"};
+    const inputStyle = {
+
+    };
 
 
     return (
@@ -86,6 +88,7 @@ function ServiceRow({onServiceChange, onRemove, onAdd, onRowUpdate}) {
                     loadOptions={loadServices}
                     onChange={handleServiceSelection}
                     placeholder="Type to search..."
+                    menuPosition={"absolute"}
                 />
             </td>
             <td className='d-flex align-items-center justify-content-center'>

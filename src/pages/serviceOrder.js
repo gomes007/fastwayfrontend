@@ -1,8 +1,8 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import customerService from "@/services/customerService";
 import AsyncSelect from "react-select/async";
 import FieldForm from "@/components/Form/FieldForm";
-import {BsBox, BsClipboard2Data, BsPerson} from "react-icons/bs";
+import {BsBox, BsCash, BsClipboard2Data, BsPerson} from "react-icons/bs";
 import {MdAdd} from "react-icons/md";
 import NavTitle from "@/components/NavTitle/NavTitle";
 import {GiAutoRepair, GiCardExchange} from "react-icons/gi";
@@ -14,6 +14,7 @@ import employeeService from "@/services/employeeService";
 import ServiceOrderEquipmentForm from "@/components/Form/ServiceOrderEquipmentForm";
 import ProductTable from "@/pages/productTable";
 import ServiceTable from "@/components/ServiceTable";
+
 
 function ServiceOrder() {
 
@@ -29,29 +30,42 @@ function ServiceOrder() {
         otherInformation: '',
         status: 'select',
         costCenter: null, // ou {}
+        payments: [{
+            date: '',
+            value: '',
+            discount: '',
+            otherInformation: '',
+            processed: false,
+            paymentMethod: {
+                name: '',
+                availability: 'select',
+                maxInstallmentQuantity: '',
+                installmentIntervalDays: '',
+                firstInstallmentDelayDays: '',
+                availableOnSellingStation: false,
+                modality: 'select',
+                bankTaxAmount: '',
+                creditProviderTaxPercent: '',
+                lateFeePercent: '',
+                latePaymentTaxPercent: '',
+                canCreateBill: false,
+            }
+        }],
     });
 
 
-    const [serviceOrderServices, setServiceOrderServices] = useState(
-        {
-            service: null, // ou {}
-            details: '',
-            quantity: 0,
-            discountPercent: '',
-            discountAmount: '',
-            totalValue: '',
-        },
-    );
-
     const [serviceOrderEquipments, setServiceOrderEquipments] = useState([]);
-
-
-
 
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [selectedCostCenter, setSelectedCostCenter] = useState(null);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [selectedExpert, setSelectedExpert] = useState(null);
+
+    const [totalServiceValue, setTotalServiceValue] = useState(0);
+    const [totalProductValue, setTotalProductValue] = useState(0);
+
+
+    const grandTotal = totalServiceValue + totalProductValue;
 
 
     const loadCustomers = async (inputValue) => {
@@ -165,41 +179,36 @@ function ServiceOrder() {
     };
 
 
-    const handleServiceOrderChange = (field) => (data) => {
-        if (data && data.isAddButton) {
-            handleAddButtonClick(data.type);
-            return;
-        }
+    //begin function handleChanges
+    const updateStateAtPath = (path, value) => {
+        let newState = {...serviceOrder};
 
-        if (data && data.target) {
-            setServiceOrder({
-                ...serviceOrder,
-                [data.target.name]: data.target.value
-            });
-        } else {
-            if (field === "customer") {
-                setSelectedCustomer(data);
-            } else if (field === "costcenter") {
-                setSelectedCostCenter(data);
-            } else if (field === "employee") {
-                setSelectedEmployee(data);
-            } else if (field === "expert") {
-                setSelectedExpert(data);
-            }
-
-            if (data) {
-                setServiceOrder(prevState => ({
-                    ...prevState,
-                    [field]: data.value
-                }));
+        path.split('.').reduce((o, k, i, ks) => {
+            if (i === ks.length - 1) {
+                o[k] = value;
             } else {
-                setServiceOrder(prevState => ({
-                    ...prevState,
-                    [field]: null
-                }));
+                o[k] = o[k] || (isNaN(ks[i + 1]) ? {} : []);
             }
-        }
+            return o[k];
+        }, newState);
+
+        setServiceOrder(newState);
     };
+
+    const handleAsyncSelectChange = (setter) => (selectedOption) => {
+        setter(selectedOption);
+    };
+
+    const handleServiceOrderChanges = (path) => (event) => {
+        const value = event.target ? event.target.value : event;
+        updateStateAtPath(path, value);
+    };
+
+    useEffect(() => {
+        updateStateAtPath("payments.0.value", grandTotal.toFixed(2));
+    }, [grandTotal]);
+
+    //end function handleChanges
 
 
     function handleSubmit() {
@@ -221,9 +230,10 @@ function ServiceOrder() {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-12">
-                        <div className="card shadow mb-4 mt-3">
-                            <div className="card-header" style={{backgroundColor: '#F5F5F5FF'}}>
-                                <h5 className="card-title" style={{display: 'flex', alignItems: "center"}}>
+                        <div className="card mb-4 mt-3">
+                            <div className="card-header" style={{backgroundColor: '#F6F8FC'}}>
+                                <h5 className="card-title"
+                                    style={{display: 'flex', alignItems: "center", padding: '5px', margin: 0}}>
                                     <BsClipboard2Data style={{marginRight: 10}}/>
                                     General Informations
                                 </h5>
@@ -240,10 +250,11 @@ function ServiceOrder() {
                                                     loadOptions={loadCustomers}
                                                     value={selectedCustomer}
                                                     isClearable
-                                                    onChange={handleServiceOrderChange("customer")}
+                                                    onChange={handleAsyncSelectChange(setSelectedCustomer)}
                                                     placeholder="Type to search..."
                                                     formatOptionLabel={formatOptionLabel}
                                                 />
+
                                             </div>
                                         </div>
                                         <div className="col-md-3">
@@ -253,7 +264,7 @@ function ServiceOrder() {
                                                     type="select"
                                                     name="status"
                                                     value={serviceOrder.status}
-                                                    onChange={handleServiceOrderChange("status")}
+                                                    onChange={handleServiceOrderChanges("status")}
                                                     options={[
                                                         {value: 'select', label: 'Select Status'},
                                                         {value: "OPEN", label: "Open"},
@@ -271,7 +282,7 @@ function ServiceOrder() {
                                                     type="date"
                                                     name="startDate"
                                                     value={serviceOrder.startDate}
-                                                    onChange={handleServiceOrderChange("startDate")}
+                                                    onChange={handleServiceOrderChanges("startDate")}
                                                 />
                                             </div>
                                         </div>
@@ -282,7 +293,7 @@ function ServiceOrder() {
                                                     type="date"
                                                     name="endDate"
                                                     value={serviceOrder.endDate}
-                                                    onChange={handleServiceOrderChange("endDate")}
+                                                    onChange={handleServiceOrderChanges("endDate")}
                                                 />
                                             </div>
                                         </div>
@@ -293,7 +304,7 @@ function ServiceOrder() {
                                                     type="text"
                                                     name="channelSales"
                                                     value={serviceOrder.channelSales}
-                                                    onChange={handleServiceOrderChange("channelSales")}
+                                                    onChange={handleServiceOrderChanges("channelSales")}
                                                 />
                                             </div>
                                         </div>
@@ -306,7 +317,7 @@ function ServiceOrder() {
                                                     loadOptions={loadCostCenters}
                                                     value={selectedCostCenter}
                                                     isClearable
-                                                    onChange={handleServiceOrderChange("costcenter")}
+                                                    onChange={handleAsyncSelectChange(setSelectedCostCenter)}
                                                     placeholder="Type to search..."
                                                     formatOptionLabel={formatOptionLabel}
                                                 />
@@ -322,13 +333,15 @@ function ServiceOrder() {
 
                 <div className="row">
                     <div className="col-md-12">
-                        <div className="card shadow mb-4 mt-3">
-                            <div className="card-header" style={{backgroundColor: '#F5F5F5FF'}}>
-                                <h5 className="card-title" style={{display: 'flex', alignItems: "center"}}>
+                        <div className="card mb-4 mt-3">
+                            <div className="card-header" style={{backgroundColor: '#F6F8FC'}}>
+                                <h5 className="card-title"
+                                    style={{display: 'flex', alignItems: "center", padding: '5px', margin: 0}}>
                                     <BsPerson style={{marginRight: 10}}/>
                                     Employee
                                 </h5>
                             </div>
+
                             <div className="card-body">
 
                                 <div className="row">
@@ -341,7 +354,7 @@ function ServiceOrder() {
                                                 loadOptions={loadEmployees}
                                                 value={selectedEmployee}
                                                 isClearable
-                                                onChange={handleServiceOrderChange("employee")}
+                                                onChange={handleAsyncSelectChange(setSelectedEmployee)}
                                                 placeholder="Type to search..."
                                             />
                                         </div>
@@ -355,14 +368,12 @@ function ServiceOrder() {
                                                 loadOptions={loadEmployees}
                                                 value={selectedExpert}
                                                 isClearable
-                                                onChange={handleServiceOrderChange("expert")}
+                                                onChange={handleAsyncSelectChange(setSelectedExpert)}
                                                 placeholder="Type to search..."
                                             />
                                         </div>
                                     </div>
                                 </div>
-
-
 
                             </div>
                         </div>
@@ -380,15 +391,16 @@ function ServiceOrder() {
 
                 <div className="row">
                     <div className="col-md-12">
-                        <div className="card shadow mb-4 mt-3">
-                            <div className="card-header" style={{backgroundColor: '#F5F5F5FF'}}>
-                                <h5 className="card-title" style={{display: 'flex', alignItems: "center"}}>
+                        <div className="card mb-4 mt-3">
+                            <div className="card-header" style={{backgroundColor: '#F6F8FC'}}>
+                                <h5 className="card-title"
+                                    style={{display: 'flex', alignItems: "center", padding: '5px', margin: 0}}>
                                     <BsBox style={{marginRight: 10}}/>
                                     Products/Equipment parts
                                 </h5>
                             </div>
                             <div className="card-body">
-                                    <ProductTable/>
+                                    <ProductTable onTotalChange={setTotalProductValue}/>
                             </div>
                         </div>
 
@@ -397,19 +409,98 @@ function ServiceOrder() {
 
                 <div className="row">
                     <div className="col-md-12">
-                        <div className="card shadow mb-4 mt-3">
-                            <div className="card-header" style={{backgroundColor: '#F5F5F5FF'}}>
-                                <h5 className="card-title" style={{display: 'flex', alignItems: "center"}}>
+                        <div className="card mb-4 mt-3">
+                            <div className="card-header" style={{backgroundColor: '#F6F8FC'}}>
+                                <h5 className="card-title"
+                                    style={{display: 'flex', alignItems: "center", padding: '5px', margin: 0}}>
                                     <GiCardExchange style={{marginRight: 10}}/>
                                     Services
                                 </h5>
                             </div>
                             <div className="card-body">
-                                <ServiceTable/>
+                                <ServiceTable onTotalChange={setTotalServiceValue}/>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="card mb-4 mt-3">
+                            <div className="card-header" style={{backgroundColor: '#F6F8FC'}}>
+                                <h5 className="card-title"
+                                    style={{display: 'flex', alignItems: "center", padding: '5px', margin: 0}}>
+                                    <BsCash style={{marginRight: 10}}/>
+                                    Payment
+                                </h5>
+                            </div>
+                            <div className="card-body">
+                                <div className="row">
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Due Date"
+                                                type="date"
+                                                name="date"
+                                                value={serviceOrder.payments[0].date}
+                                                onChange={handleServiceOrderChanges("payments.0.date")}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-2">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Value"
+                                                type="number"
+                                                name="value"
+                                                value={serviceOrder.payments[0].value}
+                                                readOnly={true}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Payment Method"
+                                                type="select"
+                                                name="modality"
+                                                value={serviceOrder.payments?.[0]?.paymentMethod?.modality}
+                                                onChange={handleServiceOrderChanges("payments.0.paymentMethod.modality")}
+                                                options={[
+                                                    {value: 'select', label: 'Select Modality'},
+                                                    {value: "MONEY", label: "Money"},
+                                                    {value: "CREDIT_CARD", label: "Credit Card"},
+                                                    {value: "DEBIT_CARD", label: "Debit Card"},
+                                                    {value: "BILL", label: "Bill"},
+                                                ]}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Payment Method Availability"
+                                                type="select"
+                                                name="availability"
+                                                value={serviceOrder.payments?.[0]?.paymentMethod?.availability}
+                                                onChange={handleServiceOrderChanges("payments.0.paymentMethod.availability")}
+                                                options={[
+                                                    {value: 'select', label: 'Select Modality'},
+                                                    {value: "SELLING", label: "Selling"},
+                                                    {value: "BUYING", label: "Buying"},
+                                                    {value: "BOTH", label: "Both"},
+                                                ]}
+                                            />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
 
