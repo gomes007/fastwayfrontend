@@ -14,43 +14,34 @@ import employeeService from "@/services/employeeService";
 import ServiceOrderEquipmentForm from "@/components/Form/ServiceOrderEquipmentForm";
 import ProductTable from "@/pages/productTable";
 import ServiceTable from "@/components/ServiceTable";
+import axios from "axios";
 
 
 function ServiceOrder() {
 
-
     const [serviceOrder, setServiceOrder] = useState({
-        customer: null, // ou {}
-        channelSales: '',
+        customer: null,
+        channelSale: '',
+        employee: null,
+        status: 'select',
         startDate: '',
         endDate: '',
-        discountAmount: '',
-        discountPercent: '',
-        total: '',
+        costCenter: null,
+        serviceOrderProducts: [],
+        serviceOrderServices: [],
+        paymentCondition: {
+            maxInstallmentQuantity: '',
+            installmentIntervalDays: '',
+            firstInstallmentDelayDays: '',
+            paymentType: 'select',
+            paymentModality: 'select',
+            creditProviderTaxPercent: '',
+            installments: []
+        },
         otherInformation: '',
-        status: 'select',
-        costCenter: null, // ou {}
-        payments: [{
-            date: '',
-            value: '',
-            discount: '',
-            otherInformation: '',
-            processed: false,
-            paymentMethod: {
-                name: '',
-                availability: 'select',
-                maxInstallmentQuantity: '',
-                installmentIntervalDays: '',
-                firstInstallmentDelayDays: '',
-                availableOnSellingStation: false,
-                modality: 'select',
-                bankTaxAmount: '',
-                creditProviderTaxPercent: '',
-                lateFeePercent: '',
-                latePaymentTaxPercent: '',
-                canCreateBill: false,
-            }
-        }],
+        attachments: [],
+        discountAmount: '',
+        discountPercent: ''
     });
 
 
@@ -63,9 +54,6 @@ function ServiceOrder() {
 
     const [totalServiceValue, setTotalServiceValue] = useState(0);
     const [totalProductValue, setTotalProductValue] = useState(0);
-
-
-    const grandTotal = totalServiceValue + totalProductValue;
 
 
     const loadCustomers = async (inputValue) => {
@@ -199,21 +187,40 @@ function ServiceOrder() {
         setter(selectedOption);
     };
 
+    const handleServiceOrderEquipmentsChange = (index, field) => (event) => {
+        const value = event.target ? event.target.value : event;
+        const updatedEquipments = [...serviceOrderEquipments];
+        updatedEquipments[index] = {
+            ...updatedEquipments[index],
+            [field]: value,
+        };
+        setServiceOrderEquipments(updatedEquipments);
+    };
+
     const handleServiceOrderChanges = (path) => (event) => {
         const value = event.target ? event.target.value : event;
         updateStateAtPath(path, value);
     };
 
     useEffect(() => {
-        updateStateAtPath("payments.0.value", grandTotal.toFixed(2));
-    }, [grandTotal]);
-
+        updateStateAtPath("paymentCondition.installments.0.value", (totalServiceValue + totalProductValue).toFixed(2));
+    }, [totalServiceValue, totalProductValue]);
     //end function handleChanges
 
 
-    function handleSubmit() {
+    const handleSubmit = async () => {
+        try {
+            const updatedServiceOrder = {
+                ...serviceOrder,
+                serviceOrderEquipments
+            };
+            const response = await axios.post('/api/service-orders', updatedServiceOrder);
+            console.log('Ordem de serviço enviada com sucesso!', response.data);
+        } catch (error) {
+            console.error('Erro ao enviar a ordem de serviço', error);
+        }
+    };
 
-    }
 
 
     return (
@@ -400,7 +407,7 @@ function ServiceOrder() {
                                 </h5>
                             </div>
                             <div className="card-body">
-                                    <ProductTable onTotalChange={setTotalProductValue}/>
+                                <ProductTable setServiceOrder={setServiceOrder} onTotalChange={setTotalProductValue} />
                             </div>
                         </div>
 
@@ -418,7 +425,7 @@ function ServiceOrder() {
                                 </h5>
                             </div>
                             <div className="card-body">
-                                <ServiceTable onTotalChange={setTotalServiceValue}/>
+                                <ServiceTable onTotalChange={setTotalServiceValue} setServiceOrder={setServiceOrder} />
                             </div>
                         </div>
                     </div>
@@ -443,20 +450,14 @@ function ServiceOrder() {
                                                 label="Due Date"
                                                 type="date"
                                                 name="date"
-                                                value={serviceOrder.payments[0].date}
-                                                onChange={handleServiceOrderChanges("payments.0.date")}
+                                                value={serviceOrder.paymentCondition?.installments?.[0]?.dueDate?.split('T')[0] || ''}
+                                                onChange={handleServiceOrderChanges("paymentCondition.installments.0.dueDate")}
                                             />
                                         </div>
                                     </div>
                                     <div className="col-md-2">
                                         <div className="form-group">
-                                            <FieldForm
-                                                label="Value"
-                                                type="number"
-                                                name="value"
-                                                value={serviceOrder.payments[0].value}
-                                                readOnly={true}
-                                            />
+
                                         </div>
                                     </div>
                                     <div className="col-md-3">
@@ -465,8 +466,8 @@ function ServiceOrder() {
                                                 label="Payment Method"
                                                 type="select"
                                                 name="modality"
-                                                value={serviceOrder.payments?.[0]?.paymentMethod?.modality}
-                                                onChange={handleServiceOrderChanges("payments.0.paymentMethod.modality")}
+                                                value={serviceOrder.paymentCondition?.paymentModality || 'select'}
+                                                onChange={handleServiceOrderChanges("paymentCondition.paymentModality")}
                                                 options={[
                                                     {value: 'select', label: 'Select Modality'},
                                                     {value: "MONEY", label: "Money"},
@@ -475,26 +476,14 @@ function ServiceOrder() {
                                                     {value: "BILL", label: "Bill"},
                                                 ]}
                                             />
+
                                         </div>
                                     </div>
                                     <div className="col-md-3">
                                         <div className="form-group">
-                                            <FieldForm
-                                                label="Payment Method Availability"
-                                                type="select"
-                                                name="availability"
-                                                value={serviceOrder.payments?.[0]?.paymentMethod?.availability}
-                                                onChange={handleServiceOrderChanges("payments.0.paymentMethod.availability")}
-                                                options={[
-                                                    {value: 'select', label: 'Select Modality'},
-                                                    {value: "SELLING", label: "Selling"},
-                                                    {value: "BUYING", label: "Buying"},
-                                                    {value: "BOTH", label: "Both"},
-                                                ]}
-                                            />
+
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>

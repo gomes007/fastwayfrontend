@@ -1,17 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductRow from '../components/ProductRow';
 
-function ProductTable({ onTotalChange }) {
+function ProductTable({ onTotalChange, setServiceOrder }) {
+    const initialProduct = {
+        product: null,
+        details: '',
+        quantity: 0,
+        discountPercent: 0,
+        discountAmount: 0,
+        totalValue: 0,
+    };
 
-    const [rows, setRows] = useState([{}]);
+    const [rows, setRows] = useState([initialProduct]);
     const [totalValue, setTotalValue] = useState(0);
     const [totalQuantity, setTotalQuantity] = useState(0);
     const [averageSalePrice, setAverageSalePrice] = useState(0);
     const [discount, setDiscount] = useState(0);
 
-
     const addRow = () => {
-        setRows([...rows, {}]);
+        setRows([...rows, initialProduct]);
     };
 
     const removeRow = (indexToRemove) => {
@@ -22,15 +29,11 @@ function ProductTable({ onTotalChange }) {
         const newRows = [...rows];
         newRows[rowIndex] = updatedRow;
         setRows(newRows);
-        console.log("Updated rows:", newRows);
     };
 
-
-
-
     useEffect(() => {
-        const newTotal = rows.reduce((sum, row) => sum + (row.totalValue || 0), 0);
-        const newTotalQuantity = rows.reduce((sum, row) => sum + Number(row.quantity || 0), 0);
+        const newTotalValue = rows.reduce((sum, row) => sum + (row.totalValue || 0), 0);
+        const newTotalQuantity = rows.reduce((sum, row) => sum + (row.quantity || 0), 0);
 
         const totalSalePrice = rows.reduce((sum, row) => {
             const salePrice = row.product && row.product.price ? row.product.price.salePrice : 0;
@@ -38,22 +41,24 @@ function ProductTable({ onTotalChange }) {
         }, 0);
 
         const newAverageSalePrice = newTotalQuantity ? totalSalePrice / newTotalQuantity : 0;
-        const newDiscount = newTotal - totalSalePrice;
+        const newDiscount = newTotalValue - totalSalePrice;
 
-        setTotalValue(newTotal);
+        setTotalValue(newTotalValue);
         setTotalQuantity(newTotalQuantity);
         setAverageSalePrice(newAverageSalePrice);
         setDiscount(newDiscount);
 
+        onTotalChange(newTotalValue);
 
-        onTotalChange(newTotal);
-    }, [rows, onTotalChange]);
-
-
-
+        // Atualiza o estado no componente pai
+        setServiceOrder(prevState => ({
+            ...prevState,
+            serviceOrderProducts: rows
+        }));
+    }, [rows, onTotalChange, setServiceOrder]);
 
     return (
-        <div className="m-4 table-responsive" style={{height: "auto"}}>
+        <div className="m-4 table-responsive" style={{ height: 'auto' }}>
             <table className="table table-striped table-hover">
                 <thead>
                 <tr>
@@ -75,7 +80,6 @@ function ProductTable({ onTotalChange }) {
                         onRowUpdate={(updatedRow) => handleRowChange(updatedRow, index)}
                         serviceOrderProduct={row}
                     />
-
                 ))}
                 <tr>
                     <td className="text-center">
