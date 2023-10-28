@@ -1,20 +1,26 @@
-import React, {useEffect, useRef, useState} from 'react';
-import customerService from "@/services/customerService";
+import React, {useRef, useState} from 'react';
+
+
 import AsyncSelect from "react-select/async";
-import FieldForm from "@/components/Form/FieldForm";
 import {BsBox, BsCash, BsClipboard2Data, BsPerson} from "react-icons/bs";
 import {MdAdd} from "react-icons/md";
-import NavTitle from "@/components/NavTitle/NavTitle";
 import {GiAutoRepair, GiCardExchange} from "react-icons/gi";
+
 import Modal from "@/components/Modal/modal";
+import FieldForm from "@/components/Form/FieldForm";
+import NavTitle from "@/components/NavTitle/NavTitle";
+
+import customerService from "@/services/customerService";
 import Customer from "@/pages/customer";
 import costCenterService from "@/services/costCenterService";
 import CostCenter from "@/pages/costCenter";
 import employeeService from "@/services/employeeService";
+import serviceOrderService from "@/services/serviceOrderService";
+
 import ServiceOrderEquipmentForm from "@/components/Form/ServiceOrderEquipmentForm";
 import ProductTable from "@/pages/productTable";
 import ServiceTable from "@/components/ServiceTable";
-import axios from "axios";
+
 
 
 function ServiceOrder() {
@@ -30,18 +36,18 @@ function ServiceOrder() {
         serviceOrderProducts: [],
         serviceOrderServices: [],
         paymentCondition: {
-            maxInstallmentQuantity: '',
-            installmentIntervalDays: '',
-            firstInstallmentDelayDays: '',
+            maxInstallmentQuantity: 0,
+            installmentIntervalDays: 0,
+            firstInstallmentDelayDays: 0,
             paymentType: 'select',
             paymentModality: 'select',
-            creditProviderTaxPercent: '',
+            creditProviderTaxPercent: 0,
             installments: []
         },
         otherInformation: '',
         attachments: [],
-        discountAmount: '',
-        discountPercent: ''
+        discountAmount: 0,
+        discountPercent: 0
     });
 
 
@@ -61,7 +67,7 @@ function ServiceOrder() {
             const data = await customerService.searchCustomerByName(inputValue);
             const items = data.items || [];
             const options = items.map(customer => ({
-                value: customer.generalInformation.id,
+                value: customer.id,
                 label: customer.generalInformation.name
             }));
             options.push({
@@ -85,13 +91,13 @@ function ServiceOrder() {
             const options = items.map(costCenter => ({
                 value: costCenter.id,
                 label: costCenter.name,
-                type: 'costcenter'
+                type: 'costCenter'
             }));
             options.push({
                 value: 'add_costcenter',
                 label: 'Add new cost center',
                 isAddButton: true,
-                type: 'costcenter'
+                type: 'costCenter'
             });
             return options;
         } catch (error) {
@@ -123,7 +129,7 @@ function ServiceOrder() {
         if (type === 'customer') {
             setCustomerModalOpen(true);
             console.log('Botão Adicionar Cliente clicado!');
-        } else if (type === 'costcenter') {
+        } else if (type === 'costCenter') {
             setCostCenterModalOpen(true);
             console.log('Botão Adicionar Centro de Custo clicado!');
         }
@@ -131,7 +137,7 @@ function ServiceOrder() {
 
     const handleCloseModal = (type) => {
         if (type === 'customer') setCustomerModalOpen(false);
-        if (type === 'costcenter') setCostCenterModalOpen(false);
+        if (type === 'costCenter') setCostCenterModalOpen(false);
     };
 
 
@@ -143,10 +149,10 @@ function ServiceOrder() {
             const customerData = customerRef.current.saveCustomer();
             console.log('Dados do cliente para salvar:', customerData);
             handleCloseModal('customer');
-        } else if (type === 'costcenter' && costCenterRef.current && typeof costCenterRef.current.saveCost === "function") {
+        } else if (type === 'costCenter' && costCenterRef.current && typeof costCenterRef.current.saveCost === "function") {
             const costCenterData = costCenterRef.current.saveCost();
             console.log('Dados do centro de custo para salvar:', costCenterData);
-            handleCloseModal('costcenter');
+            handleCloseModal('costCenter');
         }
     };
 
@@ -183,28 +189,91 @@ function ServiceOrder() {
         setServiceOrder(newState);
     };
 
-    const handleAsyncSelectChange = (setter) => (selectedOption) => {
-        setter(selectedOption);
-    };
 
-    const handleServiceOrderEquipmentsChange = (index, field) => (event) => {
-        const value = event.target ? event.target.value : event;
-        const updatedEquipments = [...serviceOrderEquipments];
-        updatedEquipments[index] = {
-            ...updatedEquipments[index],
-            [field]: value,
-        };
-        setServiceOrderEquipments(updatedEquipments);
-    };
+    const handleAsyncSelectChanges = (type) => (selectedOption) => {
+        switch (type) {
+            case 'customer':
+                setSelectedCustomer(selectedOption);
+                break;
+            case 'costCenter':
+                setSelectedCostCenter(selectedOption);
+                break;
+            case 'employee':
+                setSelectedEmployee(selectedOption);
+                break;
+            case 'expert':
+                setSelectedExpert(selectedOption);
+                break;
+            default:
+                console.warn('Unknown type in handleAsyncSelectChange:', type);
+                break;
+        }
+
+        const updatedServiceOrder = {...serviceOrder};
+
+        if (selectedOption) {
+            if (selectedOption.isAddButton) {
+                // Lógica para adicionar novo item (se necessário)
+            } else {
+                if (type === 'customer') {
+                    updatedServiceOrder[type] = {
+                        id: selectedOption.value,
+                        generalInformation: {
+                            name: selectedOption.label
+                        }
+                    };
+                } else {
+                    updatedServiceOrder[type] = {
+                        id: selectedOption.value,
+                        name: selectedOption.label
+                    };
+                }
+                setServiceOrder(updatedServiceOrder);
+            }
+        } else {
+            updatedServiceOrder[type] = null;
+            setServiceOrder(updatedServiceOrder);
+        }
+    }
+
+
+
+
+
 
     const handleServiceOrderChanges = (path) => (event) => {
         const value = event.target ? event.target.value : event;
+
+        if (path === 'paymentCondition.paymentType') {
+            const updatedServiceOrder = { ...serviceOrder };
+
+            if (value === 'INSTALLMENT') {
+                // Se o tipo de pagamento é 'parcelado', garanta que há pelo menos uma parcela
+                if (!updatedServiceOrder.paymentCondition.installments.length) {
+                    updatedServiceOrder.paymentCondition.installments = [{ dueDate: '' }];
+                }
+            } else {
+                // Se o tipo de pagamento não é 'parcelado', limpe o array de parcelas
+                updatedServiceOrder.paymentCondition.installments = [];
+            }
+
+            // Atualize o tipo de pagamento
+            updatedServiceOrder.paymentCondition.paymentType = value;
+            setServiceOrder(updatedServiceOrder);
+            return;
+        }
+
+        // Para outros casos, utilize a função de atualização de estado existente
         updateStateAtPath(path, value);
     };
 
+
+
+    /*
     useEffect(() => {
         updateStateAtPath("paymentCondition.installments.0.value", (totalServiceValue + totalProductValue).toFixed(2));
     }, [totalServiceValue, totalProductValue]);
+     */
     //end function handleChanges
 
 
@@ -212,14 +281,25 @@ function ServiceOrder() {
         try {
             const updatedServiceOrder = {
                 ...serviceOrder,
+                employee: selectedEmployee ? { id: selectedEmployee.value } : null,
+                expert: selectedExpert ? { id: selectedExpert.value } : null,
                 serviceOrderEquipments
             };
-            const response = await axios.post('/api/service-orders', updatedServiceOrder);
-            console.log('Ordem de serviço enviada com sucesso!', response.data);
+
+            // Aqui, verificamos se 'expert' foi definido, e, se sim, o definimos como 'employee'
+            if (updatedServiceOrder.expert) {
+                updatedServiceOrder.employee = updatedServiceOrder.expert;
+                delete updatedServiceOrder.expert;
+            }
+
+            console.log('Ordem de serviço!', updatedServiceOrder);
+            const response = await serviceOrderService.createNewServiceOrder(updatedServiceOrder);
+            console.log('Ordem de serviço enviada com sucesso!', response);
         } catch (error) {
             console.error('Erro ao enviar a ordem de serviço', error);
         }
     };
+
 
 
 
@@ -257,11 +337,10 @@ function ServiceOrder() {
                                                     loadOptions={loadCustomers}
                                                     value={selectedCustomer}
                                                     isClearable
-                                                    onChange={handleAsyncSelectChange(setSelectedCustomer)}
+                                                    onChange={handleAsyncSelectChanges('customer')}
                                                     placeholder="Type to search..."
                                                     formatOptionLabel={formatOptionLabel}
                                                 />
-
                                             </div>
                                         </div>
                                         <div className="col-md-3">
@@ -310,8 +389,8 @@ function ServiceOrder() {
                                                     label="Channel Sales"
                                                     type="text"
                                                     name="channelSales"
-                                                    value={serviceOrder.channelSales}
-                                                    onChange={handleServiceOrderChanges("channelSales")}
+                                                    value={serviceOrder.channelSale}
+                                                    onChange={handleServiceOrderChanges("channelSale")}
                                                 />
                                             </div>
                                         </div>
@@ -324,7 +403,7 @@ function ServiceOrder() {
                                                     loadOptions={loadCostCenters}
                                                     value={selectedCostCenter}
                                                     isClearable
-                                                    onChange={handleAsyncSelectChange(setSelectedCostCenter)}
+                                                    onChange={handleAsyncSelectChanges('costCenter')}
                                                     placeholder="Type to search..."
                                                     formatOptionLabel={formatOptionLabel}
                                                 />
@@ -361,7 +440,7 @@ function ServiceOrder() {
                                                 loadOptions={loadEmployees}
                                                 value={selectedEmployee}
                                                 isClearable
-                                                onChange={handleAsyncSelectChange(setSelectedEmployee)}
+                                                onChange={handleAsyncSelectChanges('employee')}
                                                 placeholder="Type to search..."
                                             />
                                         </div>
@@ -375,7 +454,7 @@ function ServiceOrder() {
                                                 loadOptions={loadEmployees}
                                                 value={selectedExpert}
                                                 isClearable
-                                                onChange={handleAsyncSelectChange(setSelectedExpert)}
+                                                onChange={handleAsyncSelectChanges('expert')}
                                                 placeholder="Type to search..."
                                             />
                                         </div>
@@ -444,20 +523,31 @@ function ServiceOrder() {
                             </div>
                             <div className="card-body">
                                 <div className="row">
-                                    <div className="col-md-3">
+                                    <div className="col-md-2">
                                         <div className="form-group">
                                             <FieldForm
                                                 label="Due Date"
                                                 type="date"
-                                                name="date"
-                                                value={serviceOrder.paymentCondition?.installments?.[0]?.dueDate?.split('T')[0] || ''}
+                                                name="dueDate"
+                                                value={serviceOrder.paymentCondition?.installments?.[0]?.dueDate || ''}
                                                 onChange={handleServiceOrderChanges("paymentCondition.installments.0.dueDate")}
                                             />
                                         </div>
                                     </div>
                                     <div className="col-md-2">
                                         <div className="form-group">
-
+                                            <FieldForm
+                                                label="Payment Type"
+                                                type="select"
+                                                name="paymentType"
+                                                value={serviceOrder.paymentCondition?.paymentType || 'select'}
+                                                onChange={handleServiceOrderChanges("paymentCondition.paymentType")}
+                                                options={[
+                                                    {value: 'select', label: 'Select Type'},
+                                                    {value: "ONE_TIME", label: "One Time"},
+                                                    {value: "INSTALLMENT", label: "Installment"},
+                                                ]}
+                                            />
                                         </div>
                                     </div>
                                     <div className="col-md-3">
@@ -476,12 +566,84 @@ function ServiceOrder() {
                                                     {value: "BILL", label: "Bill"},
                                                 ]}
                                             />
-
+                                        </div>
+                                    </div>
+                                    <div className="col-md-2">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Max Installment"
+                                                type="number"
+                                                name="maxInstallmentQuantity"
+                                                value={serviceOrder.paymentCondition?.maxInstallmentQuantity || ''}
+                                                onChange={handleServiceOrderChanges("paymentCondition.maxInstallmentQuantity")}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-2">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Interval Days"
+                                                type="number"
+                                                name="installmentIntervalDays"
+                                                value={serviceOrder.paymentCondition?.installmentIntervalDays || ''}
+                                                onChange={handleServiceOrderChanges("paymentCondition.installmentIntervalDays")}
+                                            />
                                         </div>
                                     </div>
                                     <div className="col-md-3">
                                         <div className="form-group">
-
+                                            <FieldForm
+                                                label="First Installment Delay Days"
+                                                type="number"
+                                                name="firstInstallmentDelayDays"
+                                                value={serviceOrder.paymentCondition?.firstInstallmentDelayDays || ''}
+                                                onChange={handleServiceOrderChanges("paymentCondition.firstInstallmentDelayDays")}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Credit Provider Tax Percent"
+                                                type="number"
+                                                name="creditProviderTaxPercent"
+                                                value={serviceOrder.paymentCondition?.creditProviderTaxPercent || ''}
+                                                onChange={handleServiceOrderChanges("paymentCondition.creditProviderTaxPercent")}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Discount Amount"
+                                                type="number"
+                                                name="discountAmount"
+                                                value={serviceOrder.discountAmount || ''}
+                                                onChange={handleServiceOrderChanges("discountAmount")}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Discount %"
+                                                type="number"
+                                                name="discountPercent"
+                                                value={serviceOrder.discountPercent || ''}
+                                                onChange={handleServiceOrderChanges("discountPercent")}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12">
+                                        <div className="form-group">
+                                            <FieldForm
+                                                label="Others Informations"
+                                                type="textarea"
+                                                rows={4}
+                                                name="otherInformation"
+                                                value={serviceOrder.otherInformation || ''}
+                                                onChange={handleServiceOrderChanges("otherInformation")}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -490,6 +652,9 @@ function ServiceOrder() {
                     </div>
                 </div>
 
+                <button type="submit" className="btn btn-primary btn-block" onClick={handleSubmit}>
+                    Save
+                </button>
 
             </div>
 
@@ -507,8 +672,8 @@ function ServiceOrder() {
                 <Modal
                     title="Add new cost center"
                     isOpen={isCostCenterModalOpen}
-                    onClose={() => handleCloseModal('costcenter')}
-                    onSave={() => handleSaveChanges('costcenter')}
+                    onClose={() => handleCloseModal('costCenter')}
+                    onSave={() => handleSaveChanges('costCenter')}
                 >
                     <CostCenter ref={costCenterRef} onSubmit={handleSaveChanges} isModalOpen={isCostCenterModalOpen}/>
                 </Modal>

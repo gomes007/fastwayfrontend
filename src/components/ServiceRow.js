@@ -34,7 +34,11 @@ function ServiceRow({onServiceChange, onRemove, onAdd, onRowUpdate}) {
     };
 
     useEffect(() => {
-        if (onRowUpdate) onRowUpdate(serviceOrderService);
+        if (onRowUpdate) {
+            const serviceDataToSend = {...serviceOrderService};
+            delete serviceDataToSend.discountType;
+            onRowUpdate(serviceDataToSend);
+        }
     }, [serviceOrderService]);
 
     useEffect(() => {
@@ -73,11 +77,6 @@ function ServiceRow({onServiceChange, onRemove, onAdd, onRowUpdate}) {
             }));
         }
     };
-
-    const inputStyle = {
-
-    };
-
 
     return (
         <tr>

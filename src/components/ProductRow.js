@@ -51,7 +51,9 @@ function ProductRow({onProductChange, onRemove, onAdd, onRowUpdate}) {
 
         // Notificar o componente pai sobre a atualização
         if (onRowUpdate) {
-            onRowUpdate(serviceOrderProduct);
+            const productToSend = {...serviceOrderProduct};
+            delete productToSend.discountType;
+            onRowUpdate(productToSend);
         }
     }, [serviceOrderProduct]);
 
