@@ -213,7 +213,7 @@ function ServiceOrder() {
 
         if (selectedOption) {
             if (selectedOption.isAddButton) {
-                // Lógica para adicionar novo item (se necessário)
+
             } else {
                 if (type === 'customer') {
                     updatedServiceOrder[type] = {
@@ -244,29 +244,17 @@ function ServiceOrder() {
     const handleServiceOrderChanges = (path) => (event) => {
         const value = event.target ? event.target.value : event;
 
-        if (path === 'paymentCondition.paymentType') {
-            const updatedServiceOrder = { ...serviceOrder };
-
-            if (value === 'INSTALLMENT') {
-                // Se o tipo de pagamento é 'parcelado', garanta que há pelo menos uma parcela
-                if (!updatedServiceOrder.paymentCondition.installments.length) {
-                    updatedServiceOrder.paymentCondition.installments = [{ dueDate: '' }];
-                }
-            } else {
-                // Se o tipo de pagamento não é 'parcelado', limpe o array de parcelas
-                updatedServiceOrder.paymentCondition.installments = [];
-            }
-
-            // Atualize o tipo de pagamento
+        // Se o path for 'paymentCondition.paymentType', limpe o array de parcelas se o tipo de pagamento não for 'parcelado'
+        if (path === 'paymentCondition.paymentType' && value !== 'INSTALLMENT') {
+            const updatedServiceOrder = { ...serviceOrder, paymentCondition: { ...serviceOrder.paymentCondition, installments: [] }};
             updatedServiceOrder.paymentCondition.paymentType = value;
             setServiceOrder(updatedServiceOrder);
             return;
         }
 
-        // Para outros casos, utilize a função de atualização de estado existente
+
         updateStateAtPath(path, value);
     };
-
 
 
     /*
@@ -523,17 +511,6 @@ function ServiceOrder() {
                             </div>
                             <div className="card-body">
                                 <div className="row">
-                                    <div className="col-md-2">
-                                        <div className="form-group">
-                                            <FieldForm
-                                                label="Due Date"
-                                                type="date"
-                                                name="dueDate"
-                                                value={serviceOrder.paymentCondition?.installments?.[0]?.dueDate || ''}
-                                                onChange={handleServiceOrderChanges("paymentCondition.installments.0.dueDate")}
-                                            />
-                                        </div>
-                                    </div>
                                     <div className="col-md-2">
                                         <div className="form-group">
                                             <FieldForm
