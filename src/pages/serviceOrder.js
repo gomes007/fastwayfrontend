@@ -251,8 +251,6 @@ function ServiceOrder() {
             setServiceOrder(updatedServiceOrder);
             return;
         }
-
-
         updateStateAtPath(path, value);
     };
 
